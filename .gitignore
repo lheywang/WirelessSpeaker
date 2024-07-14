@@ -31,4 +31,5 @@
 *.out
 *.app
 *.elf
-
+*.arm
+*.x86

@@ -1,43 +1,46 @@
-# define some files
-# In the future, add every file that shall be compiled here, separated by spaces.
-files = main.cpp
+# Include every cpp file on the folder.
+# Header files are automatically included when needed.
+files = $(wildcard *.cpp)
 
-# define some variables
-arm_CC = arm-linux-gnueabihf-g++
-arm_CFLAGS = -O3 -g3 -Wall
-armaux_CFLAGS = -O0 -g3 -Wall -g -W # This one add Clang / LLVM debugger outputs and lower optimisation.
-x86_CC = g++
-x86_CFLAGS = -O0 -Wall
+# define cross compiler parameters and flags
+arm_CC = aarch64-linux-gnu-g++
+arm_CFLAGS = -mcpu=cortex-a53 -static -O3 -Wall
+armaux_CFLAGS = -mcpu=cortex-a53 -static -O0 -Wall -g -W # Debugger flags added and Warning/
 
-EXECNAME = output.elf
+# Define basic ouput name.
+EXECNAME = output
 
 # ## Define build processes : 
 # all correspond to target build
-all: clean arm
+all: clean $(EXECNAME).arm
 
 # Clean remove .o files or execnames.
 clean:
 	@rm -f *.o $(EXECNAME)
+	@rm -f *.arm $(EXECNAME)
+	@rm -f *.x86 $(EXECNAME)
 
 # ## Architecture specific builds
 # ARM V6 build optimized. Ready for production.
-arm: clean
-	$(arm_CC) $(arm_CFLAGS) -o $(EXECNAME) -c $(files)
-	@chmod +x $(EXECNAME)
+$(EXECNAME).arm: clean
+	@touch $(EXECNAME).arm
+	$(arm_CC) $(arm_CFLAGS) -o $(EXECNAME).arm -c $(files)
+	@chmod +x $(EXECNAME).arm
 
 # ARM V6 build, less optimized with every warnings.
 arm_debug: clean
-	$(arm_CC) $(armaux_CFLAGS) -o $(EXECNAME) -c $(files)
-	@chmod +x $(EXECNAME)
-	
-# X86 build, only for compiling purposes tests. Will be removed.
-x86: clean
-	@echo "Running in x86 mode. Output cannot be executed or launched after."
-	$(x86_CC) $(x86_CFLAGS) -o $(EXECNAME) -c $(files)
-	@chmod +x $(EXECNAME)
+	@touch $(EXECNAME).arm
+	$(arm_CC) $(armaux_CFLAGS) -o $(EXECNAME).arm -c $(files)
+	@chmod +x $(EXECNAME).arm
 
-## SSH links
-#install: arm
-#	scp ... To be tested.
+## SCP links to place the file on the RPi
+install: $(EXECNAME).arm
+# This may need a password.
+	scp $(EXECNAME).arm pi@raspberrypi.home:/home/$(EXECNAME).elf 
+
+## SSH link to run the file from the host system.
+run: $(EXECNAME).arm install
+# This may need a password.
+	ssh pi@raspberrypi.home -f "cd /home/ && ./$(EXECNAME).elf && exit"
 
 
