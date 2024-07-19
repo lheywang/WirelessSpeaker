@@ -27,13 +27,20 @@ If you want only to build to system, run this command :
 
 ## How to build and / or deploy : 
 The makefile define differents steps where you can interract : 
-- clean : Clean all files
-- all : Compile only the files.
-- arm_debug : Compile an image with lower level of optimization and debug codes. Warning are used to inform the developper of all points.
-- install : Compile if not already done and try to copy the output on the root of the raspberrypi.home home folder (pi user)
-- run : Install and then attempt an ssh log to launch the code.
+- **clean** : Clean all files
+- **all** : Compile only the files.
+- **install** : Compile if not already done and try to copy the output on the root of the raspberrypi.home home folder (pi user)
+- **run** : Install and then attempt an ssh log to launch the code.
 
-**Notes**
-- The last two steps may need login or configuration of the RPi on SSH.
-- You can run any of the commands, if the prerequites aren't met they will be generated.
+> **NOTES**
+> You can speed up the build process by using make [recipe] -j [core number]
+> You will then compile each file on a core, thus way faster.
+> The last step, the linking will be done on a single core.
 
+> **NOTES**
+> - The last two steps may need login or configuration of the RPi on SSH.
+> - You can run any of the commands, if the prerequites aren't met they will be generated.
+
+> **NOTES**
+> For using the ssh / scp functions, a properly configured RasbperryPi need to be present.
+> Please refer to their own documentation for theses functionnalities.
