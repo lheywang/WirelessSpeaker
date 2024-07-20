@@ -6,7 +6,7 @@ OUTPUTDIR = build
 
 # define cross compiler parameters and flags
 arm_CC = aarch64-linux-gnu-g++
-arm_compiler_CFLAGS = -mcpu=cortex-a53 -O3
+arm_compiler_CFLAGS = -mcpu=cortex-a53 -O3 -MMD -MD -MP
 arm_linker_CFLAGS = -mcpu=cortex-a53 -static -O3 -Wall
 
 # ===========================================================================================================

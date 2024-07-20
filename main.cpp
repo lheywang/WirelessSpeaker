@@ -1,6 +1,7 @@
 // Main file for the Speaker project.
 // Includes
 #include <iostream>
+#include "I2C/Addresses.hpp"
 
 
 // entry point
