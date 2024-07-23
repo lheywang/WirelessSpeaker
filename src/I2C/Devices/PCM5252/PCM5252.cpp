@@ -5,13 +5,18 @@
 // Define functions to interface with the IC
 // ==============================================================================
 
+// Header file
 #include "PCM5252.hpp"
+
+// Cpp modules
+#include <cstdint>
 
 // =====================
 // CONSTRUCTORS
 // =====================
 
-PCM5252::PCM5252(){
+PCM5252::PCM5252()
+{
     return;
 }
 
@@ -19,6 +24,7 @@ PCM5252::PCM5252(){
 // DESTRUCTORS
 // =====================
 
-PCM5252::~PCM5252(){
+PCM5252::~PCM5252()
+{
     return;
 }

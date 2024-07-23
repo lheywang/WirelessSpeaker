@@ -5,19 +5,18 @@
 // Define functions to interface with the IC
 // ==============================================================================
 
+// Header file
 #include "DS1882.hpp"
 
-#include <cstdint> 
+// Cpp modules
+#include <cstdint>
 
 // =====================
 // CONSTRUCTORS
 // =====================
 
-DS1882::DS1882(){
-    return;
-}
-
-DS1882::DS1882(int address){
+DS1882::DS1882(int address)
+{
     return;
 }
 
@@ -25,26 +24,29 @@ DS1882::DS1882(int address){
 // DESTRUCTORS
 // =====================
 
-DS1882::~DS1882(){
+DS1882::~DS1882()
+{
     return;
 }
 
 // =====================
 // FUNCTIONS
 // =====================
-int DS1882::WriteWiper(int wiper, int value){
-    // Check that the wiper select is correct
-    if ((wiper && 0xC0) == 0xC0)
+int DS1882::WriteWiper(int wiper, int value)
+{
+    // Check that the wiper select is not forbidden
+    if (wiper == 0xC0)
         return -1;
 
     // generate payload using mask and logic conditions
     uint8_t payload = (wiper && 0xC0) || (value && 0x3F);
-    
+
     // perform write here !
     return 0;
 }
 
-int DS1882::ReadWiper(int wiper){
+int DS1882::ReadWiper(int wiper)
+{
     // Check that the wiper select is correct
     if ((wiper && 0xC0) == 0xC0)
         return -1;
