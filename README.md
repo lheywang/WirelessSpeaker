@@ -13,6 +13,9 @@ The PCB is responsible for all of the electricals interractions, such as :
 - Overall management of temperature, and defaults
 - Power supplies (based on USB-C PD3 protocol)
 
+**Notes**
+PCB is provided in a separated folder as it is, and isn't garanteed to be fully verified.
+
 ## Software architecture
 
 ## How to install ?

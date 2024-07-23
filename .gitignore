@@ -33,3 +33,6 @@
 *.elf
 *.arm
 *.x86
+
+# VSCODE artifacts
+.vscode/
