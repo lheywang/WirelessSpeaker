@@ -4,9 +4,13 @@ EXECNAME = application
 # Output folder name
 OUTPUTDIR = build
 
+# This horror list all dir and subdir up to the 5th order qnd append /src. Used for autocompile.
+VPATH = $(sort $(dir $(wildcard src/*/) $(wildcard src/*/*/) $(wildcard src/*/*/*/) $(wildcard src/*/*/*/*/) $(wildcard src/*/*/*/*/*/))) src/
+
+
 # define cross compiler parameters and flags
 arm_CC = aarch64-linux-gnu-g++
-arm_compiler_CFLAGS = -mcpu=cortex-a53 -O3 -MM -MD -std=c++11
+arm_compiler_CFLAGS = -mcpu=cortex-a53 -O3 -MM -MD -std=c++11 -g
 arm_linker_CFLAGS = -mcpu=cortex-a53 -static -O3 -Wall
 
 # ===========================================================================================================
@@ -28,8 +32,7 @@ fobjects = $(addprefix $(OUTPUTDIR)/, $(tobjects))
 # ===========================================================================================================
 
 test:
-	@echo "$(files)"
-	@echo "$(fobjects)"
+	@echo "$(sort $(dir $(wildcard src/*/) $(wildcard src/*/*/) $(wildcard src/*/*/*/) $(wildcard src/*/*/*/*/) $(wildcard src/*/*/*/*/*/))) src/"
 
 # All only build the executable.
 all: $(EXECNAME).arm
