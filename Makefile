@@ -10,8 +10,8 @@ VPATH = $(sort $(dir $(wildcard src/*/) $(wildcard src/*/*/) $(wildcard src/*/*/
 
 # define cross compiler parameters and flags
 arm_CC = aarch64-linux-gnu-g++
-arm_compiler_CFLAGS = -mcpu=cortex-a53 -O3 -MM -MD -std=c++11 -g
-arm_linker_CFLAGS = -mcpu=cortex-a53 -static -O3 -Wall
+arm_compiler_CFLAGS = -mcpu=cortex-a53 -O3 -MMD -std=c++11 -Wall -Wextra
+arm_linker_CFLAGS = -mcpu=cortex-a53 -static -O3 -Wall -Wextra
 
 # ===========================================================================================================
 # AUTO GENERATED VARIABLES. DO NOT TOUCH.
@@ -32,7 +32,9 @@ fobjects = $(addprefix $(OUTPUTDIR)/, $(tobjects))
 # ===========================================================================================================
 
 test:
-	@echo "$(sort $(dir $(wildcard src/*/) $(wildcard src/*/*/) $(wildcard src/*/*/*/) $(wildcard src/*/*/*/*/) $(wildcard src/*/*/*/*/*/))) src/"
+	@echo "$(VPATH)"
+	@echo "$(files)"
+	@echo "$(fobjects)"
 
 # All only build the executable.
 all: $(EXECNAME).arm
@@ -51,7 +53,7 @@ $(OUTPUTDIR)/%.o: %.cpp
 
 # Standard output file. Names as .arm to prevent any confusion with .elf files.
 $(EXECNAME).arm: $(fobjects)
-	@echo "$(object)"
+	@echo "$(fobjects)"
 	@touch $(EXECNAME).arm
 	$(arm_CC) $(arm_linker_CFLAGS) -o $(EXECNAME).arm $(fobjects)
 	@chmod +x $(EXECNAME).arm
