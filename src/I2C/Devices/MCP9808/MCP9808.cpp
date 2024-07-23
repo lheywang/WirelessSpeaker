@@ -32,3 +32,5 @@ MCP9808::~MCP9808()
 // =====================
 // FUNCTIONS
 // =====================
+
+// https://www.adafruit.com/product/1782
