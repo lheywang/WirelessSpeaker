@@ -1,12 +1,12 @@
 // ==============================================================================
-//                              I2C/Devices/AT42QT1244/AT42QT1244.cpp
+//                              I2C/Devices/MCP9808/MCP9808.cpp
 //                              Wrote by lheywang
 //
 // Define functions to interface with the IC
 // ==============================================================================
 
 // Header file
-#include "AT42QT1244.hpp"
+#include "MCP45HV51.hpp"
 
 // Cpp modules
 #include <cstdint>
@@ -15,7 +15,7 @@
 // CONSTRUCTORS
 // =====================
 
-AT42QT1244::AT42QT1244(int address)
+MCP45HV51::MCP45HV51(int address)
 {
     return;
 }
@@ -24,11 +24,7 @@ AT42QT1244::AT42QT1244(int address)
 // DESTRUCTORS
 // =====================
 
-AT42QT1244::~AT42QT1244()
+MCP45HV51::~MCP45HV51()
 {
     return;
-};
-
-// =====================
-// FUNCTIONS
-// =====================
+}

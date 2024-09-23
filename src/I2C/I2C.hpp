@@ -22,7 +22,8 @@
 // IC ADDRESSES
 // ==============================================================================
 
-// Define temperature sensor adresses. (MCP9808)
+// Define temperature sensor adresses
+// MCP9808
 #define TEMPSENSOR_0 0x18
 #define TEMPSENSOR_1 0x19
 #define TEMPSENSOR_2 0x1A
@@ -33,30 +34,40 @@
 #define TEMPSENSOR_7 0x1F
 
 // Digital to Analog Converter
+// PCM5252
 #define DAC_0 0x4C
 
-// Capacitive touch sensors
-#define TOUCHSENSOR_0 0x07
-#define TOUCHSENSOR_1 0x10 // Not compatible with ADC used for VMON 0
-#define TOUCHSENSOR_2 0x39
-#define TOUCHSENSOR_3 0x75
+// Capacitive touch sensor
+// AT42QT1070
+#define TOUCHSENSOR_0 0x1B
 
 // Voltage monitor
-#define VMON_0 0x10 // Not compatible with Touch sensor 1
-#define VMON_1 0x11
-#define VMON_2 0x12
-#define VMON_3 0x13
-#define VMON_4 0x14
-#define VMON_5 0X15
-#define VMON_6 0x16
-#define VMON_7 0x17
+// ADS1015
+#define VMON_0 0x90
+#define VMON_1 0x91
+#define VMON_2 0x92
+#define VMON_3 0x93
 
 // Logarithmic potentiometer
-#define POTI_0 0x28
-#define POTI_1 0x29
-#define POTI_2 0x2A
-#define POTI_3 0x2B
-#define POTI_4 0x2C
-#define POTI_5 0x2D
-#define POTI_6 0x2E
-#define POTI_7 0x2F
+// DS1882B
+#define LOG_POTI_0 0x28
+#define LOG_POTI_1 0x29
+#define LOG_POTI_2 0x2A
+#define LOG_POTI_3 0x2B
+#define LOG_POTI_4 0x2C
+#define LOG_POTI_5 0x2D
+#define LOG_POTI_6 0x2E
+#define LOG_POTI_7 0x2F
+
+// Linear potentiometer
+// MCP45HV51
+#define LIN_POTI_0 0X78
+#define LIN_POTI_1 0x79
+#define LIN_POTI_2 0x7A
+#define LIN_POTI_3 0x7B
+
+// Leds drivers
+// PCA9633
+#define LED_DRIVER_1 0xC2
+#define LED_DRIVER_2 0xC3
+// Theses chips can be addressed by any addresses, since all 7 bits are available. We won't expose all of thems

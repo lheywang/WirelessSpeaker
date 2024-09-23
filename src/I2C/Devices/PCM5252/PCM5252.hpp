@@ -91,7 +91,7 @@
 #define DETECTED_BCK_RATIO_LSB 0x5D
 
 // Misc. DAC Controls
-#define RESET 0x01
+#define DAC_RESET 0x01
 #define POWER_CONTROL 0x02
 #define MUTE_CONTROL 0x03
 #define DAC_ARCHITECTURE 0x79

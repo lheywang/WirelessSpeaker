@@ -1,12 +1,12 @@
 // ==============================================================================
-//                              I2C/Devices/TLA2528:TLA2528.cpp
+//                              I2C/Devices/AT42QT1070/AT42QT1070.cpp
 //                              Wrote by lheywang
 //
 // Define functions to interface with the IC
 // ==============================================================================
 
 // Header file
-#include "TLA2528.hpp"
+#include "AT42QT1070.hpp"
 
 // Cpp modules
 #include <cstdint>
@@ -15,7 +15,7 @@
 // CONSTRUCTORS
 // =====================
 
-TLA2528::TLA2528(int address)
+AT42QT1070::AT42QT1070(int address)
 {
     return;
 }
@@ -24,20 +24,11 @@ TLA2528::TLA2528(int address)
 // DESTRUCTORS
 // =====================
 
-TLA2528::~TLA2528()
+AT42QT1070::~AT42QT1070()
 {
     return;
-}
+};
 
 // =====================
 // FUNCTIONS
 // =====================
-double TLA2528::ReadAnalogValue()
-{
-    return 0.00;
-}
-
-int TLA2528::SelectChannel(int channel)
-{
-    return 1;
-}
