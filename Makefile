@@ -31,20 +31,16 @@ fobjects = $(addprefix $(OUTPUTDIR)/, $(tobjects))
 # RECIPES FOR COMPILATION.
 # ===========================================================================================================
 
-test:
-	@echo "$(VPATH)"
-	@echo "$(files)"
-	@echo "$(fobjects)"
-
 # All only build the executable.
 all: $(EXECNAME).arm
 
-# Clean the build artifacts.
+# Clean the build artifacts + the previous doxygen build docs
 clean:
 	@rm -f *.o $(EXECNAME)
 	@rm -f *.arm $(EXECNAME)
 	@rm -f *.x86 $(EXECNAME)
 	@rm -f -r $(OUTPUTDIR)
+	@rm -f -r doc 
 
 # Generic .o compiler. Used to compile all files.
 $(OUTPUTDIR)/%.o: %.cpp
@@ -74,5 +70,14 @@ install: $(EXECNAME).arm
 run: $(EXECNAME).arm install
 # This may need a password.
 	ssh pi@raspberrypi.home -f "cd /home/ && ./$(EXECNAME).elf && exit"
+
+# ===========================================================================================================
+# RECIPES FOR DOCUMENTATION
+# ===========================================================================================================
+
+# If Doxygen is installed, it will generate the doc and build the PDF from the TeX source for the whole project.
+doc:
+	@doxygen Doxyfile
+	@cd ./doc/latex && make pdf
 
 
