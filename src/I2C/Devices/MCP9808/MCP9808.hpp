@@ -27,15 +27,26 @@
 // IC CLASS FUNCTIONS
 // ==============================================================================
 
+/**
+ * @brief Base class of the MCP808 Temp sensor. Contain functions to execute actions on it.
+ *
+ */
 class MCP9808
 {
 private:
     uint8_t address;
 
 public:
-    // Constructor
+    /**
+     * @brief Construct a new MCP9808 object
+     *
+     * @param[in] address The address of the IC on the I2C Bus.
+     */
     MCP9808(int address);
 
-    // Destructor
+    /**
+     * @brief Destroy the MCP9808 object
+     *
+     */
     ~MCP9808();
 };

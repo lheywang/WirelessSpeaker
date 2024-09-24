@@ -17,6 +17,7 @@
 
 MCP45HV51::MCP45HV51(int address)
 {
+    this->address = (uint8_t)address;
     return;
 }
 

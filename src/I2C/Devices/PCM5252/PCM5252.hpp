@@ -139,15 +139,26 @@
 // IC CLASS FUNCTIONS
 // ==============================================================================
 
+/**
+ * @brief Base class for this audio 32b DAC.
+ *
+ */
 class PCM5252
 {
 private:
     uint8_t address;
 
 public:
-    // constructors
-    PCM5252();
+    /**
+     * @brief Construct a new PCM5252 object
+     *
+     * @param[in] address (int) : The address of the chip on the I2C Bus.
+     */
+    PCM5252(int address);
 
-    // destructors
+    /**
+     * @brief Destroy the PCM5252 object
+     *
+     */
     ~PCM5252();
 };

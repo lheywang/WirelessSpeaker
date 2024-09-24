@@ -17,6 +17,7 @@
 
 AT42QT1070::AT42QT1070(int address)
 {
+    this->address = (uint8_t)AT42QT1070_ADDRESS;
     return;
 }
 

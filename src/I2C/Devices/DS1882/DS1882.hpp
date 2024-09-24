@@ -37,33 +37,45 @@
 // IC CLASS FUNCTIONS
 // ==============================================================================
 
+/**
+ * @brief DS1882 base class, to exploit the basics functions of this logarithmic audio digital potentiometer.
+ *
+ */
 class DS1882
 {
 private:
     uint8_t address = 0x00;
 
 public:
-    // Constructors
+    /**
+     * @brief Construct a new DS1882 object
+     *
+     * @param[in] address (int) : The address of the device on the I2C bus.
+     */
     DS1882(int address);
 
-    // Destructors
+    /**
+     * @brief Destroy the DS1882 object
+     *
+     */
     ~DS1882();
 
     // Methods
     /**
      * @brief : Change the value of a potentiometer.
      *
-     * @param wiper int : Wiper selection. Use value defined in the header
-     * @param value int : Wiper value.
+     * @param[in] wiper int : Wiper selection. Use value defined in the header
+     * @param[in] value int : Wiper value.
      *
-     * @return int : 0 if correct, -1 if incorrect wiper has been choosed.
+     * @return int : 0 if correct.
+     * @return int : -1 if incorrect wiper is choosen.
      */
     int WriteWiper(int wiper, int value);
 
     /**
      * @brief : read the value of a potentiometer
      *
-     * @param wiper int : Wiper selection. Use value defined in the header
+     * @param[in] wiper int : Wiper selection. Use value defined in the header
      *
      * @return int : value. -1 if incorrect wiper has been choosen.
      */

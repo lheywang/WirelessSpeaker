@@ -15,8 +15,9 @@
 // CONSTRUCTORS
 // =====================
 
-PCM5252::PCM5252()
+PCM5252::PCM5252(int address)
 {
+    this->address = (uint8_t)address;
     return;
 }
 

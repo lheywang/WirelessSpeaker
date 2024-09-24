@@ -6,7 +6,7 @@
 // ==============================================================================
 
 // Header file
-#include "MCP9808.hpp"
+#include "PCA9633.hpp"
 
 // Cpp modules
 #include <cstdint>
@@ -15,7 +15,7 @@
 // CONSTRUCTORS
 // =====================
 
-MCP9808::MCP9808(int address)
+PCA9633::PCA9633(int address)
 {
     this->address = (uint8_t)address;
     return;
@@ -25,7 +25,7 @@ MCP9808::MCP9808(int address)
 // DESTRUCTORS
 // =====================
 
-MCP9808::~MCP9808()
+PCA9633::~PCA9633()
 {
     return;
 }

@@ -8,6 +8,8 @@
 #include "I2C/Devices/PCM5252/PCM5252.hpp"
 #include "I2C/Devices/ADS1015/ADS1015.hpp"
 #include "I2C/Devices/MCP45HV51/MCP45HV51.hpp"
+#include "I2C/Devices/PCA9633/PCA9633.hpp"
+#include "SPI/SPI.hpp"
 
 // entry point
 int main(int argc, char *argv[])

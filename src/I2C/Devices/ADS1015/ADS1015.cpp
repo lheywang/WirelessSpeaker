@@ -17,7 +17,7 @@
 
 ADS1015::ADS1015(int address)
 {
-    this->address = address;
+    this->address = (uint8_t)address;
     return;
 }
 

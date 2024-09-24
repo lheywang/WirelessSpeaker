@@ -1,9 +1,8 @@
 // ==============================================================================
-//                              I2C/Devices/MCP45HV51/MCP45HV51.hpp
+//                              I2C/Devices/MCP9808/MCP9808.hpp
 //                              Wrote by lheywang
 //
-// Define our basic I2C settings on the boards, such as :
-// - Register Addresses
+// Define functions to interface with the IC
 // ==============================================================================
 
 // prevent multiple include
@@ -16,41 +15,47 @@
 // IC REGISTER ADDRESSES
 // ==============================================================================
 
-#define MCP45HV51_DATA_SIZE 8 // 8b register here
+#define PCA9633_DATA_SIZE 8
 
-// Registers
-#define TCON0 0x04
-#define WIPER_0 0x00
-
-#define WRITE_DATA 0x00
-#define INCREMENT 0x01
-#define DECREMENT 0x02
-#define READ_DATA 0x03
+#define MODE1 0x00
+#define MODE2 0x01
+#define PWM0 0x02
+#define PWM1 0x03
+#define PWM2 0x04
+#define PWM3 0x05
+#define PWM4 0x06
+#define GRPPPWM 0x06
+#define GRPFREQ 0x07
+#define LEDOUT 0x08
+#define SUBADDR1 0x09
+#define SUBADDR2 0x0A
+#define SUBADDR3 0x0B
+#define ALLCALLADR 0x0C
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
 // ==============================================================================
 
 /**
- * @brief Base class to exploit the functionnality of this linear potentiometer.
+ * @brief Base class for this LED drivers IC.
  *
  */
-class MCP45HV51
+class PCA9633
 {
 private:
-    uint8_t address = 0x00;
+    uint8_t address;
 
 public:
     /**
-     * @brief Construct a new MCP45HV51 object
+     * @brief Construct a new PCA9633 object
      *
-     * @param[in] address (int) : The address of the IC on the I2C bus.
+     * @param[in] address (int) : The address of the IC on the I2C Bus.
      */
-    MCP45HV51(int address);
+    PCA9633(int address);
 
     /**
-     * @brief Destroy the MCP45HV51 object
+     * @brief Destroy the PCA9633 object
      *
      */
-    ~MCP45HV51();
+    ~PCA9633();
 };

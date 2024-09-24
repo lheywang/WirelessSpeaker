@@ -17,6 +17,7 @@
 
 DS1882::DS1882(int address)
 {
+    this->address = (uint8_t)address;
     return;
 }
 

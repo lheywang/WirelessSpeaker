@@ -18,6 +18,8 @@
 
 #define AT42QT1070_DATA_SIZE 8 // 8b register here
 
+#define AT42QT1070_ADDRESS 0x1B
+
 #define CHIP_ID 0x00
 #define FIRMWARE_VERSION 0x01
 #define DETECTION_STATUS 0x02
@@ -90,15 +92,27 @@
 // IC CLASS FUNCTIONS
 // ==============================================================================
 
+/**
+ * @brief This class contain all of the basic functions to exploit the AT42QT1070 Touch Sensor.
+ *
+ */
 class AT42QT1070
 {
 private:
     uint8_t address;
 
 public:
-    // Constructor
+    /**
+     * @brief Construct a new AT42QT1070 object
+     *
+     * @param[in] address The address of the IC on the I2C bus.
+     *
+     */
     AT42QT1070(int address);
 
-    // Destructor
+    /**
+     * @brief Destroy the AT42QT1070 object
+     *
+     */
     ~AT42QT1070();
 };
