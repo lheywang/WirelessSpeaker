@@ -23,7 +23,7 @@ PCB is provided in a separated folder as it is, and isn't garanteed to be fully 
 If you want only to build to system, run this command :
 > sudo apt(-get) update && upgrade -y 
 
-> sudo apt(-get) install build-essentials libc6-dev make doxygen ssh
+> sudo apt(-get) install build-essentials libc6-dev make doxygen ssh libi2c-dev
 
 > sudo apt(-get) install g++-aarch64-linux-gnu
 

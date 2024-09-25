@@ -10,6 +10,7 @@
 #include "I2C/Devices/MCP45HV51/MCP45HV51.hpp"
 #include "I2C/Devices/PCA9633/PCA9633.hpp"
 #include "SPI/SPI.hpp"
+#include "I2C/I2C_Engine.hpp"
 
 // entry point
 int main(int argc, char *argv[])
