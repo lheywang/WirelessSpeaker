@@ -4,6 +4,6 @@
  *
  */
 
-#include <linux/i2c.h>
+#include <i2c/smbus.h>
 
 // doc : https://www.pololu.com/docs/0J73/15.8
