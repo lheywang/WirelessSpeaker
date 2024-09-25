@@ -4,6 +4,16 @@ EXECNAME = application
 # Output folder name
 OUTPUTDIR = build
 
+# Define RPi IP or Domain name and location of the RSA key for automated deployment.
+RPI = 192.168.1.7 # Customize this field depending on your installation !
+KEY = ~/.ssh/id_rsa # Customize this one with your filepath !
+
+# Reminder : 
+# You can generate a SSH using ssh-keygen, then follow the steps
+# Then, add it to the RPi using ssh-copy-id -i [YOUR kEY].pub USER@DESTINATION
+# Thus, any followwing steps will be authenticated.
+
+
 # This horror list all dir and subdir up to the 5th order qnd append /src. Used for autocompile.
 VPATH = $(sort $(dir $(wildcard src/*/) $(wildcard src/*/*/) $(wildcard src/*/*/*/) $(wildcard src/*/*/*/*/) $(wildcard src/*/*/*/*/*/))) src/
 
@@ -38,7 +48,6 @@ all: $(EXECNAME).arm
 clean:
 	@rm -f *.o $(EXECNAME)
 	@rm -f *.arm $(EXECNAME)
-	@rm -f *.x86 $(EXECNAME)
 	@rm -f -r $(OUTPUTDIR)
 	@rm -f -r doc 
 
@@ -63,13 +72,14 @@ $(EXECNAME).arm: $(fobjects)
 
 install: $(EXECNAME).arm
 # This may need a password.
-	scp $(EXECNAME).arm pi@raspberrypi.home:/home/$(EXECNAME).elf 
-	ssh pi@raspberrypi.home -f "chmod +x /home/$(EXECNAME).elf"
+	ssh -i $(KEY) pi@$(RPI) -f "touch /home/pi/$(EXECNAME).elf"
+	scp -i $(KEY) $(EXECNAME).arm pi@$(RPI):/home/pi/$(EXECNAME).elf 
+	ssh -i $(KEY) pi@$(RPI) -f "chmod +x /home/pi/$(EXECNAME).elf"
 
 ## SSH link to run the file from the host system.
 run: $(EXECNAME).arm install
 # This may need a password.
-	ssh pi@raspberrypi.home -f "cd /home/ && ./$(EXECNAME).elf && exit"
+	ssh -i $(KEY) pi@$(RPI) -f "cd /home/pi/ && ./$(EXECNAME).elf"
 
 # ===========================================================================================================
 # RECIPES FOR DOCUMENTATION

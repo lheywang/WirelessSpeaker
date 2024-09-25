@@ -8,3 +8,85 @@
  * @copyright Copyright (c) 2024
  *
  */
+
+#pragma once
+
+// ==============================================================================
+// DATA STRUCTURES
+// ==============================================================================
+
+/**
+ * @brief
+ *
+ */
+struct I2C_Bus
+{
+    int I2C_file;
+    char I2C_filename[30];
+    long I2C_bus;
+    bool Is_Alive;
+};
+
+// ==============================================================================
+// PROTOTYPES
+// ==============================================================================
+
+/**
+ * @brief Return a struct that handle the I2C infos for you.
+ *        It also open the handle to the file, thus be sure to handle the closing correctly !
+ *
+ * @return *I2C_Bus
+ */
+I2C_Bus *I2C_GetInfos();
+
+/**
+ * @brief Close the I2C Bus. Any operation tempted by after will be failed.
+ *
+ * @param[inout] I2C A pointer on a struct that define bus informations.
+ *
+ * @return 0 : File closed
+ * @return -1: Unable to close the file.
+ */
+int I2C_Close(I2C_Bus *I2C);
+
+/**
+ * @brief This function perform a write of one or more bytes (depending on the lengh of the payload) to the I2C bus. For each write, the Register value is going to be incremented.
+ *
+ * @param[inout] I2C A pointer on a struct that define the settings for the currently used I2C bus.
+ * @param[in] Address The address of the IC on the bus.
+ * @param[in] Register The register where the data shall be wrote.
+ * @param[in] Payload The data to be wrote.
+ *
+ * @return 0 : Everything went fine.
+ * @return -1 : Unable to find the Address.
+ * @return -2 : Unable to find the Register.
+ * @return -3 : Incorrect Payload.
+ * @return -4 : Payload too long.
+ */
+int I2C_write(I2C_Bus *I2C, int Address, int Register, int *Payload);
+
+/**
+ * @brief This function perform the read of N (Size) bytes on the IC.
+ *
+ * @param[inout] I2C A pointer on a struct that define the settings for the currently used I2C bus.
+ * @param[in] Address The address of the IC on the bus.
+ * @param[in] Register The register where the data shall be wrote.
+ * @param[in] Payload The data to be rode.
+ * @param[in] Size The number of bytes to be rode.
+ *
+ * @return 0 : Everything went fine.
+ * @return -1 : Unable to find the Address.
+ * @return -2 : Unable to find the Register.
+ * @return -3 : Number of bytes to read too big.
+ */
+int I2C_read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size);
+
+/**
+ * @brief This function, called automatically before any operation configure the address on the IOCTL file.
+ *
+ * @param[inout] I2C A pointer on a struct that define the settings for the currently used I2C bus.
+ * @param[in] Address The address of the IC on the bus.
+ * @return 0 : Everything went fine
+ * @return -1 : Cannot configure address
+ */
+int I2C_ConfigureAddress(I2C_Bus *I2C, int Address);

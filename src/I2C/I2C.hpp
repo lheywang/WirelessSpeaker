@@ -16,6 +16,8 @@
 // IC ADDRESSES
 // ==============================================================================
 
+#define I2C_BUS_NUMBER 1
+
 // Define temperature sensor adresses
 // MCP9808
 #define TEMPSENSOR_0 0x18
