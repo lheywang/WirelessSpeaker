@@ -1,6 +1,11 @@
 /**
  * @file DS1882.cpp
  * @author l.heywang
+ * @brief Source of the DS1882 functions
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
 

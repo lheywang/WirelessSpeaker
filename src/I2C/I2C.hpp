@@ -1,7 +1,11 @@
 /**
  * @file I2C.hpp
- * @brief Define addresses of the differents ICs.
  * @author l.heywang
+ * @brief Define Basic I2C parameters on the project.
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
 

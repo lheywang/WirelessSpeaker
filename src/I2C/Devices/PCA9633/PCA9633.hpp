@@ -1,10 +1,13 @@
 /**
- * @file PCA9633.cpp
- * @brief Define basic functions for the PCA9633 Leds Drivers.
+ * @file PCA9633.hpp
  * @author l.heywang
+ * @brief Define a class and basic function for the PCA9633 leds drivers.
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
-
 // prevent multiple include
 #pragma once
 

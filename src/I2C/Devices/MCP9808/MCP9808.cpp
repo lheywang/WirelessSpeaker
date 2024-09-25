@@ -1,6 +1,11 @@
 /**
  * @file MCP9808.cpp
  * @author l.heywang
+ * @brief Source of the functions for the MCP9808 Temperature Sensor.
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
 

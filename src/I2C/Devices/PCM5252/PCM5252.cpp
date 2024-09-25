@@ -1,6 +1,11 @@
 /**
  * @file PCM5252.cpp
  * @author l.heywang
+ * @brief Source of basic functions for the PCM5252 Audio DAC.
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
 

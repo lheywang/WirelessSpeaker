@@ -1,7 +1,11 @@
 /**
- * @file DS1882.cpp
- * @brief Define basic functions for the DS1882 Logarithmic Digital Potentiometer.
+ * @file DS1882.hpp
  * @author l.heywang
+ * @brief Define a class and functions to exploit the DS1882 Audio logarithmic potentiometer
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
 
@@ -21,10 +25,6 @@
 #define WIPER_0 0x00
 #define WIPER_1 0x40
 #define CONFIG 0x80
-
-// define attenuation values
-#define ATTEN_EXTENDED [ [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63 ], [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 90 ] ]
-#define ATTEN_DEFAULT   [[0, 1, 2? 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 39, 42, 45, 48, 51, 54, 57, 60, 90]]
 
 // config register defined values
 #define ZERO_CROSSING 0x01

@@ -1,9 +1,13 @@
 /**
  * @file MCP45HV51.cpp
  * @author l.heywang
+ * @brief Source of the functions of the MCP45HV51.
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
-
 // Header file
 #include "MCP45HV51.hpp"
 

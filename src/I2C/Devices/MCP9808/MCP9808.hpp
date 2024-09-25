@@ -1,10 +1,13 @@
 /**
- * @file MCP9808.cpp
- * @brief Define basic functions for the MCP9808 Digital Thermometer.
+ * @file MCP9808.hpp
  * @author l.heywang
+ * @brief Define a class and functions to exploit the MCP9808 Temperature Sensor.
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
-
 // prevent multiple include
 #pragma once
 

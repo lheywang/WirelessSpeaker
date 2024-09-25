@@ -1,10 +1,13 @@
 /**
- * @file MCP45HV51.cpp
- * @brief Define basic functions for the MCP45HV51 Linear Digital Potentiometer.
+ * @file MCP45HV51.hpp
  * @author l.heywang
+ * @brief Define a class and functions for the MCP45HV51 linear digital potentiometer.
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
-
 // prevent multiple include
 #pragma once
 

@@ -1,9 +1,13 @@
 /**
- * @file PCM5252.cpp
- * @brief Define basic functions for the PCM5252 Audio DAC IC.
+ * @file PCM5252.hpp
  * @author l.heywang
+ * @brief Define a class and functions to exploit the PCM5252 audio DAC.
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
+ *
  */
-
 // prevent multiple include
 #pragma once
 

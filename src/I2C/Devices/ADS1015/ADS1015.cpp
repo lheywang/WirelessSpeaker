@@ -1,9 +1,13 @@
 /**
  * @file ADS1015.cpp
  * @author l.heywang
+ * @brief Source for the ADS1015 ADC.
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
-
 // Header file
 #include "ADS1015.hpp"
 

@@ -1,7 +1,11 @@
 /**
  * @file ADS1015.hpp
- * @brief Define basic functions for the ADS1015 ADC
  * @author l.heywang
+ * @brief Define a class and functions to exploit the ADS1015 ADC.
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
 

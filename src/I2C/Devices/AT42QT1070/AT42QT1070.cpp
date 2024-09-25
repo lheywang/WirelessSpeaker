@@ -1,6 +1,11 @@
 /**
  * @file AT42QT1070.cpp
  * @author l.heywang
+ * @brief Source for the AT42QT1070 functions
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
 

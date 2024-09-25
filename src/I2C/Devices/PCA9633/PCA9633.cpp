@@ -1,9 +1,13 @@
 /**
  * @file PCA9633.cpp
  * @author l.heywang
+ * @brief Source of the functions for the PCA9633 Leds Drivers
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
-
 // Header file
 #include "PCA9633.hpp"
 

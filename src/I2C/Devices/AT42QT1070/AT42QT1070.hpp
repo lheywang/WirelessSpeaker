@@ -1,7 +1,11 @@
 /**
- * @file AT42QT1070.cpp
- * @brief Define basic functions for the AT42QT1070 Capacitive Touch Sensor IC.
+ * @file AT42QT1070.hpp
  * @author l.heywang
+ * @brief Define a class and functions for the AT42QT1070 Capacitive Touch Sensor.
+ * @version 0.1
+ * @date 2024-09-25
+ *
+ * @copyright Copyright (c) 2024
  *
  */
 
