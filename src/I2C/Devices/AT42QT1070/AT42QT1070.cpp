@@ -1,9 +1,8 @@
-// ==============================================================================
-//                              I2C/Devices/AT42QT1070/AT42QT1070.cpp
-//                              Wrote by lheywang
-//
-// Define functions to interface with the IC
-// ==============================================================================
+/**
+ * @file AT42QT1070.cpp
+ * @author l.heywang
+ *
+ */
 
 // Header file
 #include "AT42QT1070.hpp"

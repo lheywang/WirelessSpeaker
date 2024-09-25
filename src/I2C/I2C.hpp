@@ -1,22 +1,12 @@
-// ==============================================================================
-//                              I2C/I2C.hpp
-//                              Wrote by lheywang
-//
-// Define our basic I2C settings on the boards, such as :
-// - Addresses
-// - Register adresses
-// - Slave numbers
-// ==============================================================================
+/**
+ * @file I2C.hpp
+ * @brief Define addresses of the differents ICs.
+ * @author l.heywang
+ *
+ */
 
 // Only included one time
 #pragma once
-
-// ==============================================================================
-// I2C PINS
-// ==============================================================================
-
-#define SDA 2
-#define SCL 3
 
 // ==============================================================================
 // IC ADDRESSES
@@ -68,6 +58,12 @@
 
 // Leds drivers
 // PCA9633
-#define LED_DRIVER_1 0xC2
-#define LED_DRIVER_2 0xC3
+#define LED_DRIVER_0 0xC2
+#define LED_DRIVER_1 0xC3
+#define LED_DRIVER_2 0xC4
+#define LED_DRIVER_3 0xC5
+#define LED_DRIVER_4 0xC6
+#define LED_DRIVER_5 0xC7
+#define LED_DRIVER_6 0xC8
+#define LED_DRIVER_7 0xC9
 // Theses chips can be addressed by any addresses, since all 7 bits are available. We won't expose all of thems

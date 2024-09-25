@@ -1,10 +1,9 @@
-// ==============================================================================
-//                              SPI/SPI.hpp
-//                              Wrote by lheywang
-//
-// Define our basic I2C settings on the boards, such as :
-// - Pinout
-// ==============================================================================
+/**
+ * @file SPI.hpp
+ * @brief Define the SPI Class, which is only used to store paramters onto the EEPROM.
+ * @author l.heywang
+ *
+ */
 
 // Only included one time
 #pragma once

@@ -1,7 +1,6 @@
-// ==============================================================================
-//                              I2C/Engine/I2C_Engine.hpp
-//                              Wrote by lheywang
-//
-// Define functions to interface with the I2C bus.
-// Used by the submodules.
-// ==============================================================================
+/**
+ * @file I2C_Engine.hpp
+ * @brief Define basic IO functions on the I2C bus. Based on the Linux Kernel Driver.
+ * @author l.heywang
+ *
+ */

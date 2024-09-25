@@ -1,10 +1,9 @@
-// ==============================================================================
-//                              I2C/Devices/ADS1015/ADS1015.hpp
-//                              Wrote by lheywang
-//
-// Define our basic I2C settings on the boards, such as :
-// - Register Addresses
-// ==============================================================================
+/**
+ * @file ADS1015.hpp
+ * @brief Define basic functions for the ADS1015 ADC
+ * @author l.heywang
+ *
+ */
 
 // prevent multiple include
 #pragma once

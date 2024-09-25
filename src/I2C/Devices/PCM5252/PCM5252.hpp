@@ -1,10 +1,8 @@
-// ==============================================================================
-//                              I2C/Devices/PCM5252/PCM5252.hpp
-//                              Wrote by lheywang
-//
-// Define our basic I2C settings on the boards, such as :
-// - Register Addresses
-// ==============================================================================
+/**
+ * @file PCM5252.cpp
+ * @brief Define basic functions for the PCM5252 Audio DAC IC.
+ * @author l.heywang
+ */
 
 // prevent multiple include
 #pragma once

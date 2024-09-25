@@ -20,8 +20,10 @@ PCB is provided in a separated folder as it is, and isn't garanteed to be fully 
 
 ## How to install ?
 ## Tools
-If you want only to build to system, run this command : 
+If you want only to build to system, run this command :
+> sudo apt(-get) update && upgrade -y 
 > sudo apt(-get) install g++-aarch64-linux-gnu
+> sudo apt(-get) install texlive-full graphwiz
 
 ***WARNING** Sometimes, install may be broken. Be sure that everything as suceeded to be zorking as intended.*
 
@@ -34,6 +36,7 @@ The makefile define differents steps where you can interract :
 - **all** : Compile only the files.
 - **install** : Compile if not already done and try to copy the output on the root of the raspberrypi.home home folder (pi user)
 - **run** : Install and then attempt an ssh log to launch the code.
+- **doc** : Create the HTML and PDF documentations for the project using Doxygen
 
 > **NOTES**
 > You can speed up the build process by using make [recipe] -j [core number]
@@ -47,3 +50,7 @@ The makefile define differents steps where you can interract :
 > **NOTES**
 > For using the ssh / scp functions, a properly configured RasbperryPi need to be present.
 > Please refer to their own documentation for theses functionnalities.
+
+> **NOTES**
+> For using Doxygen, a proper LaTeX suite shall be installed and configured.
+> Required modules : TexLive Full + graphwiz.

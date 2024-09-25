@@ -1,9 +1,8 @@
-// ==============================================================================
-//                              I2C/Devices/MCP9808/MCP9808.cpp
-//                              Wrote by lheywang
-//
-// Define functions to interface with the IC
-// ==============================================================================
+/**
+ * @file ADS1015.cpp
+ * @author l.heywang
+ *
+ */
 
 // Header file
 #include "ADS1015.hpp"

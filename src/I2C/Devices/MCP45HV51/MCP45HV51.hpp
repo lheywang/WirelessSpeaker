@@ -1,10 +1,9 @@
-// ==============================================================================
-//                              I2C/Devices/MCP45HV51/MCP45HV51.hpp
-//                              Wrote by lheywang
-//
-// Define our basic I2C settings on the boards, such as :
-// - Register Addresses
-// ==============================================================================
+/**
+ * @file MCP45HV51.cpp
+ * @brief Define basic functions for the MCP45HV51 Linear Digital Potentiometer.
+ * @author l.heywang
+ *
+ */
 
 // prevent multiple include
 #pragma once

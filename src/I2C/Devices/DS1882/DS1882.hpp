@@ -1,10 +1,9 @@
-// ==============================================================================
-//                              I2C/Devices/DS1882/DS1882.hpp
-//                              Wrote by lheywang
-//
-// Define our basic I2C settings on the boards, such as :
-// - Register Addresses
-// ==============================================================================
+/**
+ * @file DS1882.cpp
+ * @brief Define basic functions for the DS1882 Logarithmic Digital Potentiometer.
+ * @author l.heywang
+ *
+ */
 
 // prevent multiple include
 #pragma once

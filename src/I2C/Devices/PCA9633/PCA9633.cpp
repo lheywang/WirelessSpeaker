@@ -1,9 +1,8 @@
-// ==============================================================================
-//                              I2C/Devices/MCP9808/MCP9808.cpp
-//                              Wrote by lheywang
-//
-// Define functions to interface with the IC
-// ==============================================================================
+/**
+ * @file PCA9633.cpp
+ * @author l.heywang
+ *
+ */
 
 // Header file
 #include "PCA9633.hpp"

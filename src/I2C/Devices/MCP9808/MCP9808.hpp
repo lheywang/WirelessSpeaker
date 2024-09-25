@@ -1,9 +1,9 @@
-// ==============================================================================
-//                              I2C/Devices/MCP9808/MCP9808.hpp
-//                              Wrote by lheywang
-//
-// Define functions to interface with the IC
-// ==============================================================================
+/**
+ * @file MCP9808.cpp
+ * @brief Define basic functions for the MCP9808 Digital Thermometer.
+ * @author l.heywang
+ *
+ */
 
 // prevent multiple include
 #pragma once

@@ -1,9 +1,8 @@
-// ==============================================================================
-//                              I2C/Devices/PCM5252/PCM5252.cpp
-//                              Wrote by lheywang
-//
-// Define functions to interface with the IC
-// ==============================================================================
+/**
+ * @file PCM5252.cpp
+ * @author l.heywang
+ *
+ */
 
 // Header file
 #include "PCM5252.hpp"

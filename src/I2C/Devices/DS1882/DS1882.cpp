@@ -1,9 +1,8 @@
-// ==============================================================================
-//                              I2C/Devices/MCP9808/MCP9808.cpp
-//                              Wrote by lheywang
-//
-// Define functions to interface with the IC
-// ==============================================================================
+/**
+ * @file DS1882.cpp
+ * @author l.heywang
+ *
+ */
 
 // Header file
 #include "DS1882.hpp"

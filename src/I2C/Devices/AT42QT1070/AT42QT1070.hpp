@@ -1,10 +1,9 @@
-// ==============================================================================
-//                              I2C/Devices/AT42QT1070/AT42QT1070.hpp
-//                              Wrote by lheywang
-//
-// Define our basic I2C settings on the boards, such as :
-// - Register Addresses
-// ==============================================================================
+/**
+ * @file AT42QT1070.cpp
+ * @brief Define basic functions for the AT42QT1070 Capacitive Touch Sensor IC.
+ * @author l.heywang
+ *
+ */
 
 // prevent multiple include
 #pragma once

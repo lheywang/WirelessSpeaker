@@ -1,9 +1,8 @@
-// ==============================================================================
-//                              I2C/Engine/I2C_Engine.cpp
-//                              Wrote by lheywang
-//
-// Define our abstraction layer with the linux/i2c.h file
-// ==============================================================================
+/**
+ * @file I2C_Engine.hpp
+ * @author l.heywang
+ *
+ */
 
 #include <linux/i2c.h>
 
