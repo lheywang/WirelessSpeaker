@@ -17,50 +17,43 @@
  *        Values that are immutable arent stored here.
  *        All of theses settings are saved onto an SPI EEPROM.
  *
- * @var Config::Speaker_Name
- *        The Name of the Speaker. Used as simple identifier.
- * @var Config::Board_Revision
- *        Field that cannot be edited. Contain the board revision indication.
- * @var Config::Board_Variant
- *        Field that cannot be edited. Contain the board minor variants (BOM).
- * @struct Config::Audio
- *         Structure that contain all of the Audio settings.
- * @struct Config::Capacitive
- *         Structure that contain all of the Capacitive Sensor Settings.
- * @struct Config::LEDS
- *         Structure that contain all of the LEDS setings.
- * @struct Config::Temperature
- *         Structure that contain all of the Temperature monitoring settings.
  */
 struct Config
 {
-    std::string Speaker_Name;
-    std::string Board_Revision;
-    std::string Board_Variant;
+    std::string Speaker_Name;   /*!< The Name of the Speaker. Used as simple identifier.*/
+    std::string Board_Revision; /*!< Field that cannot be edited. Contain the board revision indication.*/
+    std::string Board_Variant;  /*!< Field that cannot be edited. Contain the board minor variants (BOM).*/
 
     /**
-     * @brief Audio Structure. Store parameters that are related to the audio on the Speaker.
+     * @brief Structure that contain all of the Audio settings.
      *
      * @struct Config::Audio::Trebbles
      *         Structure that contain all of the settings relative to the Trebbles.
+     *         Configure the cutdown frequency for the low cutoff frequency played on theses speakers.
+     *         Configure the gain for this frequency range.
+     *         Thus, both can be used as a mixer.
      * @struct Config::Audio::Medium
      *         Structure that contain all of the settings relative to the Mediums.
+     *         Configure the cutdown frequency for the low and high cutoff frequencies played on theses speakers.
+     *         Configure the gain for this frequency range.
+     *         Thus, both can be used as a mixer.
      * @struct Config::Audio::Bass
      *         Structure that contain all of the settings relative to the Bass.
+     *         Configure the cutdown frequency for the high cutoff frequency played on theses speakers.
+     *         Configure the gain for this frequency range.
+     *         Thus, both can be used as a mixer.
      * @struct Config::Audio::DAC
      *         Structure that contain all of the settings relative to the Digital to Analog Conversion.
+     *         Configure paramters such as the frequency base played (44.1 kHz or 48 kHz).
+     *         Configure user selectable settings such as automute or independant volume control per channel.
      * @struct Config::Audio::Global
      *         Structure that contain all of the settings relative to the Global Analog Audio domain.
+     *         Store parameters that are global to the audio chain, such as the R-L balance or Analog Volume 2
      *
      */
     struct Audio
     {
         /**
-         * @brief Trebbles Structure. Store parameters that are related to the trebbles only.
-         *        Configure the cutdown frequency for the low cutoff frequency played on theses speakers.
-         *        Configure the gain for this frequency range.
-         *        Thus, both can be used as a mixer.
-         *
          * @var Config::Audio::Trebbles::HP_Value
          *      Value of the potentiometer that is used to set the high pass point for the trebbles speaker.
          * @var Config::Audio::Trebbles::Gain
@@ -74,11 +67,6 @@ struct Config
         } Trebbles;
 
         /**
-         * @brief Medium Structure. Store parameters that are related to the mediums only.
-         *        Configure the cutdown frequency for the low and high cutoff frequencies played on theses speakers.
-         *        Configure the gain for this frequency range.
-         *        Thus, both can be used as a mixer.
-         *
          * @var Config::Audio::Medium::LP_Value
          *      Value of the potentiometer that is used to set the low pass point for the mediums speaker.
          * @var Config::Audio::Medium::HP_Value
@@ -95,11 +83,6 @@ struct Config
         } Medium;
 
         /**
-         * @brief Bass Structure. Store parameters that are related to the bass only.
-         *        Configure the cutdown frequency for the high cutoff frequency played on theses speakers.
-         *        Configure the gain for this frequency range.
-         *        Thus, both can be used as a mixer.
-         *
          * @var Config::Audio::Bass::LP_Value
          *      Value of the potentiometer that is used to set the low pass point for the bass speaker.
          * @var Config::Audio::Bass::Gain
@@ -113,8 +96,6 @@ struct Config
         } Bass;
 
         /**
-         * @brief Global Structure. Store parameters that are global to the audio chain, such as the R-L balance or Analog Volume 2
-         *
          * @var Config::Audio::Global::Volume
          *      Analog gain for the volume. Used as master volume.
          *
@@ -125,10 +106,6 @@ struct Config
         } Global;
 
         /**
-         * @brief DAC Structure. Store parameters that are related to the DAC IC.
-         *        Configure paramters such as the frequency base played (44.1 kHz or 48 kHz).
-         *        Configure user selectable settings such as automute or independant volume control per channel.
-         *
          * @var Config::Audio::DAC::Audio_44k
          *      Boolean that is set to True of the settings for the PLL need to be set to 44.1kHz playback. Will be overhiden by the 48k setting.
          * @var Config::Audio::DAC::Audio_48k
@@ -156,7 +133,7 @@ struct Config
     } Audio;
 
     /**
-     * @brief Store the LEDS settings for the speaker.
+     * @brief Structure that contain all of the LEDS setings.
      *        Store the brightness values.
      *        Store the group configuration values.
      *
@@ -170,7 +147,7 @@ struct Config
     } LEDS;
 
     /**
-     * @brief Store the capacitive touch sensor, such as the sensivity or the threshold values.
+     *  @brief Structure that contain all of the Capacitive Sensor Settings such as the sensivity or the threshold values.
      *
      * @var Config::Capacitive::Threshold
      *      Contain the value of the peak that need to be measured to be considered as a touch.
@@ -186,7 +163,8 @@ struct Config
     } Capacitive;
 
     /**
-     * @brief Store the temperature settings, and more precisely the values of the Interrupts at which an action shall be triggered (overheat ?)
+     * @brief Structure that contain all of the Temperature monitoring settings,
+     *        and more precisely the values of the Interrupts at which an action shall be triggered (overheat ?)
      *
      * @var Config::Temperature::Maximal_Temperature
      *      Maximal Temperature that is accepted.
