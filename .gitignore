@@ -36,3 +36,6 @@
 
 # VSCODE artifacts
 .vscode/
+
+# Doxygen output
+doc/
