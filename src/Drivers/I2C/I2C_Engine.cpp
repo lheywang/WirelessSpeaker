@@ -41,7 +41,7 @@ I2C_Bus *I2C_GetInfos()
     I2C->I2C_bus = I2C_BUS_NUMBER;
 
     // Generate the file
-    snprintf(I2C->I2C_filename, sizeof(I2C->I2C_filename), "/dev/i2c/%ld", I2C->I2C_bus);
+    snprintf(I2C->I2C_filename, sizeof(I2C->I2C_filename), "/dev/i2c-%ld", I2C->I2C_bus);
     I2C->I2C_filename[sizeof(I2C->I2C_filename) - 1] = '\0';
 
     // Open the file
