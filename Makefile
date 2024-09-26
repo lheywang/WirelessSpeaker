@@ -15,7 +15,7 @@ KEY = ~/.ssh/id_rsa # Customize this one with your filepath !
 
 
 # This horror list all dir and subdir up to the 5th order qnd append /src. Used for autocompile.
-VPATH = $(sort $(dir $(wildcard src/*/) $(wildcard src/*/*/) $(wildcard src/*/*/*/) $(wildcard src/*/*/*/*/) $(wildcard src/*/*/*/*/*/))) src/
+VPATH = $(sort $(dir $(wildcard src/*/) $(wildcard src/*/*/) $(wildcard src/*/*/*/) $(wildcard src/*/*/*/*/) $(wildcard src/*/*/*/*/*/) $(wildcard src/*/*/*/*/*/*/) $(wildcard src/*/*/*/*/*/*/))) src/
 
 
 # define cross compiler parameters and flags

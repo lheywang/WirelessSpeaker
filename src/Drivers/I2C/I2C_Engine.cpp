@@ -14,9 +14,7 @@
 // ==============================================================================
 #include "I2C_Engine.hpp"
 #include "I2C.hpp"
-
 #include <linux/i2c-dev.h>
-#include <i2c/smbus.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,6 +22,11 @@
 #include <unistd.h>
 #include <errno.h>
 #include <cstdint>
+
+// Custom builded smbus.h file, from the original repo : https://github.com/Sensirion/i2c-tools/tree/master
+// Only includes path were modified.
+// File extension was changed to C++ to make the compilation easier.
+#include "includes/smbus.h"
 
 // ==============================================================================
 // FUNCTIONS

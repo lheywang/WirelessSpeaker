@@ -1,16 +1,16 @@
 // Main file for the Speaker project.
 // Includes
 #include <iostream>
-#include "I2C/I2C.hpp"
-#include "I2C/Devices/DS1882/DS1882.hpp"
-#include "I2C/Devices/AT42QT1070/AT42QT1070.hpp"
-#include "I2C/Devices/MCP9808/MCP9808.hpp"
-#include "I2C/Devices/PCM5252/PCM5252.hpp"
-#include "I2C/Devices/ADS1015/ADS1015.hpp"
-#include "I2C/Devices/MCP45HV51/MCP45HV51.hpp"
-#include "I2C/Devices/PCA9633/PCA9633.hpp"
-#include "SPI/SPI.hpp"
-#include "I2C/I2C_Engine.hpp"
+#include "Drivers/I2C/I2C.hpp"
+#include "Drivers/Devices/DS1882/DS1882.hpp"
+#include "Drivers/Devices/AT42QT1070/AT42QT1070.hpp"
+#include "Drivers/Devices/MCP9808/MCP9808.hpp"
+#include "Drivers/Devices/PCM5252/PCM5252.hpp"
+#include "Drivers/Devices/ADS1015/ADS1015.hpp"
+#include "Drivers/Devices/MCP45HV51/MCP45HV51.hpp"
+#include "Drivers/Devices/PCA9633/PCA9633.hpp"
+#include "Drivers/SPI/SPI.hpp"
+#include "Drivers/I2C/I2C_Engine.hpp"
 
 // entry point
 int main(int argc, char *argv[])
