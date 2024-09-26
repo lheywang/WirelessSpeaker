@@ -120,7 +120,6 @@ int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, in
         // Match the wanted datasize.
         if (DataSize == 8)
         {
-            i2c_smbus_write_byte(I2C->I2C_file, i + Register);
             res += i2c_smbus_read_byte(I2C->I2C_file);
         }
         else if (DataSize == 16)
