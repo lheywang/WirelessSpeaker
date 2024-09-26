@@ -20,5 +20,5 @@
 #define AMP2_FAULT 27
 #define AMP3_FAULT 22
 
-// Pozer subsystem interrupt pin.
+// Power subsystem interrupt pin.
 #define POWER_INT 16

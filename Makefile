@@ -5,8 +5,10 @@ EXECNAME = application
 OUTPUTDIR = build
 
 # Define RPi IP or Domain name and location of the RSA key for automated deployment.
-RPI = 192.168.1.7 # Customize this field depending on your installation !
-KEY = ~/.ssh/id_rsa # Customize this one with your filepath !
+# Customize this field depending on your installation !
+RPI = 192.168.1.7
+# Customize this one with your filepath !
+KEY = ~/.ssh/id_rsa
 
 # Reminder : 
 # You can generate a SSH using ssh-keygen, then follow the steps

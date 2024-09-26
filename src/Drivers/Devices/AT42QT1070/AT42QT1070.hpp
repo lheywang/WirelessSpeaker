@@ -14,6 +14,7 @@
 
 // type include
 #include <cstdint>
+#include "../../I2C/I2C.hpp"
 
 // ==============================================================================
 // IC REGISTER ADDRESSES

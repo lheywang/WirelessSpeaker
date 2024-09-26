@@ -65,51 +65,77 @@ int I2C_Close(I2C_Bus *I2C)
 }
 
 // ------------------------------------------------------------------------------
-int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload)
+int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, int DataSize)
 {
-    // Configure the I2C Slave address
+    // basics checks
+    if (I2C_CheckAddress(Address) != 0)
+        return -1;
+    if (I2C_CheckRegister(Register) != 0)
+        return -2;
+
+    int res = 0;
+
+    // address conf to the driver
     I2C_ConfigureAddress(I2C, Address);
 
-    if (sizeof(Payload[0]) == 1)
+    // IO operation
+    if (DataSize == 8)
     {
-        int res = i2c_smbus_write_block_data(I2C->I2C_file, Register, sizeof(Payload), (uint8_t *)Payload);
+        res = i2c_smbus_write_block_data(I2C->I2C_file, Register, Size, (uint8_t *)Payload);
     }
-    else if (sizeof(Payload[0]) == 2)
+    else if (DataSize == 16)
     {
-        for (int i = 0; i < (sizeof(Payload) / sizeof(Payload[0])) + 1; i++)
+        for (int i = 0; i < Size + 1; i++)
         {
-            int res = i2c_smbus_write_word_data(I2C->I2C_file, Register, Payload[i]);
+            res += i2c_smbus_write_word_data(I2C->I2C_file, Register, Payload[i]);
         }
     }
     else
+        return -3;
+
+    if (res != 0)
         return -4;
+    return 0;
 }
 
 // ------------------------------------------------------------------------------
 int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, int DataSize)
 {
-    // Configure the I2C Slave address
+    // basics checks
+    if (I2C_CheckAddress(Address) != 0)
+        return -1;
+    if (I2C_CheckRegister(Register) != 0)
+        return -2;
+    if (Size > 0xFF)
+        return -3;
+
+    int res = 0;
+
+    // address conf to the driver// Configure the I2C Slave address
     I2C_ConfigureAddress(I2C, Address);
 
     // Iterate over the wanted number of data
-    for (int i = 0; i < (sizeof(Payload) / sizeof(Payload[0])) + 1; i++)
+    for (int i = 0; i < Size + 1; i++)
     {
         // Match the wanted datasize.
         if (DataSize == 8)
         {
-            i2c_smbus_write_byte(I2C->I2C_file, Register);
-            int res = i2c_smbus_read_byte(I2C->I2C_file);
+            i2c_smbus_write_byte(I2C->I2C_file, i + Register);
+            res += i2c_smbus_read_byte(I2C->I2C_file);
         }
         else if (DataSize == 16)
         {
-            int res = i2c_smbus_read_word_data(I2C->I2C_file, Register);
+            res += i2c_smbus_read_word_data(I2C->I2C_file, i + Register);
         }
         else
             return -4;
 
-        // Increment to point to the next address
-        Register++;
+        // Store the result.
+        Payload[i] = res;
     }
+
+    if (res != 0)
+        return -5;
     return 0;
 }
 
@@ -121,6 +147,20 @@ int I2C_ConfigureAddress(I2C_Bus *I2C, int Address)
         fprintf(stderr, "Could not set address");
         return -errno;
     }
+    return 0;
+}
+// ------------------------------------------------------------------------------
+int I2C_CheckAddress(int Address)
+{
+    if (Address < 0x08 or Address > 0x77)
+        return -1;
+    return 0;
+}
 
+// ------------------------------------------------------------------------------
+int I2C_CheckRegister(int Register)
+{
+    if (Register > 0xFF)
+        return -1;
     return 0;
 }
