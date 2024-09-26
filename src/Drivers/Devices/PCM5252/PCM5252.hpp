@@ -149,14 +149,16 @@ class PCM5252
 {
 private:
     uint8_t address;
+    I2C_Bus I2C;
 
 public:
     /**
      * @brief Construct a new PCM5252 object
      *
-     * @param[in] address (int) : The address of the chip on the I2C Bus.
+     * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
+     * @param[in] address The address of the IC on the I2C bus.
      */
-    PCM5252(int address);
+    PCM5252(I2C_Bus *I2C, int address);
 
     /**
      * @brief Destroy the PCM5252 object

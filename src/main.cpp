@@ -17,13 +17,8 @@ int main()
     std::cout << "Hello World !" << std::endl;
 
     I2C_Bus *I2C = I2C_GetInfos();
-    std::cout << I2C->I2C_bus << std::endl;
-    std::cout << I2C->I2C_filename << std::endl;
-    std::cout << I2C->I2C_file << std::endl;
 
-    int buf = 0;
-    I2C_Read(I2C, 0x55, 0x22, &buf, 1, 16);
-    std::cout << buf << std::endl;
+    DS1882 POTI0 = DS1882(I2C, 0x55);
 
     return 0;
 }

@@ -18,9 +18,10 @@
 // CONSTRUCTORS
 // =====================
 
-ADS1015::ADS1015(int address)
+ADS1015::ADS1015(I2C_Bus *I2C, int address)
 {
     this->address = (uint8_t)address;
+    this->I2C = *I2C;
     return;
 }
 

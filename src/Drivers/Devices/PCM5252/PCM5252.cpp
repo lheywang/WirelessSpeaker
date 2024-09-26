@@ -14,14 +14,16 @@
 
 // Cpp modules
 #include <cstdint>
+#include "../../I2C/I2C.hpp"
 
 // =====================
 // CONSTRUCTORS
 // =====================
 
-PCM5252::PCM5252(int address)
+PCM5252::PCM5252(I2C_Bus *I2C, int address)
 {
     this->address = (uint8_t)address;
+    this->I2C = *I2C;
     return;
 }
 

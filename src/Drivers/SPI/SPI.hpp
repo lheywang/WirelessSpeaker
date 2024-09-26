@@ -3,6 +3,8 @@
  * @brief Define the SPI Class, which is only used to store paramters onto the EEPROM.
  * @author l.heywang
  *
+ * @todo To be completed within new devices values !
+ *
  */
 
 // Only included one time

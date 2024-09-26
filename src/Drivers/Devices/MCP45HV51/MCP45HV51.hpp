@@ -42,14 +42,16 @@ class MCP45HV51
 {
 private:
     uint8_t address = 0x00;
+    I2C_Bus I2C;
 
 public:
     /**
      * @brief Construct a new MCP45HV51 object
      *
-     * @param[in] address (int) : The address of the IC on the I2C bus.
+     * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
+     * @param[in] address The address of the IC on the I2C bus.
      */
-    MCP45HV51(int address);
+    MCP45HV51(I2C_Bus *I2C, int address);
 
     /**
      * @brief Destroy the MCP45HV51 object

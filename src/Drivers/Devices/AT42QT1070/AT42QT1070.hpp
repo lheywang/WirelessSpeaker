@@ -104,15 +104,17 @@ class AT42QT1070
 {
 private:
     uint8_t address;
+    I2C_Bus I2C;
 
 public:
     /**
      * @brief Construct a new AT42QT1070 object
      *
+     * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      *
      */
-    AT42QT1070(int address);
+    AT42QT1070(I2C_Bus *I2C, int address);
 
     /**
      * @brief Destroy the AT42QT1070 object

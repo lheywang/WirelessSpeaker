@@ -70,7 +70,7 @@ int I2C_Close(I2C_Bus *I2C);
  * @return -1 : Incorrect Address.
  * @return -2 : Incorrect Register.
  * @return -3 : Incorrect Payload size.
- * @return -4 : Write failed. Check errno.
+ * @return -4 : IOCTL error.
  */
 int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 1, int DataSize = 8);
 
@@ -88,9 +88,9 @@ int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 
  * @return -2 : Incorrect Register.
  * @return -3 : Number of bytes to read too big.
  * @return -4 : DataSize Incorrect. Only 8 or 16 are accepted.
- * @return -5 : Read failed. Check errno.
+ * @return -5 : IOCTL error.
  */
-int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, int DataSize = 8);
+int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 1, int DataSize = 8);
 
 /**
  * @brief This function, called automatically before any operation configure the address on the IOCTL file.

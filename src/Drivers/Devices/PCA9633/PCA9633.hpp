@@ -48,14 +48,16 @@ class PCA9633
 {
 private:
     uint8_t address;
+    I2C_Bus I2C;
 
 public:
     /**
      * @brief Construct a new PCA9633 object
      *
-     * @param[in] address (int) : The address of the IC on the I2C Bus.
+     * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
+     * @param[in] address The address of the IC on the I2C bus.
      */
-    PCA9633(int address);
+    PCA9633(I2C_Bus *I2C, int address);
 
     /**
      * @brief Destroy the PCA9633 object
