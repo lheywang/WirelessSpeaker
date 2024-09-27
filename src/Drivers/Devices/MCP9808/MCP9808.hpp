@@ -39,6 +39,12 @@
 #define HYST_6 0x03
 
 // ==============================================================================
+// MACROS
+// ==============================================================================
+#define REGISTER(x) (x & 0x3F)
+#define INT_TO_FLOAT(Sign, Int, Float) ((Sign * (-1)) + Int + (Float * 0.0625))
+
+// ==============================================================================
 // IC CLASS FUNCTIONS
 // ==============================================================================
 
@@ -51,9 +57,6 @@ class MCP9808
 private:
     uint8_t address;
     I2C_Bus I2C;
-
-    // Compute the register value.
-    uint8_t ComputeRegister(int Register);
 
 public:
     /**
@@ -141,8 +144,9 @@ public:
      * @param[out] Status Return a *int for the device altert status.
      *
      * @return  0 : OK
-     * @return -1 : Invalid pointer
-     * @return -2 : IOCTL error.
+     * @return -1 : Invalid Temperature pointer
+     * @return -2 : Invalid Status pointer
+     * @return -3 : IOCTL error.
      */
     int ReadTemperature(float *Temperature, int *Status);
 };
