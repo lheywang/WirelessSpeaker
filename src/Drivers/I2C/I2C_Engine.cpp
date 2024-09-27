@@ -130,11 +130,11 @@ int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, in
         // Match the wanted datasize.
         if (DataSize == 8)
         {
-            res += i2c_smbus_read_byte(I2C->I2C_file);
+            res = i2c_smbus_read_byte(I2C->I2C_file);
         }
         else if (DataSize == 16)
         {
-            res += i2c_smbus_read_word_data(I2C->I2C_file, i + Register);
+            res = i2c_smbus_read_word_data(I2C->I2C_file, i + Register);
         }
         else
             return -4;
@@ -142,9 +142,6 @@ int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, in
         // Store the result.
         Payload[i] = res;
     }
-
-    if (res != 0)
-        return -5;
     return 0;
 }
 

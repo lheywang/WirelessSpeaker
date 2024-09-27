@@ -88,7 +88,6 @@ int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 
  * @return -2 : Incorrect Register.
  * @return -3 : Number of bytes to read too big.
  * @return -4 : DataSize Incorrect. Only 8 or 16 are accepted.
- * @return -5 : IOCTL error.
  */
 int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 1, int DataSize = 8);
 

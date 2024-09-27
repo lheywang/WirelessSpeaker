@@ -27,6 +27,8 @@
 #define CRIT_TEMP 0x04
 #define READ_TEMP 0x05
 #define MANUFACTURER 0x06
+#define DEVICEID 0x07
+#define TEMP_RESOLUTION 0x08
 
 #define C0_5 0x00
 #define C0_25 0x01
@@ -37,12 +39,6 @@
 #define HYST_1 0x01
 #define HYST_3 0x02
 #define HYST_6 0x03
-
-// ==============================================================================
-// MACROS
-// ==============================================================================
-#define REGISTER(x) (x & 0x3F)
-#define INT_TO_FLOAT(Sign, Int, Float) ((Sign * (-1)) + Int + (Float * 0.0625))
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -93,17 +89,17 @@ public:
      * @param[in] Lock Block updates to Tlower, Tupper, Tcrit registers as well as some parameters here (0 = unlocked, 1 = locked).
      * @param[in] ClearInterrupt Clear actual interrupt. (1 = clear).
      * @param[in] AlertStatus Enable or Disable Output Interrupt pin (Asserted or High Z) ( 1= asserted, 0 = HighZ).
-     * @param[in] AlterControl Enable or Disable the Interrupt subsystem (1 = Enabled, 0 = Disabled).
-     * @param[in] AlterSelection Select the criteria for the Interrupt (1 = Ta > Tcrit, 0 = Tlower < Ta < Tupper + Ta < Tcrit).
-     * @param[in] AlterPolarity Select the polarity of the Interrupt (1 = Active High, 0 = Active Low).
-     * @param[in] AltertMode Select the Alter Mode (0 = Comparator Output, 1 = Interrupt Output).
+     * @param[in] AlertControl Enable or Disable the Interrupt subsystem (1 = Enabled, 0 = Disabled).
+     * @param[in] AlertSelection Select the criteria for the Interrupt (1 = Ta > Tcrit, 0 = Tlower < Ta < Tupper + Ta < Tcrit).
+     * @param[in] AlertPolarity Select the polarity of the Interrupt (1 = Active High, 0 = Active Low).
+     * @param[in] AlertMode Select the Alter Mode (0 = Comparator Output, 1 = Interrupt Output).
      *
      * @return  0 : OK
      * @return -1 : Wrong Hysteresis value.
      * @return -2 : IOCTL error.
      *
      */
-    int ConfigureThermometer(int Hysteresis, int Mode, int Lock, int ClearInterrupt, int AlertStatus, int AlterControl, int AlterSelection, int AlterPolarity, int AltertMode);
+    int ConfigureThermometer(int Hysteresis, int Mode, int Lock, int ClearInterrupt, int AlertStatus, int AlertControl, int AlertSelection, int AlertPolarity, int AlertMode);
 
     /**
      * @brief Returns the differents ID's of the device.
@@ -147,6 +143,8 @@ public:
      * @return -1 : Invalid Temperature pointer
      * @return -2 : Invalid Status pointer
      * @return -3 : IOCTL error.
+     *
+     * @test Verify correct conversion.
      */
     int ReadTemperature(float *Temperature, int *Status);
 };

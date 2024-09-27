@@ -84,17 +84,15 @@ int DS1882::ReadWipers(int *wiper0, int *wiper1)
 
 int DS1882::ConfigurePoti(int Volatile, int ZeroCrossing, int PotiConfig)
 {
-    // First, cast to 0 or 1 the values.
-    bool b_Volatile = (bool)Volatile;
-    bool b_ZeroCrossing = (bool)ZeroCrossing;
+    // Store this setting onto the class.
     this->b_PotiConfig = !(bool)PotiConfig; // Command is inverted here.
 
     // Second, compute the command value:
     uint8_t TempRegister = 0;
 
     // Shift the rights settings
-    TempRegister |= b_Volatile;
-    TempRegister = (TempRegister << 1) | b_ZeroCrossing;
+    TempRegister |= (bool)Volatile;
+    TempRegister = (TempRegister << 1) | (bool)ZeroCrossing;
     TempRegister = (TempRegister << 1) | this->b_PotiConfig;
 
     // Write the correct Config selection bits

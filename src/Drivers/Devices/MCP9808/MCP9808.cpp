@@ -17,6 +17,12 @@
 #include <math.h>
 #include "../../I2C/I2C.hpp"
 
+// ==============================================================================
+// MACROS
+// ==============================================================================
+#define REGISTER(x) (x & 0x3F)
+#define INT_TO_FLOAT(Sign, Int, Float) ((Sign * (-1)) + Int + (Float * 0.0625))
+
 // =====================
 // CONSTRUCTORS
 // =====================
@@ -42,14 +48,14 @@ MCP9808::~MCP9808()
 // =====================
 
 // This function is private, thus we assume OutputBuf is a list of 2 elements of 8 bits
-inline static void FloatToInts(float Input, int *OutputBuf)
+static void FloatToInts(float Input, int *OutputBuf)
 {
     bool Sign = false;
     if (Input < 0)
         Sign = true; // We set to 1 the sign bit, since data is expressed as CPL2.
 
-    int IntegerPart = (int)round(Input);
-    int FloatPart = (int)round((Input - (float)IntegerPart) * 256);
+    int IntegerPart = (int)floor(Input);
+    int FloatPart = (int)round((Input - (float)IntegerPart) / 0.0625);
 
     OutputBuf[0] = 0;
     OutputBuf[1] = 0;
@@ -65,14 +71,70 @@ inline static void FloatToInts(float Input, int *OutputBuf)
 
 int MCP9808::ConfigureResolution(int Resolution)
 {
+    if ((Resolution > C0_0625) & (Resolution < C0_5))
+        return -1;
+
+    int res = I2C_Write(&this->I2C, this->address, REGISTER(TEMP_RESOLUTION), &Resolution);
+
+    if (res != 0)
+        return -2;
+
+    return 0;
 }
 
-int MCP9808::ConfigureThermometer(int Hysteresis, int Mode, int Lock, int ClearInterrupt, int AlertStatus, int AlterControl, int AlterSelection, int AlterPolarity, int AltertMode)
+int MCP9808::ConfigureThermometer(int Hysteresis, int Mode, int Lock, int ClearInterrupt, int AlertStatus, int AlertControl, int AlertSelection, int AlertPolarity, int AlertMode)
 {
+    if ((Hysteresis > HYST_6) & (Hysteresis < HYST_0))
+        return -1;
+
+    int buf[2] = {0};
+
+    // MSB
+    buf[0] = Hysteresis;
+    buf[0] = (buf[0] << 1) | (bool)Mode;
+
+    // LSB
+    buf[1] = (bool)Lock;
+    buf[1] = (buf[1] << 1) | (bool)Lock;
+    buf[1] = (buf[1] << 1) | (bool)ClearInterrupt;
+    buf[1] = (buf[1] << 1) | (bool)AlertStatus;
+    buf[1] = (buf[1] << 1) | (bool)AlertControl;
+    buf[1] = (buf[1] << 1) | (bool)AlertSelection;
+    buf[1] = (buf[1] << 1) | (bool)AlertPolarity;
+    buf[1] = (buf[1] << 1) | (bool)AlertMode;
+
+    int res = 0;
+    res = I2C_Write(&this->I2C, this->address, REGISTER(MCP9808_CONFIG), buf, 2);
+
+    if (res != 0)
+        return -2;
+
+    return 0;
 }
 
 int MCP9808::GetIDs(int *DeviceID, int *DeviceRevision, int *ManufacturerID)
 {
+    if (DeviceID == NULL)
+        return -1;
+    if (DeviceRevision == NULL)
+        return -2;
+    if (ManufacturerID == NULL)
+        return -3;
+
+    int res = 0;
+    int buf[2] = {0};
+    res += I2C_Read(&this->I2C, this->address, REGISTER(DEVICEID), buf, 2);
+
+    *DeviceID = buf[0];
+    *DeviceRevision = buf[1];
+
+    res += I2C_Read(&this->I2C, this->address, REGISTER(MANUFACTURER), buf, 2);
+    *ManufacturerID = (buf[0] << 8) | buf[1];
+
+    if (res != 0)
+        return -4;
+
+    return 0;
 }
 
 int MCP9808::SetAlertTemperatures(float Minimal, float Maximal, float Critical)
@@ -112,12 +174,12 @@ int MCP9808::ReadTemperature(float *Temperature, int *Status)
     int buf[2] = {0};
     int res = I2C_Read(&this->I2C, this->address, REGISTER(READ_TEMP), buf, 2);
 
-    if (res < 0)
+    if (res != 0)
         return -3;
 
     // Fetching in temp variables the correct values.
     *Status = (buf[0] & 0xE0) >> 5;
-    bool Sign = (bool)((buf[0] & 0x10) >> 4);
+    bool Sign = (bool)(buf[0] & 0x10);
     uint8_t IntTemp = (uint8_t)((buf[1] >> 4) | (buf[0]) << 4);
     uint8_t FloatTemp = (uint8_t)(buf[1] & 0x0F);
 
@@ -125,19 +187,3 @@ int MCP9808::ReadTemperature(float *Temperature, int *Status)
     *Temperature = INT_TO_FLOAT(Sign, IntTemp, FloatTemp);
     return 0;
 }
-
-// Integer conversion :
-/*
- * bit 16:14 : Status (opt)
- * bit 15 : Sign
- * bit 14: 2^7
- * bit 13: 2^6
- * ...
- * bit 5 : 2^0
- * bit 4 : 2^-1
- * ...
- * bit 1 : 2^-4
- *
- *
- * bit 15 * (-1) + Integer + Float * 0.0625
- */
