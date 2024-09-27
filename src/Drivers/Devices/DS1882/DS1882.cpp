@@ -21,7 +21,7 @@
 // CONSTRUCTORS
 // =====================
 
-DS1882::DS1882(I2C_Bus *I2C, int address)
+DS1882::DS1882(const I2C_Bus *I2C, const int address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;
@@ -41,12 +41,12 @@ DS1882::~DS1882()
 // =====================
 // FUNCTIONS
 // =====================
-int DS1882::WriteWiper(int wiper, int value)
+int DS1882::WriteWiper(const int wiper, const int value)
 {
     if ((wiper != WIPER_0) && (wiper != WIPER_1))
         return -1;
 
-    if (value > 0x3F)
+    if (value > (this->b_PotiConfig ? 0x3F : 0x1F))
         return -2;
 
     // Cast and AND the last to bits to write the wiper settings.
@@ -63,8 +63,11 @@ int DS1882::WriteWiper(int wiper, int value)
     return 0;
 }
 
-int DS1882::ReadWipers(int *wiper0, int *wiper1)
+int DS1882::ReadWipers(int *const wiper0, int *const wiper1)
 {
+    if ((wiper0 == nullptr) | wiper1 == nullptr)
+        return -1;
+
     // init a memory buffer
     int buf[3] = {0};
 
@@ -77,12 +80,12 @@ int DS1882::ReadWipers(int *wiper0, int *wiper1)
     *wiper1 = buf[1];
 
     if (res < 0)
-        return -1;
+        return -2;
 
     return 0;
 }
 
-int DS1882::ConfigurePoti(int Volatile, int ZeroCrossing, int PotiConfig)
+int DS1882::ConfigurePoti(const int Volatile, const int ZeroCrossing, const int PotiConfig)
 {
     // Store this setting onto the class.
     this->b_PotiConfig = !(bool)PotiConfig; // Command is inverted here.

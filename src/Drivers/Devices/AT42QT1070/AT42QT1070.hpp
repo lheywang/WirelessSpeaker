@@ -114,7 +114,7 @@ public:
      * @param[in] address The address of the IC on the I2C bus.
      *
      */
-    AT42QT1070(I2C_Bus *I2C, int address);
+    AT42QT1070(const I2C_Bus *I2C, const int address);
 
     /**
      * @brief Destroy the AT42QT1070 object

@@ -19,7 +19,7 @@
 // CONSTRUCTORS
 // =====================
 
-MCP45HV51::MCP45HV51(I2C_Bus *I2C, int address)
+MCP45HV51::MCP45HV51(const I2C_Bus *I2C, const int address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;

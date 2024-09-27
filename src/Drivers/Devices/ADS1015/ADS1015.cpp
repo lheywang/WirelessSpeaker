@@ -18,7 +18,7 @@
 // CONSTRUCTORS
 // =====================
 
-ADS1015::ADS1015(I2C_Bus *I2C, int address)
+ADS1015::ADS1015(const I2C_Bus *I2C, const int address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;
@@ -38,7 +38,7 @@ ADS1015::~ADS1015()
 // FUNCTIONS
 // =====================
 
-int ADS1015::Read_Voltage(int channel, float *value)
+int ADS1015::Read_Voltage(const int channel, const float *value)
 {
     // Checking if the channel is within values
     if (channel > CHANNEL_3)
@@ -55,7 +55,13 @@ int ADS1015::Read_Voltage(int channel, float *value)
     return 0;
 }
 
-int ADS1015::Configure_ADC(int channel, int gain, int mode, int sampling_frequency, int comparator_mode, int comparator_polarity, int comparator_latching, int comparator_queue)
+int ADS1015::Configure_ADC(const int channel,
+                           const int gain, const int mode,
+                           const int sampling_frequency,
+                           const int comparator_mode,
+                           const int comparator_polarity,
+                           const int comparator_latching,
+                           const int comparator_queue)
 {
     // Checking if the channel is within values
     if (channel > CHANNEL_3)

@@ -49,7 +49,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    DS1882(I2C_Bus *I2C, int address);
+    DS1882(const I2C_Bus *I2C, const int address);
 
     /**
      * @brief Destroy the DS1882 object
@@ -71,7 +71,7 @@ public:
      *
      * @test This function need to be tested !
      */
-    int WriteWiper(int wiper, int value);
+    int WriteWiper(const int wiper, const int value);
 
     /**
      * @brief
@@ -80,12 +80,13 @@ public:
      * @param[inout] wiper1 Pointer to an int to store the Wiper1 value
      *
      * @return  0 : OK
-     * @return -1 : IOCTL error.
+     * @return -1 : Invalid wipers pointers.
+     * @return -2 : IOCTL error.
      *
      * @test This function need to be tested !
      *
      */
-    int ReadWipers(int *wiper0, int *wiper1);
+    int ReadWipers(int *const wiper0, int *const wiper1);
 
     /**
      * @brief Configure the potentiometer.
@@ -98,5 +99,5 @@ public:
      * @return  0 : OK
      * @return -1 : IOCTL errror.
      */
-    int ConfigurePoti(int Volatile, int ZeroCrossing, int PotiConfig);
+    int ConfigurePoti(const int Volatile, const int ZeroCrossing, const int PotiConfig);
 };

@@ -20,14 +20,14 @@
 // ==============================================================================
 // MACROS
 // ==============================================================================
-#define REGISTER(x) (x & 0x3F)
-#define INT_TO_FLOAT(Sign, Int, Float) ((Sign * (-1)) + Int + (Float * 0.0625))
+// Define the way of passing commands to this IC
+#define REGISTER(x) (x & 0x0F)
 
 // =====================
 // CONSTRUCTORS
 // =====================
 
-MCP9808::MCP9808(I2C_Bus *I2C, int address)
+MCP9808::MCP9808(const I2C_Bus *I2C, const int address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;
@@ -48,7 +48,7 @@ MCP9808::~MCP9808()
 // =====================
 
 // This function is private, thus we assume OutputBuf is a list of 2 elements of 8 bits
-static void FloatToInts(float Input, int *OutputBuf)
+static void FloatToInts(const float Input, int *const OutputBuf)
 {
     bool Sign = false;
     if (Input < 0)
@@ -69,12 +69,13 @@ static void FloatToInts(float Input, int *OutputBuf)
 // FUNCTIONS
 // =====================
 
-int MCP9808::ConfigureResolution(int Resolution)
+int MCP9808::ConfigureResolution(const int Resolution)
 {
     if ((Resolution > C0_0625) & (Resolution < C0_5))
         return -1;
 
-    int res = I2C_Write(&this->I2C, this->address, REGISTER(TEMP_RESOLUTION), &Resolution);
+    int TResolution = Resolution;
+    int res = I2C_Write(&this->I2C, this->address, REGISTER(TEMP_RESOLUTION), &TResolution);
 
     if (res != 0)
         return -2;
@@ -82,7 +83,15 @@ int MCP9808::ConfigureResolution(int Resolution)
     return 0;
 }
 
-int MCP9808::ConfigureThermometer(int Hysteresis, int Mode, int Lock, int ClearInterrupt, int AlertStatus, int AlertControl, int AlertSelection, int AlertPolarity, int AlertMode)
+int MCP9808::Configure(const int Hysteresis,
+                       const int Mode,
+                       const int Lock,
+                       const int ClearInterrupt,
+                       const int AlertStatus,
+                       const int AlertControl,
+                       const int AlertSelection,
+                       const int AlertPolarity,
+                       const int AlertMode)
 {
     if ((Hysteresis > HYST_6) & (Hysteresis < HYST_0))
         return -1;
@@ -112,13 +121,13 @@ int MCP9808::ConfigureThermometer(int Hysteresis, int Mode, int Lock, int ClearI
     return 0;
 }
 
-int MCP9808::GetIDs(int *DeviceID, int *DeviceRevision, int *ManufacturerID)
+int MCP9808::GetIDs(int *const DeviceID, int *const DeviceRevision, int *const ManufacturerID)
 {
-    if (DeviceID == NULL)
+    if (DeviceID == nullptr)
         return -1;
-    if (DeviceRevision == NULL)
+    if (DeviceRevision == nullptr)
         return -2;
-    if (ManufacturerID == NULL)
+    if (ManufacturerID == nullptr)
         return -3;
 
     int res = 0;
@@ -137,7 +146,7 @@ int MCP9808::GetIDs(int *DeviceID, int *DeviceRevision, int *ManufacturerID)
     return 0;
 }
 
-int MCP9808::SetAlertTemperatures(float Minimal, float Maximal, float Critical)
+int MCP9808::SetAlertTemperatures(const float Minimal, const float Maximal, const float Critical)
 {
     if ((Minimal < -128) | (Minimal > 128))
         return -1;
@@ -164,11 +173,11 @@ int MCP9808::SetAlertTemperatures(float Minimal, float Maximal, float Critical)
     return 0;
 }
 
-int MCP9808::ReadTemperature(float *Temperature, int *Status)
+int MCP9808::ReadTemperature(float *const Temperature, int *const Status)
 {
-    if (&Temperature == NULL)
+    if (&Temperature == nullptr)
         return -1;
-    if (&Status == NULL)
+    if (&Status == nullptr)
         return -2;
 
     int buf[2] = {0};
@@ -184,6 +193,6 @@ int MCP9808::ReadTemperature(float *Temperature, int *Status)
     uint8_t FloatTemp = (uint8_t)(buf[1] & 0x0F);
 
     // Computing the temperature.
-    *Temperature = INT_TO_FLOAT(Sign, IntTemp, FloatTemp);
+    *Temperature = (float)((Sign * (-1)) + IntTemp + (FloatTemp * 0.0625));
     return 0;
 }

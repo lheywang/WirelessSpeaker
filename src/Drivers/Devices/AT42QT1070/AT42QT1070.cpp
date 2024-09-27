@@ -20,7 +20,7 @@
 // CONSTRUCTORS
 // =====================
 
-AT42QT1070::AT42QT1070(I2C_Bus *I2C, int address)
+AT42QT1070::AT42QT1070(const I2C_Bus *I2C, const int address)
 {
     this->address = (uint8_t)AT42QT1070_ADDRESS;
     this->I2C = *I2C;

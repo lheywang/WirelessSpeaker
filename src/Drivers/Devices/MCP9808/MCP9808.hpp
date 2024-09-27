@@ -21,6 +21,7 @@
 
 #define MCP9808_DATA_SIZE 16 // 16b register here
 
+// Register
 #define MCP9808_CONFIG 0x01
 #define UPPER_TEMP 0x02
 #define LOWER_TEMP 0x03
@@ -30,11 +31,13 @@
 #define DEVICEID 0x07
 #define TEMP_RESOLUTION 0x08
 
+// Resolution
 #define C0_5 0x00
 #define C0_25 0x01
 #define C0_125 0x02
 #define C0_0625 0x03
 
+// Hysteresis Settings
 #define HYST_0 0x00
 #define HYST_1 0x01
 #define HYST_3 0x02
@@ -61,7 +64,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    MCP9808(I2C_Bus *I2C, int address);
+    MCP9808(const I2C_Bus *I2C, const int address);
 
     /**
      * @brief Destroy the MCP9808 object
@@ -79,7 +82,7 @@ public:
      * @return -2 : IOCTL error
      *
      */
-    int ConfigureResolution(int Resolution);
+    int ConfigureResolution(const int Resolution);
 
     /**
      * @brief Configure the temperature sensor with various parameters.
@@ -99,7 +102,15 @@ public:
      * @return -2 : IOCTL error.
      *
      */
-    int ConfigureThermometer(int Hysteresis, int Mode, int Lock, int ClearInterrupt, int AlertStatus, int AlertControl, int AlertSelection, int AlertPolarity, int AlertMode);
+    int Configure(const int Hysteresis,
+                  const int Mode,
+                  const int Lock,
+                  const int ClearInterrupt,
+                  const int AlertStatus,
+                  const int AlertControl,
+                  const int AlertSelection,
+                  const int AlertPolarity,
+                  const int AlertMode);
 
     /**
      * @brief Returns the differents ID's of the device.
@@ -115,7 +126,7 @@ public:
      * @return -4 : IOCTL error
      *
      */
-    int GetIDs(int *DeviceID, int *DeviceRevision, int *ManufacturerID);
+    int GetIDs(int *const DeviceID, int *const DeviceRevision, int *const ManufacturerID);
 
     /**
      * @brief Set the Alert Temperatures object
@@ -131,7 +142,7 @@ public:
      * @return -4 : IOCTL error.
      *
      */
-    int SetAlertTemperatures(float Minimal, float Maximal, float Critical);
+    int SetAlertTemperatures(const float Minimal, const float Maximal, const float Critical);
 
     /**
      * @brief Return the temperature read from the sensor.
@@ -146,5 +157,5 @@ public:
      *
      * @test Verify correct conversion.
      */
-    int ReadTemperature(float *Temperature, int *Status);
+    int ReadTemperature(float *const Temperature, int *const Status);
 };

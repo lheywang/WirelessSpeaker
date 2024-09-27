@@ -72,7 +72,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus
      */
-    ADS1015(I2C_Bus *I2C, int address);
+    ADS1015(const I2C_Bus *I2C, const int address);
 
     /**
      * @brief Destroy the ADS1015 object
@@ -92,7 +92,7 @@ public:
      * @return (int) : -2 : Channel set is over the maximum value
      * @return (int) : -3 : value pointer incorrect
      */
-    int Read_Voltage(int channel, float *value);
+    int Read_Voltage(const int channel, const float *value);
 
     /**
      * @brief Configure the ADC operation mode
@@ -108,5 +108,12 @@ public:
      *
      * @return (int) : 0 if everything went fine, <0 otherwise.
      */
-    int Configure_ADC(int channel = CHANNEL_0, int gain = GAIN_4V00, int mode = 1, int sampling_frequency = SPS_920, int comparator_mode = 0, int comparator_polarity = 1, int comparator_latching = 1, int comparator_queue = 0);
+    int Configure_ADC(const int channel = CHANNEL_0,
+                      const int gain = GAIN_4V00,
+                      const int mode = 1,
+                      const int sampling_frequency = SPS_920,
+                      const int comparator_mode = 0,
+                      const int comparator_polarity = 1,
+                      const int comparator_latching = 1,
+                      const int comparator_queue = 0);
 };
