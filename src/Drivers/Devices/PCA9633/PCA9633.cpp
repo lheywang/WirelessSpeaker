@@ -63,6 +63,26 @@ int PCA9633::Configure(const int Mode,
     if ((OEStatus > LED_IN) | (OEStatus < LED_OFF))
         return -1;
 
+    int buf[2] = {0};
+
+    // MODE 1
+    buf[0] = ((bool)Mode) << 4;
+    buf[0] |= ((bool)SubAddr1Response) << 3;
+    buf[0] |= ((bool)SubAddr2Response) << 2;
+    buf[0] |= ((bool)SubAddr3Response) << 1;
+    buf[0] |= ((bool)AllAddrResponse);
+
+    // MODE 2
+    buf[1] = ((bool)Dimming) << 5;
+    buf[1] = ((bool)Inverter) << 4;
+    buf[1] = ((bool)Change) << 3;
+    buf[1] = ((bool)OutputDriver) << 2;
+    buf[1] = ((bool)OEStatus);
+
+    int res = I2C_Write(&this->I2C, this->address, REGISTER_WITH_INCREMENT_ALL(MODE1), buf, 2);
+    if (res != 0)
+        return -2;
+
     return 0;
 }
 
@@ -70,12 +90,10 @@ int PCA9633::ConfigureDutyCycle(const int FirstChannel, int *const Value, const 
 {
     if ((FirstChannel > PWM3) | (FirstChannel < PWM0))
         return -1;
-    if (Value == nullptr)
-        return -2;
     if ((FirstChannel + AutoIncrement) > PWM3)
-        return -3;
+        return -2;
     if (AutoIncrement == 0)
-        return -3;
+        return -2;
 
     // Let's create a copy to prevent from running out of memory if too short array is provided.
     int buf[4] = {0};
@@ -89,9 +107,9 @@ int PCA9633::ConfigureDutyCycle(const int FirstChannel, int *const Value, const 
     else
         Tregister = REGISTER_WITH_INCREMENT_LEDS(FirstChannel);
 
-    int res = I2C_Write(&this->I2C, this->address, Tregister, Value, AutoIncrement);
+    int res = I2C_Write(&this->I2C, this->address, Tregister, buf, AutoIncrement);
     if (res != 0)
-        return -4;
+        return -3;
 
     return 0;
 }

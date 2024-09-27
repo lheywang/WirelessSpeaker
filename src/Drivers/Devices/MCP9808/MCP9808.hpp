@@ -120,10 +120,7 @@ public:
      * @param[out] ManufacturerID Return a *int that contain the ManufacturerID.
      *
      * @return  0 : OK
-     * @return -1 : Invalid DeviceID pointer.
-     * @return -2 : Invalid DeviceRevision pointer.
-     * @return -3 : Invalide ManufacturerID pointer.
-     * @return -4 : IOCTL error
+     * @return -1 : IOCTL error
      *
      */
     int GetIDs(int *const DeviceID, int *const DeviceRevision, int *const ManufacturerID);
@@ -151,9 +148,7 @@ public:
      * @param[out] Status Return a *int for the device altert status.
      *
      * @return  0 : OK
-     * @return -1 : Invalid Temperature pointer
-     * @return -2 : Invalid Status pointer
-     * @return -3 : IOCTL error.
+     * @return -1 : IOCTL error.
      *
      * @test Verify correct conversion.
      */

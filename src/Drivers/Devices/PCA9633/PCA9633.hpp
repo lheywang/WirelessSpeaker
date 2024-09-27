@@ -113,9 +113,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : First channel incorrect value
-     * @return -2 : Invalid pointer.
-     * @return -3 : Invalid AutoIncrement value (Too big or 0).
-     * @return -4 : IOCTL error.
+     * @return -2 : Invalid AutoIncrement value (Too big or 0).
+     * @return -3 : IOCTL error.
      */
     int ConfigureDutyCycle(const int FirstChannel, int *const Value, const int AutoIncrement = 1);
 

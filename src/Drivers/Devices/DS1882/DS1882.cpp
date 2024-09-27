@@ -65,9 +65,6 @@ int DS1882::WriteWiper(const int wiper, const int value)
 
 int DS1882::ReadWipers(int *const wiper0, int *const wiper1)
 {
-    if ((wiper0 == nullptr) | wiper1 == nullptr)
-        return -1;
-
     // init a memory buffer
     int buf[3] = {0};
 
@@ -80,7 +77,7 @@ int DS1882::ReadWipers(int *const wiper0, int *const wiper1)
     *wiper1 = buf[1];
 
     if (res < 0)
-        return -2;
+        return -1;
 
     return 0;
 }

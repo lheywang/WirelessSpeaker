@@ -123,13 +123,6 @@ int MCP9808::Configure(const int Hysteresis,
 
 int MCP9808::GetIDs(int *const DeviceID, int *const DeviceRevision, int *const ManufacturerID)
 {
-    if (DeviceID == nullptr)
-        return -1;
-    if (DeviceRevision == nullptr)
-        return -2;
-    if (ManufacturerID == nullptr)
-        return -3;
-
     int res = 0;
     int buf[2] = {0};
     res += I2C_Read(&this->I2C, this->address, REGISTER(DEVICEID), buf, 2);
@@ -141,7 +134,7 @@ int MCP9808::GetIDs(int *const DeviceID, int *const DeviceRevision, int *const M
     *ManufacturerID = (buf[0] << 8) | buf[1];
 
     if (res != 0)
-        return -4;
+        return -1;
 
     return 0;
 }
@@ -175,16 +168,11 @@ int MCP9808::SetAlertTemperatures(const float Minimal, const float Maximal, cons
 
 int MCP9808::ReadTemperature(float *const Temperature, int *const Status)
 {
-    if (&Temperature == nullptr)
-        return -1;
-    if (&Status == nullptr)
-        return -2;
-
     int buf[2] = {0};
     int res = I2C_Read(&this->I2C, this->address, REGISTER(READ_TEMP), buf, 2);
 
     if (res != 0)
-        return -3;
+        return -1;
 
     // Fetching in temp variables the correct values.
     *Status = (buf[0] & 0xE0) >> 5;

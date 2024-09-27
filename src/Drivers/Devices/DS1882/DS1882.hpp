@@ -80,8 +80,7 @@ public:
      * @param[inout] wiper1 Pointer to an int to store the Wiper1 value
      *
      * @return  0 : OK
-     * @return -1 : Invalid wipers pointers.
-     * @return -2 : IOCTL error.
+     * @return -1 : IOCTL error.
      *
      * @test This function need to be tested !
      *
