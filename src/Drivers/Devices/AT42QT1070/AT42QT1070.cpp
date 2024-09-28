@@ -39,3 +39,53 @@ AT42QT1070::~AT42QT1070()
 // =====================
 // FUNCTIONS
 // =====================
+
+int AT42QT1070::GetIDs(int *const ID, int *const FirmwareRevision)
+{
+}
+
+int AT42QT1070::GetKeysStatus(int *const Calibration, int *const Overflow, int *const Touch, int *const Keys)
+{
+}
+
+int AT42QT1070::GetKeySignals(const int Key, int *const Value)
+{
+}
+
+int AT42QT1070::GetKeyReferenceSignal(const int Key, int *const Value)
+{
+}
+
+int AT42QT1070::SetReferenceThreshold(const int Key, const int Value)
+{
+}
+
+int AT42QT1070::GetReferenceThreshold(const int Key, int *const Value)
+{
+}
+
+int AT42QT1070::SetAdjacentKeySuppresion(const int Key, const int Value)
+{
+}
+
+int AT42QT1070::GetAdjacentKeySuppresion(const int Key, int *const Value)
+{
+}
+
+int AT42QT1070::SetDetectionIntegrator(const int Key, const int Value)
+{
+}
+
+int AT42QT1070::GetDetectionIntegrator(const int Key, int *const Value)
+{
+}
+
+int AT42QT1070::ConfigureCapacitiveSensor(const int FastOut,
+                                          const int MaxCal,
+                                          const int GuardChannel,
+                                          const int LowPower,
+                                          const int MaxOnDuration,
+                                          const int Calibrate,
+                                          const int nRESET)
+{
+}

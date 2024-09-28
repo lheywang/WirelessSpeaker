@@ -76,12 +76,12 @@ int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, i
     int res = 0;
 
     // address conf to the driver
-    I2C_ConfigureAddress(I2C, Address);
+    I2C_ConfigureAddress(I2C, (uint8_t)Address);
 
     // If no data is provided, only write the command !
     if (Size == 0)
     {
-        res += i2c_smbus_write_byte(I2C->I2C_file, Register);
+        res += i2c_smbus_write_byte(I2C->I2C_file, (uint8_t)Register);
     }
     // otherwise, write the data accordingly in series depending of the Payload.
     else
@@ -95,7 +95,7 @@ int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, i
         {
             for (int i = 0; i < Size + 1; i++)
             {
-                res += i2c_smbus_write_word_data(I2C->I2C_file, Register, Payload[i]);
+                res += i2c_smbus_write_word_data(I2C->I2C_file, Register, (uint16_t)Payload[i]);
             }
         }
         else
@@ -134,7 +134,7 @@ int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, in
         }
         else if (DataSize == 16)
         {
-            res = i2c_smbus_read_word_data(I2C->I2C_file, i + Register);
+            res = i2c_smbus_read_word_data(I2C->I2C_file, (uint8_t)(i + Register));
         }
         else
             return -4;

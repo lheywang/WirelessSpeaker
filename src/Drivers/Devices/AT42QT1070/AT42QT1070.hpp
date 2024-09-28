@@ -121,4 +121,158 @@ public:
      *
      */
     ~AT42QT1070();
+
+    /**
+     * @brief Return the Device IDs.
+     *
+     * @param ID Pointer to an Integer to an int to store the Device ID.
+     * @param FirmwareRevision Pointer to an int to store the FirmwareRevision.
+     *
+     * @return  0 : OK
+     * @return -1 : IOCTL error.
+     *
+     */
+    int GetIDs(int *const ID, int *const FirmwareRevision);
+
+    /**
+     * @brief Get the Keys Status (ALL Channels + Others Infos)
+     *
+     * @param Calibration Pointer to an integer to store the Calibration value.
+     * @param Overflow Pointer to an integer to store the Overflow Status.
+     * @param Touch Pointer to the TOUCH value.
+     * @param Keys Pointer to an array of 6 elements to store the KEY values.
+     *
+     * @return  0 : OK
+     * @return -1 : Keys array to short.
+     * @return -2 : IOCTL error.
+     *
+     */
+    int GetKeysStatus(int *const Calibration, int *const Overflow, int *const Touch, int *const Keys);
+
+    /**
+     * @brief Get the Key Signals for a channel.
+     *
+     * @param Key Key ID Identifier value.
+     * @param Value Pointer to an integer to store the read value.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid Key Value.
+     * @return -2 : IOCTL error.
+     *
+     */
+    int GetKeySignals(const int Key, int *const Value);
+
+    /**
+     * @brief Get the Key Reference Signal for a channel.
+     *
+     * @param Key Key ID Identifier value.
+     * @param Value Pointer to an integer to store the read value.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid Key Value.
+     * @return -2 : IOCTL error.
+     *
+     */
+    int GetKeyReferenceSignal(const int Key, int *const Value);
+
+    /**
+     * @brief Configure the reference threshold value for a channel.
+     *
+     * @param Key Key ID Identifier value.
+     * @param Value Value to be written in the register.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid Key Value.
+     * @return -2 : Invalid Value.
+     * @return -3 : IOCTL error.
+     *
+     */
+    int SetReferenceThreshold(const int Key, const int Value);
+    /**
+     * @brief Get the Reference threshold value for a channel.
+     *
+     * @param Key Key ID Identifier value.
+     * @param Value Pointer to an integer to store the read value.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid Key Value.
+     * @return -2 : IOCTL error.
+     *
+     */
+    int GetReferenceThreshold(const int Key, int *const Value);
+
+    /**
+     * @brief Set the Adjacent Key Suppresion object for a channel.
+     *
+     * @param Key Key ID Identifier value.
+     * @param Value Value to be written in the register.
+     *
+     * @return -1 : Invalid Key Value.
+     * @return -2 : Invalid Value.
+     * @return -3 : IOCTL error.
+     *
+     */
+    int SetAdjacentKeySuppresion(const int Key, const int Value);
+    /**
+     * @brief Get the Adjacent Key Suppresion configured value for a channel.
+     *
+     * @param Key Key ID Identifier value.
+     * @param Value Pointer to an integer to store the read value.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid Key Value.
+     * @return -2 : IOCTL error.
+     *
+     */
+    int GetAdjacentKeySuppresion(const int Key, int *const Value);
+
+    /**
+     * @brief Set the Detection Integrator value for a channel.
+     *
+     * @param Key Key ID Identifier value.
+     * @param Value Value to be written in the register.
+     *
+     * @return -1 : Invalid Key Value.
+     * @return -2 : Invalid Value.
+     * @return -3 : IOCTL error.
+     *
+     */
+    int SetDetectionIntegrator(const int Key, const int Value);
+    /**
+     * @brief Get the Detection Integrator value for a channel.
+     *
+     * @param Key Key ID Identifier value.
+     * @param Value Pointer to an integer to store the read value.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid Key Value.
+     * @return -2 : IOCTL error.
+     *
+     */
+    int GetDetectionIntegrator(const int Key, int *const Value);
+
+    /**
+     * @brief Configure the behavior of the IC
+     *
+     * @param FastOut Force all channels Detection Integrator with a value of 4. (1 to enable, 0 to disable)
+     * @param MaxCal Force recalibration of all channels if a MaxOnDuration has been reached. (1 to enable, 0 to disable)
+     * @param GuardChannel Configure the guard channel value.
+     * @param LowPower Configure the time between each measures on the Capacitive touch.
+     * @param MaxOnDuration Configure the maximal allowed ON time before calibration of the key(s).
+     * @param Calibrate Force calibration of the IC.
+     * @param nRESET Force a reset of the IC.
+     *
+     * @return  0 : OK
+     * @return -1 : Incorrect guard channel value.
+     * @return -2 : Incorrect LowPower value
+     * @return -3 : Incorrect MaxOnDuration value
+     * @return -4 : IOCTL error.
+     */
+    int ConfigureCapacitiveSensor(const int FastOut,
+                                  const int MaxCal,
+                                  const int GuardChannel,
+                                  const int LowPower,
+                                  const int MaxOnDuration,
+                                  const int Calibrate,
+                                  const int nRESET);
 };
