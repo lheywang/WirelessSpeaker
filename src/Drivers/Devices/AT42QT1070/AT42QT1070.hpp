@@ -27,6 +27,7 @@
 #define CHIP_ID 0x00
 #define FIRMWARE_VERSION 0x01
 #define DETECTION_STATUS 0x02
+#define KEY_STATUS 0x03
 #define FASTOUT_MAXCAL_GUARD 0x35
 #define LOW_POWER_MODE 0x36
 #define MAX_ON_DURATION 0x37
@@ -34,36 +35,22 @@
 #define TOUCH_RESET 0x39
 
 // KEY SIGNALS
-#define KEY_SIGNAL_0_MSB 0x04
-#define KEY_SIGNAL_0_LSB 0x05
-#define KEY_SIGNAL_1_MSB 0x06
-#define KEY_SIGNAL_1_LSB 0x07
-#define KEY_SIGNAL_2_MSB 0x08
-#define KEY_SIGNAL_2_LSB 0x09
-#define KEY_SIGNAL_3_MSB 0x0A
-#define KEY_SIGNAL_3_LSB 0x0B
-#define KEY_SIGNAL_4_MSB 0x0C
-#define KEY_SIGNAL_4_LSB 0x0D
-#define KEY_SIGNAL_5_MSB 0x0E
-#define KEY_SIGNAL_5_LSB 0x0F
-#define KEY_SIGNAL_6_MSB 0x10
-#define KEY_SIGNAL_6_LSB 0x11
+#define KEY_SIGNAL_0 0x04
+#define KEY_SIGNAL_1 0x06
+#define KEY_SIGNAL_2 0x08
+#define KEY_SIGNAL_3 0x0A
+#define KEY_SIGNAL_4 0x0C
+#define KEY_SIGNAL_5 0x0E
+#define KEY_SIGNAL_6 0x10
 
 // REFERENCE DATA
-#define REFERENCE_DATA_0_MSB 0x12
-#define REFERENCE_DATA_0_LSB 0x13
-#define REFERENCE_DATA_1_MSB 0x14
-#define REFERENCE_DATA_1_LSB 0x15
-#define REFERENCE_DATA_2_MSB 0x16
-#define REFERENCE_DATA_2_LSB 0x17
-#define REFERENCE_DATA_3_MSB 0x18
-#define REFERENCE_DATA_3_LSB 0x19
-#define REFERENCE_DATA_4_MSB 0x1A
-#define REFERENCE_DATA_4_LSB 0x1B
-#define REFERENCE_DATA_5_MSB 0x1C
-#define REFERENCE_DATA_5_LSB 0x1D
-#define REFERENCE_DATA_6_MSB 0x1E
-#define REFERENCE_DATA_6_LSB 0x1F
+#define REFERENCE_DATA_0 0x12
+#define REFERENCE_DATA_1 0x14
+#define REFERENCE_DATA_2 0x16
+#define REFERENCE_DATA_3 0x18
+#define REFERENCE_DATA_4 0x1A
+#define REFERENCE_DATA_5 0x1C
+#define REFERENCE_DATA_6 0x1E
 
 // NEGATIVE THRESHOLD
 #define NEGATIVE_THRESHOLD_KEY_0 0x20
@@ -111,10 +98,9 @@ public:
      * @brief Construct a new AT42QT1070 object
      *
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
-     * @param[in] address The address of the IC on the I2C bus.
      *
      */
-    AT42QT1070(const I2C_Bus *I2C, const int address);
+    AT42QT1070(const I2C_Bus *I2C);
 
     /**
      * @brief Destroy the AT42QT1070 object
@@ -125,8 +111,8 @@ public:
     /**
      * @brief Return the Device IDs.
      *
-     * @param ID Pointer to an Integer to an int to store the Device ID.
-     * @param FirmwareRevision Pointer to an int to store the FirmwareRevision.
+     * @param[out] ID Pointer to an Integer to an int to store the Device ID.
+     * @param[out] FirmwareRevision Pointer to an int to store the FirmwareRevision.
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
@@ -137,10 +123,10 @@ public:
     /**
      * @brief Get the Keys Status (ALL Channels + Others Infos)
      *
-     * @param Calibration Pointer to an integer to store the Calibration value.
-     * @param Overflow Pointer to an integer to store the Overflow Status.
-     * @param Touch Pointer to the TOUCH value.
-     * @param Keys Pointer to an array of 6 elements to store the KEY values.
+     * @param[out] Calibration Pointer to an integer to store the Calibration value.
+     * @param[out] Overflow Pointer to an integer to store the Overflow Status.
+     * @param[out] Touch Pointer to the TOUCH value.
+     * @param[out] Keys Pointer to an array of 6 elements to store the KEY values.
      *
      * @return  0 : OK
      * @return -1 : Keys array to short.
@@ -152,8 +138,8 @@ public:
     /**
      * @brief Get the Key Signals for a channel.
      *
-     * @param Key Key ID Identifier value.
-     * @param Value Pointer to an integer to store the read value.
+     * @param[out] Key Key ID Identifier value.
+     * @param[out] Value Pointer to an integer to store the read value.
      *
      * @return  0 : OK
      * @return -1 : Invalid Key Value.
@@ -165,8 +151,8 @@ public:
     /**
      * @brief Get the Key Reference Signal for a channel.
      *
-     * @param Key Key ID Identifier value.
-     * @param Value Pointer to an integer to store the read value.
+     * @param[out] Key Key ID Identifier value.
+     * @param[out] Value Pointer to an integer to store the read value.
      *
      * @return  0 : OK
      * @return -1 : Invalid Key Value.
@@ -178,8 +164,8 @@ public:
     /**
      * @brief Configure the reference threshold value for a channel.
      *
-     * @param Key Key ID Identifier value.
-     * @param Value Value to be written in the register.
+     * @param[in] Key Key ID Identifier value.
+     * @param[in] Value Value to be written in the register.
      *
      * @return  0 : OK
      * @return -1 : Invalid Key Value.
@@ -191,8 +177,8 @@ public:
     /**
      * @brief Get the Reference threshold value for a channel.
      *
-     * @param Key Key ID Identifier value.
-     * @param Value Pointer to an integer to store the read value.
+     * @param[out] Key Key ID Identifier value.
+     * @param[out] Value Pointer to an integer to store the read value.
      *
      * @return  0 : OK
      * @return -1 : Invalid Key Value.
@@ -204,8 +190,8 @@ public:
     /**
      * @brief Set the Adjacent Key Suppresion object for a channel.
      *
-     * @param Key Key ID Identifier value.
-     * @param Value Value to be written in the register.
+     * @param[in] Key Key ID Identifier value.
+     * @param[in] Value Value to be written in the register.
      *
      * @return -1 : Invalid Key Value.
      * @return -2 : Invalid Value.
@@ -216,8 +202,8 @@ public:
     /**
      * @brief Get the Adjacent Key Suppresion configured value for a channel.
      *
-     * @param Key Key ID Identifier value.
-     * @param Value Pointer to an integer to store the read value.
+     * @param[out] Key Key ID Identifier value.
+     * @param[out] Value Pointer to an integer to store the read value.
      *
      * @return  0 : OK
      * @return -1 : Invalid Key Value.
@@ -229,8 +215,8 @@ public:
     /**
      * @brief Set the Detection Integrator value for a channel.
      *
-     * @param Key Key ID Identifier value.
-     * @param Value Value to be written in the register.
+     * @param[in] Key Key ID Identifier value.
+     * @param[in] Value Value to be written in the register.
      *
      * @return -1 : Invalid Key Value.
      * @return -2 : Invalid Value.
@@ -241,8 +227,8 @@ public:
     /**
      * @brief Get the Detection Integrator value for a channel.
      *
-     * @param Key Key ID Identifier value.
-     * @param Value Pointer to an integer to store the read value.
+     * @param[out] Key Key ID Identifier value.
+     * @param[out] Value Pointer to an integer to store the read value.
      *
      * @return  0 : OK
      * @return -1 : Invalid Key Value.
@@ -254,13 +240,13 @@ public:
     /**
      * @brief Configure the behavior of the IC
      *
-     * @param FastOut Force all channels Detection Integrator with a value of 4. (1 to enable, 0 to disable)
-     * @param MaxCal Force recalibration of all channels if a MaxOnDuration has been reached. (1 to enable, 0 to disable)
-     * @param GuardChannel Configure the guard channel value.
-     * @param LowPower Configure the time between each measures on the Capacitive touch.
-     * @param MaxOnDuration Configure the maximal allowed ON time before calibration of the key(s).
-     * @param Calibrate Force calibration of the IC.
-     * @param nRESET Force a reset of the IC.
+     * @param[in] FastOut Force all channels Detection Integrator with a value of 4. (1 to enable, 0 to disable)
+     * @param[in] MaxCal Force recalibration of all channels if a MaxOnDuration has been reached. (1 to enable, 0 to disable)
+     * @param[in] GuardChannel Configure the guard channel value.
+     * @param[in] LowPower Configure the time between each measures on the Capacitive touch.
+     * @param[in] MaxOnDuration Configure the maximal allowed ON time before calibration of the key(s).
+     * @param[in] Calibrate Force calibration of the IC.
+     * @param[in] nRESET Force a reset of the IC.
      *
      * @return  0 : OK
      * @return -1 : Incorrect guard channel value.
