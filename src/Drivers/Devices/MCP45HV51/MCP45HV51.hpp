@@ -36,7 +36,7 @@
 class MCP45HV51
 {
 private:
-    uint8_t address = 0x00;
+    uint8_t address;
     I2C_Bus I2C;
 
 public:

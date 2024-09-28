@@ -62,8 +62,21 @@
 class ADS1015
 {
 private:
-    uint8_t address = 0x00;
+    uint8_t address;
     I2C_Bus I2C;
+
+    int ActualSampling;
+    int ActualChannel;
+    int ActualGain;
+    int ActualMode;
+    int ActualComparator_mode;
+    int ActualComparator_polarity;
+    int ActualComparator_latching;
+    int ActualComparator_queue;
+
+    float ReferenceVoltage;
+    float HighThreshold;
+    float LowThreshold;
 
 public:
     /**
@@ -80,40 +93,84 @@ public:
      */
     ~ADS1015();
 
-    // Methods
     /**
-     * @brief Return the value in volt for the selected channel. This function take a bit of time to execute.
+     * @brief Define the upper reference of voltage used to compute the real value.
+     *        Ideally, this value shall be measured with a DMM.
+     *        By default to 3.300000V.
      *
-     * @param[in] int channel (int) : The channel selected.
-     * @param[out] value (float*) : A pointer to a float to store the output value
+     * @param Reference The value.
      *
-     * @return (int) : 0 : Everything went fine !
-     * @return (int) : -1 : Channel set is under the minimum value
-     * @return (int) : -2 : Channel set is over the maximum value
-     * @return (int) : -3 : value pointer incorrect
+     * @return  0 : OK
      */
-    int Read_Voltage(const int channel, const float *value);
+    int ConfigureVoltageReference(const float Reference);
 
     /**
-     * @brief Configure the ADC operation mode
+     * @brief Read back the seen value on the selected input.
+     *        Warning : This function is blocking the software for a period of 2/Fsampling to ensure that the data is ready.
      *
-     * @param[in] channel (int) : Selected channel. Will be overwritten by reading functions
-     * @param[in] gain  (int) : Gain of the PGA
-     * @param[in] mode (int) : Operation mode
-     * @param[in] sampling_frequency (int)
-     * @param[in] comparator_mode (int)
-     * @param[in] comparator_polarity (int)
-     * @param[in] comparator_latching (int)
-     * @param[in] comparator_queue (int)
+     * @param[in] channel The selected channel
+     * @param[out] value The value converted in volts.
      *
-     * @return (int) : 0 if everything went fine, <0 otherwise.
+     * @return  0 : OK
+     * @return -1 : Invalid Channel
+     * @return -2 : IOCTL error.
      */
-    int Configure_ADC(const int channel = CHANNEL_0,
-                      const int gain = GAIN_4V00,
-                      const int mode = 1,
-                      const int sampling_frequency = SPS_920,
-                      const int comparator_mode = 0,
-                      const int comparator_polarity = 1,
-                      const int comparator_latching = 1,
-                      const int comparator_queue = 0);
+    int Read_Voltage(const int channel, float *const value);
+
+    /**
+     * @brief Configure the operation mode of the ADC.
+     *
+     * @param[in] OS Status of the conversion. Write a 1 to start conversion.
+     * @param[in] channel Selection of the channel (0-3)
+     * @param[in] gain Selection of the gain (0-7)
+     * @param[in] mode Selection of the mode (1 for single shot, 0 for continous.)
+     * @param[in] sampling_frequency Selection of the sampling frequency(0-7 -> See datasheet)
+     * @param[in] comparator_mode Mode of the comparator (0 : Classic, 1 : windowed)
+     * @param[in] comparator_polarity Polarity of the alert pin. (1 : Active high, 0 : active low)
+     * @param[in] comparator_latching Does an alert need to be cleared by software ?(1 to enable)
+     * @param[in] comparator_queue Number of assersions before triggering a flag.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid Channel
+     * @return -2 : Invalid Gain
+     * @return -3 : Invalid sampling frequency
+     * @return -4 : Invalid Comparator Queue
+     * @return -5 : IOCTL error.
+     *
+     */
+    int Configure_ADC(const int OS,
+                      const int channel,
+                      const int gain,
+                      const int mode,
+                      const int sampling_frequency,
+                      const int comparator_mode,
+                      const int comparator_polarity,
+                      const int comparator_latching,
+                      const int comparator_queue);
+
+    /**
+     * @brief Configure the low threshold value to trigger an interrupt.
+     *
+     * @param Value The value to trigger in volts.
+     *              Warning : This value is relative to the PGA settings and the input.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid Value.
+     * @return -2 : IOCTL error.
+     *
+     */
+    int ConfigureLowThreshold(const float Value);
+
+    /**
+     * @brief Configure the low threshold value to trigger an interrupt.
+     *
+     * @param Value The value to trigger in volts.
+     *              Warning : This value is relative to the PGA settings and the input.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid Value.
+     * @return -2 : IOCTL error.
+     *
+     */
+    int ConfigureHighThreshold(const float Value);
 };
