@@ -15,6 +15,15 @@
 #include <cstdint>
 #include "../../I2C/I2C.hpp"
 
+// ==============================================================================
+// MACROS
+// ==============================================================================
+// Define the way of passing commands to this IC
+#define REGISTER_WRITE(x) (((x & 0xF0) << 4) | 0x00)
+#define REGISTER_INCREMENT(x) (((x & 0xF0) << 4) | 0x40)
+#define REGISTER_DECREMENT(x) (((x & 0xF0) << 4) | 0x80)
+#define REGISTER_READ(x) (((x & 0xF0) << 4) | 0xC0)
+
 // =====================
 // CONSTRUCTORS
 // =====================
@@ -33,4 +42,69 @@ MCP45HV51::MCP45HV51(const I2C_Bus *I2C, const int address)
 MCP45HV51::~MCP45HV51()
 {
     return;
+}
+
+// =====================
+// FUNCTIONS
+// =====================
+
+int MCP45HV51::ConfigurePotentiometer(const int HardwareShutdownMode,
+                                      const int R0A,
+                                      const int R0W,
+                                      const int R0B)
+{
+    int buf = 0XFF;
+    buf = buf & (bool)HardwareShutdownMode;
+    buf = (buf << 1) & (bool)R0A;
+    buf = (buf << 1) & (bool)R0W;
+    buf = (buf << 1) & (bool)R0B;
+
+    int res = I2C_Write(&this->I2C, this->address, REGISTER_WRITE(TCON0), &buf);
+
+    if (res != 0)
+        return -1;
+    return 0;
+}
+
+int MCP45HV51::WriteWiper(const int Value)
+{
+    if ((Value < 0x00) | (Value > 0xFF))
+        return -1;
+
+    int buf = Value;
+
+    int res = I2C_Write(&this->I2C, this->address, REGISTER_WRITE(WIPER_0), &buf);
+
+    if (res != 0)
+        return -2;
+    return 0;
+}
+
+int MCP45HV51::ReadWiper(int *const Value)
+{
+    int res = I2C_Read(&this->I2C, this->address, REGISTER_READ(WIPER_0), Value);
+
+    if (res != 0)
+        return -1;
+    return 0;
+}
+
+int MCP45HV51::IncrementWiper()
+{
+    int buf = 0;
+    int res = I2C_Write(&this->I2C, this->address, REGISTER_INCREMENT(WIPER_0), &buf, 0);
+
+    if (res != 0)
+        return -1;
+    return 0;
+}
+
+int MCP45HV51::DecrementWiper()
+{
+    int buf = 0;
+    int res = I2C_Write(&this->I2C, this->address, REGISTER_DECREMENT(WIPER_0), &buf, 0);
+
+    if (res != 0)
+        return -1;
+    return 0;
 }
