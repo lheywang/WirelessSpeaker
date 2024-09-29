@@ -30,6 +30,7 @@
 // =====================
 // PAGE 0
 // =====================
+#define PAGE_0 0x00
 // PLL Config
 #define PLL_P_FACTOR 0x14
 #define PLL_J_FACTOR 0x15
@@ -118,6 +119,8 @@
 // =====================
 // PAGE 1
 // =====================
+#define PAGE_1 0x01
+// Analog Config
 #define OUTPUT_AMPLITUDE_REF 0x01
 #define ANALOG_GAIN 0x02
 #define EXTERNAL_UVP 0x05
@@ -129,11 +132,13 @@
 // =====================
 // PAGE 44
 // =====================
+#define PAGE_44 0x2C
 #define DSP_ADAPTATIVE 0x01
 
 // =====================
 // PAGE 253
 // =====================
+#define PAGE_253 0xFD
 #define CLOCK_FLEX_1 0x3F
 #define CLOCK_FLEX_2 0x40
 
@@ -152,6 +157,8 @@ private:
     I2C_Bus I2C;
 
     int SelectPage(int Page);
+
+    int PLLINPUTFREQ;
 
 public:
     /**
@@ -175,13 +182,11 @@ public:
      * @param[in] PLLReference Select the PLL Reference Clock
      * @param[in] PLLSource Select the PLL Source Clock
      * @param[in] PLLP P Coefficient for the PLL
-     * @param[in] PLLJ J Coefficient for the PLL
-     * @param[in] PLLD D Coefficient for the PLL
+     * @param[in] PLLK K Coefficient for the PLL. J and D values are determined automatically.
      * @param[in] PLLR R Coefficient for the PLL
      * @param[in] OSR OSR Coefficient for the Clock
      * @param[in] NCP NCP Coefficient for the Clock
-     * @param[in] PLLFlex1 Configure Advanced clock tree functions.
-     * @param[in] PLLFlex2 Configure Advanced clock tree functions.
+     * @param[in] AdvancedClock Set to 1 to enable advanced clock circuitry.
      * @param[out] PLLLock Return the PLL Lock Status.
      *
      * @return  0 : OK
@@ -195,13 +200,11 @@ public:
                      const int PLLReference,
                      const int PLLSource,
                      const int PLLP,
-                     const int PLLJ,
-                     const int PLLD,
+                     const float PLLK,
                      const int PLLR,
                      const int OSR,
                      const int NCP,
-                     const int PLLFLex1,
-                     const int PLLFlex2,
+                     const int AdvancedClock,
                      int *const PLLLock);
 
     /**
@@ -240,16 +243,6 @@ public:
                       const int GPIO6Output,
                       const int GPIOPolarity,
                       const int GPIOInversion);
-
-    /**
-     * @brief Read the status of the GPIO used as input.
-     *
-     * @param[out] GPIOInputStatus Pointer to an integer to store the value.
-     *
-     * @return  0 : OK
-     * @return -1 : IOCTL error.
-     */
-    int ReadGPIOInput(int *const GPIOInputStatus);
 
     /**
      * @brief Configure the I2S Input of the DAC.
@@ -395,112 +388,6 @@ public:
                           const int EMergencyVolumeRampDownStep);
 
     /**
-     * @brief Configure the volume (digital) for the DAC.
-     *
-     * @param[in] LeftVolume Left volume value.
-     * @param[in] RightVolume Right volume value.
-     *
-     * @return  0 : OK
-     * @return -1 : Invalid Left Volume
-     * @return -2 : Invalid Right Volume
-     * @return -3 : IOCTL error.
-     */
-    int ConfigureVolume(const int LeftVolume, const int RightVolume);
-
-    /**
-     * @brief Mute one or two channels on the DAC
-     *
-     * @param MuteLeft Mute Left channel.
-     * @param MuteRight Mute Right channel.
-     *
-     * @return  0 : OK
-     * @return -1 : IOCTL error.
-     */
-    int Mute(const int MuteLeft, const int MuteRight);
-
-    /**
-     * @brief Read the clock status of the DAC
-     *
-     * @param[out] DetectedBCKRatio Does the DAC has detected a BCK to SCK Ratio ?
-     * @param[out] SCKPresent Does the SCK is present ?
-     * @param[out] PLLLocked Is the PLL locked ?
-     * @param[out] LRCLKBCKPresent Are the LRCLK or BCK present ?
-     * @param[out] SCKRatio Is the SCK Ratio valid ?
-     * @param[out] SCKValid Is the SCK Valid ?
-     * @param[out] BCKValid Is the BCK Valid ?
-     * @param[out] FSValid Is the FS mode valid ?
-     * @param[out] LatchedClockHalt Does the clock has halted ?
-     * @param[out] ClockMissing Does the clock miss ?
-     * @param[out] ClockResync Do we need to resync the clock ?
-     * @param[out] ClockError Is there Clock errors ?
-     * @param[out] FSSpeedMonitor Does the FS Speed monitor is OK ?
-     *
-     * @return  0 : OK
-     * @return -1 : IOCTL error.
-     */
-    int ReadClockStatus(int *const DetectedBCKRatio,
-                        int *const SCKPresent,
-                        int *const PLLLocked,
-                        int *const LRCLKBCKPresent,
-                        int *const SCKRatio,
-                        int *const SCKRatioValid,
-                        int *const BCKValid,
-                        int *const FSValid,
-                        int *const LatchedClockHalt,
-                        int *const ClockMissing,
-                        int *const ClockResync,
-                        int *const ClockError,
-                        int *const FSSpeedMonitor);
-
-    /**
-     * @brief Read the Mute status of the DAC
-     *
-     * @param[out] AnalogLeftMute Analog left channel mute status
-     * @param[out] AnalogRightMute Analog right channel mute status
-     * @param[out] MuteZStatus XSMT status
-     * @param[out] AutoMuteLeftStatus Automute left channel status
-     * @param[out] AutoMuteRightStatus Automute right channel status
-     *
-     * @return  0 : OK
-     * @return -1 : IOCTL error.
-     */
-    int ReadMuteStatus(int *const AnalogLeftMute,
-                       int *const AnalogRightMute,
-                       int *const MuteZStatus,
-                       int *const AutoMuteLeftStatus,
-                       int *const AutoMuteRightStatus);
-
-    /**
-     * @brief Read the DSP status
-     *
-     * @param[out] DSPBootStatus Does the DSP has finished booting ?
-     * @param[out] DSPState In which mode is the DSP ?
-     * @param[out] UsedCRAM Which CRAM is used ?
-     * @param[out] ActiveCRAM Which CRAM is active ?
-     * @param[out] IDAC How many steps are available for each audio frame.
-     *
-     * @return  0 : OK
-     * @return -1 : IOCTL error.
-     */
-    int ReadDSPStatus(int *const DSPBootStatus,
-                      int *const DSPState,
-                      int *const UsedCRAM,
-                      int *const ActiveCRAM,
-                      int *const IDAC);
-
-    /**
-     * @brief Read the Analog Output Status
-     *
-     * @param[out] ShortCircuitOccuring A short circuit is occuring on the Output.
-     * @param[out] ShortCircuitDetected A short circuit has occured on the Output (may not be present anymore).
-     *
-     * @return  0 : OK
-     * @return -1 : IOCTL error.
-     */
-    int ReadAnalogStatus(int *const ShortCircuitOccuring,
-                         int *const ShortCircuitDetected);
-
-    /**
      * @brief Configure the DSP substystem settings
      * @warning This function doesn't configure the coefficients.
      *
@@ -616,4 +503,120 @@ public:
      * @return -3 : IOCTL error.
      */
     int ConfigureDSPIntructions(int *const Instructions);
+
+    /**
+     * @brief Configure the volume (digital) for the DAC.
+     *
+     * @param[in] LeftVolume Left volume value.
+     * @param[in] RightVolume Right volume value.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid Left Volume
+     * @return -2 : Invalid Right Volume
+     * @return -3 : IOCTL error.
+     */
+    int ConfigureVolume(const int LeftVolume, const int RightVolume);
+
+    /**
+     * @brief Mute one or two channels on the DAC
+     *
+     * @param MuteLeft Mute Left channel.
+     * @param MuteRight Mute Right channel.
+     *
+     * @return  0 : OK
+     * @return -1 : IOCTL error.
+     */
+    int Mute(const int MuteLeft, const int MuteRight);
+
+    /**
+     * @brief Read the status of the GPIO used as input.
+     *
+     * @param[out] GPIOInputStatus Pointer to an integer to store the value.
+     *
+     * @return  0 : OK
+     * @return -1 : IOCTL error.
+     */
+    int ReadGPIOInput(int *const GPIOInputStatus);
+
+    /**
+     * @brief Read the clock status of the DAC
+     *
+     * @param[out] DetectedBCKRatio Does the DAC has detected a BCK to SCK Ratio ?
+     * @param[out] SCKPresent Does the SCK is present ?
+     * @param[out] PLLLocked Is the PLL locked ?
+     * @param[out] LRCLKBCKPresent Are the LRCLK or BCK present ?
+     * @param[out] SCKRatio Is the SCK Ratio valid ?
+     * @param[out] SCKValid Is the SCK Valid ?
+     * @param[out] BCKValid Is the BCK Valid ?
+     * @param[out] FSValid Is the FS mode valid ?
+     * @param[out] LatchedClockHalt Does the clock has halted ?
+     * @param[out] ClockMissing Does the clock miss ?
+     * @param[out] ClockResync Do we need to resync the clock ?
+     * @param[out] ClockError Is there Clock errors ?
+     * @param[out] FSSpeedMonitor Does the FS Speed monitor is OK ?
+     *
+     * @return  0 : OK
+     * @return -1 : IOCTL error.
+     */
+    int ReadClockStatus(int *const DetectedBCKRatio,
+                        int *const SCKPresent,
+                        int *const PLLLocked,
+                        int *const LRCLKBCKPresent,
+                        int *const SCKRatio,
+                        int *const SCKRatioValid,
+                        int *const BCKValid,
+                        int *const FSValid,
+                        int *const LatchedClockHalt,
+                        int *const ClockMissing,
+                        int *const ClockResync,
+                        int *const ClockError,
+                        int *const FSSpeedMonitor);
+
+    /**
+     * @brief Read the Mute status of the DAC
+     *
+     * @param[out] AnalogLeftMute Analog left channel mute status
+     * @param[out] AnalogRightMute Analog right channel mute status
+     * @param[out] MuteZStatus XSMT status
+     * @param[out] AutoMuteLeftStatus Automute left channel status
+     * @param[out] AutoMuteRightStatus Automute right channel status
+     *
+     * @return  0 : OK
+     * @return -1 : IOCTL error.
+     */
+    int ReadMuteStatus(int *const AnalogLeftMute,
+                       int *const AnalogRightMute,
+                       int *const MuteZStatus,
+                       int *const AutoMuteLeftStatus,
+                       int *const AutoMuteRightStatus);
+
+    /**
+     * @brief Read the DSP status
+     *
+     * @param[out] DSPBootStatus Does the DSP has finished booting ?
+     * @param[out] DSPState In which mode is the DSP ?
+     * @param[out] UsedCRAM Which CRAM is used ?
+     * @param[out] ActiveCRAM Which CRAM is active ?
+     * @param[out] IDAC How many steps are available for each audio frame.
+     *
+     * @return  0 : OK
+     * @return -1 : IOCTL error.
+     */
+    int ReadDSPStatus(int *const DSPBootStatus,
+                      int *const DSPState,
+                      int *const UsedCRAM,
+                      int *const ActiveCRAM,
+                      int *const IDAC);
+
+    /**
+     * @brief Read the Analog Output Status
+     *
+     * @param[out] ShortCircuitOccuring A short circuit is occuring on the Output.
+     * @param[out] ShortCircuitDetected A short circuit has occured on the Output (may not be present anymore).
+     *
+     * @return  0 : OK
+     * @return -1 : IOCTL error.
+     */
+    int ReadAnalogStatus(int *const ShortCircuitOccuring,
+                         int *const ShortCircuitDetected);
 };
