@@ -106,7 +106,7 @@ public:
 
     /**
      * @brief Read back the seen value on the selected input.
-     *        Warning : This function is blocking the software for a period of 2/Fsampling to ensure that the data is ready.
+     * @warning This function block the code execution for a 2/Fsampling (between 60us and 15ms, depending on the settings).
      *
      * @param[in] channel The selected channel
      * @param[out] value The value converted in volts.
@@ -152,7 +152,8 @@ public:
      * @brief Configure the low threshold value to trigger an interrupt.
      *
      * @param Value The value to trigger in volts.
-     *              Warning : This value is relative to the PGA settings and the input.
+     * @warning The configured value is relative to the seen binary code.
+     *          When PGA settings are modified, this value shall be also edited.
      *
      * @return  0 : OK
      * @return -1 : Invalid Value.
@@ -163,9 +164,10 @@ public:
 
     /**
      * @brief Configure the low threshold value to trigger an interrupt.
+     * @warning The configured value is relative to the seen binary code.
+     *          When PGA settings are modified, this value shall be also edited.
      *
      * @param Value The value to trigger in volts.
-     *              Warning : This value is relative to the PGA settings and the input.
      *
      * @return  0 : OK
      * @return -1 : Invalid Value.

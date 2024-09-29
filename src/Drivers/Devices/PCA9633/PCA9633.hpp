@@ -121,7 +121,7 @@ public:
     /**
      * @brief Configure the global dimming circuitry on the chip.
      *        This include a Dimming or Blinking engine
-     *        (WARNING : May depend on the MODE config)
+     * @warning Theses settings meaning depend on global IC configuration.
      *
      * @param[in] DutyCycle The requested Duty Cycle
      * @param[in] Period The requested period in count of 41 ms (0 = 0s, 255 = 10.83s).
