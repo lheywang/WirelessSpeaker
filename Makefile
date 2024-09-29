@@ -48,10 +48,10 @@ all: $(EXECNAME).arm
 
 # Clean the build artifacts + the previous doxygen build docs
 clean:
-	@rm -f *.o $(EXECNAME)
 	@rm -f *.arm $(EXECNAME)
 	@rm -f -r $(OUTPUTDIR)
-	@rm -f -r doc 
+	@rm -f -r doc/ 
+	@echo "Deleted doc/ build/ and executable (.arm)"
 
 # Generic .o compiler. Used to compile all files.
 $(OUTPUTDIR)/%.o: %.cpp
