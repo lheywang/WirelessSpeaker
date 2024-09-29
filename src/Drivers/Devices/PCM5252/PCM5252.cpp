@@ -133,8 +133,9 @@ int PCM5252::ConfigurePLL(const int EnablePLL,
     temp = (this->PLLINPUTFREQ * PLLK * PLLR) / PLLP;
     if ((temp > 100'000'001) | (temp < 63'999'999))
         return -3;
-    temp = floor(PLLK);
 
+    temp = floor(PLLK);
+    int PLLD = round(PLLK - temp);
     if ((PLLD == 0) & ((temp < 1) | (temp > 63)))
         return -3;
     else if ((temp < 4) | (temp > 11))
