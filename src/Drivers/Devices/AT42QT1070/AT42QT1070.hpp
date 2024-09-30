@@ -126,11 +126,10 @@ public:
      * @param[out] Calibration Pointer to an integer to store the Calibration value.
      * @param[out] Overflow Pointer to an integer to store the Overflow Status.
      * @param[out] Touch Pointer to the TOUCH value.
-     * @param[out] Keys Pointer to an array of 6 elements to store the KEY values.
+     * @param[out] Keys Pointer to an integer to store the keys value.
      *
      * @return  0 : OK
-     * @return -1 : Keys array to short.
-     * @return -2 : IOCTL error.
+     * @return -1 : IOCTL error.
      *
      */
     int GetKeysStatus(int *const Calibration, int *const Overflow, int *const Touch, int *const Keys);

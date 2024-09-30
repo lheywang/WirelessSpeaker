@@ -78,33 +78,15 @@ int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, i
     // address conf to the driver
     I2C_ConfigureAddress(I2C, (uint8_t)Address);
 
-    // If no data is provided, only write the command !
-    if (Size == 0)
-    {
-        res += i2c_smbus_write_byte(I2C->I2C_file, (uint8_t)Register);
-    }
-    // otherwise, write the data accordingly in series depending of the Payload.
-    else
-    {
-        // IO operation
-        if (DataSize == 8)
-        {
-            res = i2c_smbus_write_block_data(I2C->I2C_file, Register, Size, (uint8_t *)Payload);
-        }
-        else if (DataSize == 16)
-        {
-            for (int i = 0; i < Size + 1; i++)
-            {
-                res += i2c_smbus_write_word_data(I2C->I2C_file, Register, (uint16_t)Payload[i]);
-            }
-        }
+    for (int i = 0; i < Size; i++)
+        if (DataSize == 1)
+            res = i2c_smbus_write_byte_data(I2C->I2C_file, Register, (uint8_t)Payload[i]);
         else
-            return -3;
+            res = i2c_smbus_write_word_data(I2C->I2C_file, Register, (uint16_t)Payload[i]);
 
-        if (res != 0)
-            return -4;
-        return 0;
-    }
+    if (res != 0)
+        return -4;
+    return 0;
 }
 
 // ------------------------------------------------------------------------------
@@ -124,22 +106,12 @@ int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, in
     I2C_ConfigureAddress(I2C, Address);
 
     // If data == 0 (We send only a command !)
-
-    for (int i = 0; i < Size + 1; i++)
+    for (int i = 0; i < Size; i++)
     {
-        // Match the wanted datasize.
-        if (DataSize == 8)
-        {
-            res = i2c_smbus_read_byte(I2C->I2C_file);
-        }
-        else if (DataSize == 16)
-        {
-            res = i2c_smbus_read_word_data(I2C->I2C_file, (uint8_t)(i + Register));
-        }
-        else
-            return -4;
-
-        // Store the result.
+        if (DataSize == 1)
+            res = i2c_smbus_read_byte_data(I2C->I2C_file, Register);
+        else if (DataSize == 2)
+            res = i2c_smbus_read_word_data(I2C->I2C_file, Register);
         Payload[i] = res;
     }
     return 0;

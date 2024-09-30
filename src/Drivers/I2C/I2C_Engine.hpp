@@ -64,15 +64,16 @@ int I2C_Close(I2C_Bus *I2C);
  * @param[in] Register The register where the data shall be wrote.
  * @param[in] Payload The data to be wrote.
  * @param[in] Size The number of bytes (or words) to write. Default to 1 byte.
- * @param[in] DataSize The number of bits per register to write. Default to 8 bits.
+ * @param[in] DataSize The number of bytes per operation to write (1 or 2).
  *
  * @return  0 : Everything went fine.
  * @return -1 : Incorrect Address.
  * @return -2 : Incorrect Register.
  * @return -3 : Incorrect Payload size.
- * @return -4 : IOCTL error.
+ * @return -4 : Incorrect DataSize value.
+ * @return -5 : IOCTL error.
  */
-int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 1, int DataSize = 8);
+int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 1, int DataSize = 1);
 
 /**
  * @brief This function perform the read of N (Size) bytes on the IC.
@@ -81,15 +82,16 @@ int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 
  * @param[in] Register The register where the data shall be rode.
  * @param[in] Payload The data to be rode. Pass an array of int of the wanted size.
  * @param[in] Size The number of bytes (or words) to be rode.
- * @param[in] DataSize The number of bites to be rode. By default 8.
+ * @param[in] DataSize The number of bytes per operation to write (1 or 2).
  *
  * @return  0 : Everything went fine.
  * @return -1 : Incorrect Address.
  * @return -2 : Incorrect Register.
  * @return -3 : Number of bytes to read too big.
- * @return -4 : DataSize Incorrect. Only 8 or 16 are accepted.
+ * @return -4 : Incorrect DataSize value.
+ * @return -5 : IOCTL error.
  */
-int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 1, int DataSize = 8);
+int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 1, int DataSize = 1);
 
 /**
  * @brief This function, called automatically before any operation configure the address on the IOCTL file.

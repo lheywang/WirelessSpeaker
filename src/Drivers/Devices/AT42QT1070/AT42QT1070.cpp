@@ -16,6 +16,8 @@
 #include <cstdint>
 #include "../../I2C/I2C.hpp"
 
+#include <iostream>
+
 // =====================
 // CONSTRUCTORS
 // =====================
@@ -58,9 +60,6 @@ int AT42QT1070::GetIDs(int *const ID, int *const FirmwareRevision)
 
 int AT42QT1070::GetKeysStatus(int *const Calibration, int *const Overflow, int *const Touch, int *const Keys)
 {
-    if ((sizeof(Keys) / sizeof(Keys[0])) < 7)
-        return -1;
-
     int buf[2] = {0};
     int res;
 
@@ -71,16 +70,10 @@ int AT42QT1070::GetKeysStatus(int *const Calibration, int *const Overflow, int *
     *Calibration = buf[0] >> 7;
     *Overflow = (buf[0] & 0x40) >> 6;
     *Touch = (buf[0] & 0x01);
-
-    // buf 1
-    for (int i = 0; i < 7; i++)
-    {
-        Keys[i] = buf[1] & 0x01;
-        buf[1] = buf[1] >> 1;
-    }
+    *Keys = buf[1];
 
     if (res != 0)
-        return -2;
+        return -1;
     return 0;
 }
 
