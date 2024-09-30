@@ -211,27 +211,28 @@ public:
      * @brief Configure the GPIO Subsystem of the DAC
      *
      * @param[in] MISOFunction Define the function of the MISO pin.
-     * @param[in] GPIOEnable Define the state of all of the GPIO. Select Input or Output.
-     * @param[in] GPIO1Output Configure the output source for the GPIO1.
+     * @param[in] GPIOEnable Define the state of all of the GPIO. Select Input or Output. Each bit mean 1 GPIO, thus a mask is required. 1 is output.
+     * @param[in] GPIO1Output Configure the output source for the GPIO1. --> Check Datasheet
      * @param[in] GPIO2Output Configure the output source for the GPIO2.
      * @param[in] GPIO3Output Configure the output source for the GPIO3.
      * @param[in] GPIO4Output Configure the output source for the GPIO4.
      * @param[in] GPIO5Output Configure the output source for the GPIO5.
      * @param[in] GPIO6Output Configure the output source for the GPIO6.
-     * @param[in] GPIOPolarity Configure the output polarity.
-     * @param[in] GPIOInversion Configure the output inversion.
+     * @param[in] GPIOPolarity Configure the output polarity. 1 mean output high (Only for simple digital outputs)
+     * @param[in] GPIOInversion Configure the output inversion. 1 mean that the output is inverted (active low)
      *
      * @return  0 : OK
-     * @return -1 : Invalid Enable Value
-     * @return -2 : Invalid output selection for GPIO1.
-     * @return -3 : Invalid output selection for GPIO2.
-     * @return -4 : Invalid output selection for GPIO3.
-     * @return -5 : Invalid output selection for GPIO4.
-     * @return -6 : Invalid output selection for GPIO5.
-     * @return -7 : Invalid output selection for GPIO6.
-     * @return -8 : Invalid output polarity.
-     * @return -9 : Invalid output inversion.
-     * @return -10 : IOCTL error.
+     * @return -1 : Invalid MISOBUF Function.
+     * @return -2 : Invalid Enable Value
+     * @return -3 : Invalid output selection for GPIO1.
+     * @return -4 : Invalid output selection for GPIO2.
+     * @return -5 : Invalid output selection for GPIO3.
+     * @return -6 : Invalid output selection for GPIO4.
+     * @return -7 : Invalid output selection for GPIO5.
+     * @return -8 : Invalid output selection for GPIO6.
+     * @return -9 : Invalid output polarity.
+     * @return -10 : Invalid output inversion.
+     * @return -11 : IOCTL error.
      */
     int ConfigureGPIO(const int MISOFunction,
                       const int GPIOEnable,

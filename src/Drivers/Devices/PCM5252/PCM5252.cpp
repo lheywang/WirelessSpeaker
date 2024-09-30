@@ -153,6 +153,60 @@ int PCM5252::ConfigureGPIO(const int MISOFunction,
                            const int GPIOPolarity,
                            const int GPIOInversion)
 {
+    int res = 0;
+    int buf[10] = {0}; // Our buffers
+
+    // MISO Function Selection
+    if (0 > MISOFunction | MISOFunction > 1)
+        return -1;
+    buf[0] = MISOFunction;
+
+    // GPIO Enable
+    if (0 > GPIOEnable | GPIOEnable > 63)
+        return -2;
+    buf[1] = GPIOEnable;
+
+    // GPIO Functions
+    if (0 > GPIO1Output | GPIO1Output > 16)
+        return -3;
+    if (0 > GPIO2Output | GPIO2Output > 16)
+        return -4;
+    if (0 > GPIO3Output | GPIO3Output > 16)
+        return -5;
+    if (0 > GPIO4Output | GPIO4Output > 16)
+        return -6;
+    if (0 > GPIO5Output | GPIO5Output > 16)
+        return -7;
+    if (0 > GPIO6Output | GPIO6Output > 16)
+        return -8;
+    buf[2] = GPIO1Output;
+    buf[3] = GPIO2Output;
+    buf[4] = GPIO3Output;
+    buf[5] = GPIO4Output;
+    buf[6] = GPIO5Output;
+    buf[7] = GPIO6Output;
+
+    // GPIO Ouput polarity
+    if (0 > GPIOPolarity | GPIOPolarity > 63)
+        return -9;
+    buf[8] = GPIOPolarity;
+
+    // GPIO Inversion
+    if (0 > GPIOInversion | GPIOInversion > 63)
+        return -10;
+    buf[9] = GPIOInversion;
+
+    // I2C Writes
+    res += this->SelectPage(PAGE_0);
+    res += I2C_Write(&this->I2C, this->address, REGISTER_NONINCREMENT(MISOFunction), &buf[0], 1, 1);
+    res += I2C_Write(&this->I2C, this->address, REGISTER_NONINCREMENT(GPIO_CONTROL), &buf[1], 1, 1);
+    res += I2C_Write(&this->I2C, this->address, REGISTER_AUTOINCREMENT(GPIO1_OUTPUT_FUNCTION), buf + 2 * sizeof(buf[2]), 6, 1);
+    res += I2C_Write(&this->I2C, this->address, REGISTER_NONINCREMENT(GPIO_OUTPUT_STATUS), &buf[8], 1, 1);
+    res += I2C_Write(&this->I2C, this->address, REGISTER_NONINCREMENT(GPIO_POLARITY), &buf[9], 1, 1);
+
+    if (res != 0)
+        return -11;
+    return 0;
 }
 
 int PCM5252::ReadGPIOInput(int *const GPIOInputStatus)
