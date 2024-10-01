@@ -97,8 +97,7 @@ int PCA9633::ConfigureDutyCycle(const int FirstChannel, int *const Value, const 
 
     // Let's create a copy to prevent from running out of memory if too short array is provided.
     int buf[4] = {0};
-    int size = sizeof(Value) / sizeof(Value[0]);
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < AutoIncrement; i++)
         buf[i] = Value[i];
 
     int Tregister = 0;
@@ -107,6 +106,7 @@ int PCA9633::ConfigureDutyCycle(const int FirstChannel, int *const Value, const 
     else
         Tregister = REGISTER_WITH_INCREMENT_LEDS(FirstChannel);
 
+    // Write the number of channels we want.
     int res = I2C_Write(&this->I2C, this->address, Tregister, buf, AutoIncrement);
     if (res != 0)
         return -3;

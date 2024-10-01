@@ -21,6 +21,12 @@ int main()
     I2C_Bus *I2C = I2C_GetInfos();
 
     AT42QT1070 TOUCH0 = AT42QT1070(I2C);
+    MCP9808 TEMP0 = MCP9808(I2C, 0x1a);
+
+    float Temperature;
+    int Status;
+    std::cout << TEMP0.ReadTemperature(&Temperature, &Status) << std::endl;
+    std::cout << Temperature << " | " << Status << std::endl;
 
     int Calibration = 0;
     int Overflow = 0;

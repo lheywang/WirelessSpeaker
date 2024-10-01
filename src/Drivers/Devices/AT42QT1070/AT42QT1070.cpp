@@ -61,7 +61,7 @@ int AT42QT1070::GetIDs(int *const ID, int *const FirmwareRevision)
 int AT42QT1070::GetKeysStatus(int *const Calibration, int *const Overflow, int *const Touch, int *const Keys)
 {
     int buf[2] = {0};
-    int res;
+    int res = 0;
 
     res += I2C_Read(&this->I2C, this->address, DETECTION_STATUS, &buf[0]);
     res += I2C_Read(&this->I2C, this->address, KEY_STATUS, &buf[1]);

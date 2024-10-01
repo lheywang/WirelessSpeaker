@@ -75,6 +75,7 @@
 #define I2S_CONFIG 0x28
 #define I2S_OFFSET 0x29
 #define FS_SPEED 0x22
+#define MASTER_MODE_CONTROL 0x0C
 
 // Clocks
 #define DAC_CLOCK_DIVIDER 0x1C
@@ -82,7 +83,6 @@
 #define CLOCK_MISSING_DETECT 0x2C
 #define CLOCK_SYSTEM_STATUS 0x5E
 #define CLOCK_SYSTEM_ERRORS 0x5F
-#define MASTER_MODE_CONTROL 0x0C
 #define DAC_CLOCK_SOURCE 0x0E
 #define DAC_RESYNC 0x13
 #define NCP_CLOCK_DIVIDER 0x1D
@@ -142,6 +142,13 @@
 #define CLOCK_FLEX_1 0x3F
 #define CLOCK_FLEX_2 0x40
 
+// =====================
+// DSP INSTRUCTIONS / COEFFICIENTS
+// =====================
+#define BUFFER_A 0x2C
+#define BUFFER_B 0x3E
+#define INSTR 0x98
+
 // ==============================================================================
 // IC CLASS FUNCTIONS
 // ==============================================================================
@@ -176,7 +183,8 @@ public:
     ~PCM5252();
 
     /**
-     * @brief Configure the PLL Subsystem of the DAC
+     * @brief Configure the PLL Subsystem of the DAC.
+     *
      *
      * @param[in] EnablePLL Enable the PLL
      * @param[in] PLLReference Select the PLL Reference Clock
@@ -184,17 +192,15 @@ public:
      * @param[in] PLLP P Coefficient for the PLL
      * @param[in] PLLK K Coefficient for the PLL. J and D values are determined automatically.
      * @param[in] PLLR R Coefficient for the PLL
-     * @param[in] OSR OSR Coefficient for the Clock
-     * @param[in] NCP NCP Coefficient for the Clock
-     * @param[in] AdvancedClock Set to 1 to enable advanced clock circuitry.
      * @param[out] PLLLock Return the PLL Lock Status.
      *
      * @return  0 : OK
      * @return -1 : Invalid PLLReference
      * @return -2 : Invalid PLLSource
      * @return -3 : Invalid Coefficients (PLL P, J, D, R, OSR, NCP)
-     * @return -4 : IOCTL error.
-     *
+     * @return -4 : Invalid PLLP Value
+     * @return -5 : Fractionnal value of PLLK > 9999.
+     * @return -6 : IOCTL error.
      */
     int ConfigurePLL(const int EnablePLL,
                      const int PLLReference,
@@ -202,13 +208,10 @@ public:
                      const int PLLP,
                      const float PLLK,
                      const int PLLR,
-                     const int OSR,
-                     const int NCP,
-                     const int AdvancedClock,
                      int *const PLLLock);
 
     /**
-     * @brief Configure the GPIO Subsystem of the DAC
+     * @brief Configure the GPIO Subsystem of the DAC. Some of the settings below may need an advanced clocking configuration before.
      *
      * @param[in] MISOFunction Define the function of the MISO pin.
      * @param[in] GPIOEnable Define the state of all of the GPIO. Select Input or Output. Each bit mean 1 GPIO, thus a mask is required. 1 is output.
@@ -248,7 +251,7 @@ public:
     /**
      * @brief Configure the I2S Input of the DAC.
      *
-     * @param[in] BCKPolarity Configure the BCK polarity
+     * @param[in] BCKPolarity Configure the BCK polarity. Assert the data sampling on rising edges or falling edges.
      * @param[in] BCKOutputEnable Configure the I2S BCK mode (master or slave)
      * @param[in] LRCLKOutputEnable Configure the I2S LRCLK mode (master or slave)
      * @param[in] MasterModeBCKDivider Configure the Master BCK Divider
@@ -256,17 +259,15 @@ public:
      * @param[in] Enable16xInterpolation Enable the 16x Interpolation input.
      * @param[in] FSSpeedMode Configure the FS mode (single, dual, quad or octal)
      * @param[in] I2SDataFormat Configure the I2S Data Format
-     * @param[in] I2CWOrdLength Configure the I2S Data Length
+     * @param[in] I2SWordLength Configure the I2S Data Length
      * @param[in] I2SDataShift Configure how many BCK shift are applied to the I2S Data In
      *
      * @return  0 : OK
-     * @return -1 : Invalid Master BCK Divider.
-     * @return -2 : Invalid Master LRCLK Divider.
-     * @return -3 : Invalid FS Mode.
-     * @return -4 : Invalid I2S DataFormat.
-     * @return -5 : Invalid I2S Word Length.
-     * @return -6 : Invalid I2C Data Shift.
-     * @return -7 : IOCTL error.
+     * @return -1 : Invalid FS Mode.
+     * @return -2 : Invalid I2S DataFormat.
+     * @return -3 : Invalid I2S Word Length.
+     * @return -4 : Invalid I2C Data Shift.
+     * @return -5 : IOCTL error.
      */
     int ConfigureI2S(const int BCKPolarity,
                      const int BCKOutputEnable,
@@ -276,7 +277,7 @@ public:
                      const int Enable16xInterpolation,
                      const int FSSpeedMode,
                      const int I2SDataFormat,
-                     const int I2CWOrdLength,
+                     const int I2SWordLength,
                      const int I2SDataShift);
 
     /**
@@ -365,16 +366,15 @@ public:
      * @param[in] EMergencyVolumeRampDownStep Configure the emergency ramp down step size.
      *
      * @return  0 : OK
-     * @return -1 : Invalid Enable Auto Mute value.
-     * @return -2 : Invalid Left Auto Mute delay value
-     * @return -3 : Invalid Right Auto Mute delay value
-     * @return -4 : Invalid Ramp Down Speed value.
-     * @return -5 : Invalid Ramp down step value.
-     * @return -6 : Invalid Ramp Up Speed value.
-     * @return -7 : Invalid Ramp Up step value.
-     * @return -9 : Invalid Emergency Volume Ramp down speed value
-     * @return -10 : Invalid Emergency Volume Ramp down step value.
-     * @return -11 : IOCTL error.
+     * @return -1 : Invalid Left Auto Mute delay value
+     * @return -2 : Invalid Right Auto Mute delay value
+     * @return -3 : Invalid Ramp Down Speed value.
+     * @return -4 : Invalid Ramp down step value.
+     * @return -5 : Invalid Ramp Up Speed value.
+     * @return -6 : Invalid Ramp Up step value.
+     * @return -7 : Invalid Emergency Volume Ramp down speed value
+     * @return -8 : Invalid Emergency Volume Ramp down step value.
+     * @return -9 : IOCTL error.
      */
     int ConfigureAutoMute(const int EnableAutoMute,
                           const int LeftEnableAutoMute,
@@ -457,53 +457,85 @@ public:
     int ConfigureVoltageProtection(const int EnableXSMUTEPowerLoss, const int EnableInternalPowerLoss);
 
     /**
-     * @brief
+     * @brief Configure the clocking subsystem for the whole chip.
      *
-     * @param[in] AutoClockSet
-     * @param[in] IgnoreFSDetection
-     * @param[in] IgnoreBCKDetection
-     * @param[in] IgnoreSCKDetection
-     * @param[in] IgnoreClockHaltDetection
-     * @param[in] IgnoreLRCLKBCKDetection
-     * @param[in] IgnorePLLUnlocks
-     * @param[in] ClockMissingDelay
-     * @return
+     * @param[in] AutoClockSet Enable or disable the autoset mode for the clocks.
+     * @param[in] IgnoreFSDetection Ignore the FS detection.
+     * @param[in] IgnoreBCKDetection Ignore the BCK detection.
+     * @param[in] IgnoreSCKDetection Ignore the SCK detection.
+     * @param[in] IgnoreClockHaltDetection Ignore the Clock Halt Detection
+     * @param[in] IgnoreLRCLKBCKDetection Ignore the LRCLK /  BCK detection.
+     * @param[in] IgnorePLLUnlocks Ignore the PLL unlock detection.
+     * @param[in] ClockMissingDelay Configure the delay before triggering an error for missing clock.
+     *
+     * @param[in] AdvancedClock Set to 1 to enable advanced clock circuitry.
+     *
+     * @return  0 : OK.
+     * @return -1 : Incorrect Clock Missing Delay.
+     * @return -2 : IOCTL error.
      */
-    int ConfigureClock(const int AutoClockSet,
-                       const int IgnoreFSDetection,
-                       const int IgnoreBCKDetection,
-                       const int IgnoreSCKDetection,
-                       const int IgnoreClockHaltDetection,
-                       const int IgnoreLRCLKBCKDetection,
-                       const int IgnorePLLUnlocks,
-                       const int ClockMissingDelay);
+    int ConfigureClockErrors(const int AutoClockSet,
+                             const int IgnoreFSDetection,
+                             const int IgnoreBCKDetection,
+                             const int IgnoreSCKDetection,
+                             const int IgnoreClockHaltDetection,
+                             const int IgnoreLRCLKBCKDetection,
+                             const int IgnorePLLUnlocks,
+                             const int ClockMissingDelay,
+                             const int AdvancedClock);
+    /**
+     * @brief Configure the various dividers on the clock tree !
+     *
+     * @param[in] OSR Divider coefficient for the oversampling circuit. Source = DDAC
+     * @param[in] NCP Divider coefficient for the Negative Charge pump.  Source = DDAC
+     * @param[in] DDAC Divider frequency for the DAC circuit.  Source = PLL | SCK
+     * @param[in] DSP Divider coefficient for the DSP circuit. Source = PLL | SCK
+     * @param[in] BCK Divider coefficient for the BCK value (Master mode only). Source = SCK
+     * @param[in] LRLCK Divider coefficient for the LRLCK value. (Master mode only). Source = SCK
+     *
+     * @return -1 : Incorrect OSR Value.
+     * @return -2 : Incorrect NCP Value.
+     * @return -3 : Incorrect DDAC Value.
+     * @return -4 : Incorrect DSP Value.
+     * @return -5 : Incorrect BCK Value.
+     * @return -6 : Incorrect LRLCK Value.
+     * @return -7 : IOCTL error.
+     */
+    int ConfigureClockDividers(const int OSR,
+                               const int NCP,
+                               const int DDAC,
+                               const int DSP,
+                               const int BCK,
+                               const int LRLCK);
 
     /**
      * @brief Write to a CRAM buffer a list of coefficients for the DSP.
      * @warning This function is slow and blocking due to the large amount of Data to transfer.
      *
-     * @param Buffer The number of the buffer.
-     * @param Values An array to be wrote.
+     * @param[in] Buffer The number of the buffer.
+     * @param[in] Values An array to be wrote.
+     * @param[in] CoeffNumber The number of values to write.
      *
      * @return  0 : OK
      * @return -1 : Invalid Buffer
      * @return -2 : Invalid Values sizes
      * @return -3 : IOCTL error.
      */
-    int ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values);
+    int ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values, const int CoeffNumber);
 
     /**
      * @brief Write to a CRAM buffer a list of instructions for the DSP.
      * @warning This function is slow and blocking due to the large amount of Data to transfer.
      *
-     * @param Values An array of instructions to be wrote.
+     * @param[in] Values An array of instructions to be wrote.
+     * @param[in] InstrNumber The number of instructions to write.
      *
      * @return  0 : OK
-     * @return -1 : Invalid Buffer
-     * @return -2 : Invalid Values sizes
-     * @return -3 : IOCTL error.
+     * @return -1 : Invalid Values sizes
+     * @return -2 : IOCTL error.
+     * @return -3 : Unknown error. Shoudln't get here, if you land here, good luck !
      */
-    int ConfigureDSPIntructions(int *const Instructions);
+    int ConfigureDSPIntructions(int *const Instructions, const int InstrNumber);
 
     /**
      * @brief Configure the volume (digital) for the DAC.
@@ -515,14 +547,15 @@ public:
      * @return -1 : Invalid Left Volume
      * @return -2 : Invalid Right Volume
      * @return -3 : IOCTL error.
+     * @return -4 : Unknown error. Shoudln't get here, if you land here, good luck !
      */
     int ConfigureVolume(const int LeftVolume, const int RightVolume);
 
     /**
      * @brief Mute one or two channels on the DAC
      *
-     * @param MuteLeft Mute Left channel.
-     * @param MuteRight Mute Right channel.
+     * @param[in] MuteLeft Mute Left channel.
+     * @param[in] MuteRight Mute Right channel.
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
@@ -555,6 +588,8 @@ public:
      * @param[out] ClockResync Do we need to resync the clock ?
      * @param[out] ClockError Is there Clock errors ?
      * @param[out] FSSpeedMonitor Does the FS Speed monitor is OK ?
+     * @param[out] DetectedFS Seen FS.
+     * @param[out] DetectedSCK Seen SCK in FS counts.
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
@@ -571,7 +606,9 @@ public:
                         int *const ClockMissing,
                         int *const ClockResync,
                         int *const ClockError,
-                        int *const FSSpeedMonitor);
+                        int *const FSSpeedMonitor,
+                        int *const DetectedFS,
+                        int *const DetectedSCK);
 
     /**
      * @brief Read the Mute status of the DAC
@@ -599,6 +636,7 @@ public:
      * @param[out] UsedCRAM Which CRAM is used ?
      * @param[out] ActiveCRAM Which CRAM is active ?
      * @param[out] IDAC How many steps are available for each audio frame.
+     * @param[out] DSPOverflow Does the DSP has overflow ?
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
@@ -607,7 +645,8 @@ public:
                       int *const DSPState,
                       int *const UsedCRAM,
                       int *const ActiveCRAM,
-                      int *const IDAC);
+                      int *const IDAC,
+                      int *const DPSOverflow);
 
     /**
      * @brief Read the Analog Output Status

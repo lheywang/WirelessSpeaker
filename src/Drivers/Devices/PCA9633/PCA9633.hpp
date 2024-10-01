@@ -107,7 +107,7 @@ public:
      *        The same value will be copied.
      *
      * @param[in] FirstChannel The first channel to be configured.
-     * @param[in] Value Pointer to the value to be defined. May be an array of multiple ellements.
+     * @param[in] Value Pointer to the value to be defined. May be an array of multiple elements.
      * @param[in] AutoIncrement Set to the number of channel to set. By default 1, for 1 channel.
      *                      Up to four channel may be configured, depending on the first channel.
      *

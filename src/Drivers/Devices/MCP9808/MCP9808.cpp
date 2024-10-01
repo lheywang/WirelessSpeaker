@@ -22,7 +22,6 @@
 // ==============================================================================
 // Define the way of passing commands to this IC
 #define REGISTER(x) (x & 0x0F)
-#define SWAP_BYTES(x) (((x & 0x00FF) << 8) | (x & 0xFF00) >> 8)
 
 // =====================
 // CONSTRUCTORS
@@ -61,7 +60,6 @@ static void FloatToInts(const float Input, int *const OutputBuf)
 
     *OutputBuf = 0;
     *OutputBuf = (Sign << 12) | (IntegerPart << 4) | (FloatPart & 0x0F);
-    *OutputBuf = SWAP_BYTES(*OutputBuf);
 
     return;
 }
@@ -112,9 +110,6 @@ int MCP9808::Configure(const int Hysteresis,
     buf = (buf << 1) | (bool)AlertPolarity;
     buf = (buf << 1) | (bool)AlertMode;
 
-    // Swap LSB and MSB before sneding the data to the I2C system.
-    buf = SWAP_BYTES(buf);
-
     int res = 0;
     res = I2C_Write(&this->I2C, this->address, REGISTER(MCP9808_CONFIG), &buf, 1, 2);
 
@@ -134,7 +129,7 @@ int MCP9808::GetIDs(int *const DeviceID, int *const DeviceRevision, int *const M
 
     buf = 0;
     res += I2C_Read(&this->I2C, this->address, REGISTER(MANUFACTURER), &buf, 1, 2);
-    *ManufacturerID = SWAP_BYTES(buf);
+    *ManufacturerID = buf;
 
     if (res != 0)
         return -1;
@@ -176,9 +171,6 @@ int MCP9808::ReadTemperature(float *const Temperature, int *const Status)
 
     if (res != 0)
         return -1;
-
-    // Swap bytes !
-    buf = SWAP_BYTES(buf);
 
     // Fetching in temp variables the correct values.
     *Status = (buf & 0xE000) >> 13;
