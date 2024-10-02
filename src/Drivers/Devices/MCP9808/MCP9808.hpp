@@ -1,11 +1,13 @@
 /**
  * @file MCP9808.hpp
- * @author l.heywang
+ * @authorl.heywang (leonard.heywang@gmail.com)
  * @brief Define a class and functions to exploit the MCP9808 Temperature Sensor.
- * @version 0.1
+ * @version 1.0
  * @date 2024-09-25
  *
  * @copyright Copyright (c) 2024
+ *
+ * @remark Class was tested successfully on 01/10/2024.
  *
  */
 // prevent multiple include
@@ -16,20 +18,8 @@
 #include "../../I2C/I2C.hpp"
 
 // ==============================================================================
-// IC REGISTER ADDRESSES
+// PUBLIC DEFINES
 // ==============================================================================
-
-#define MCP9808_DATA_SIZE 16 // 16b register here
-
-// Register
-#define MCP9808_CONFIG 0x01
-#define UPPER_TEMP 0x02
-#define LOWER_TEMP 0x03
-#define CRIT_TEMP 0x04
-#define READ_TEMP 0x05
-#define MANUFACTURER 0x06
-#define DEVICEID 0x07
-#define TEMP_RESOLUTION 0x08
 
 // Resolution
 #define C0_5 0x00
@@ -126,7 +116,7 @@ public:
     int GetIDs(int *const DeviceID, int *const DeviceRevision, int *const ManufacturerID);
 
     /**
-     * @brief Set the Alert Temperatures object
+     * @brief Set the Alert Temperatures object. Values are within the range -128 +127 °C
      *
      * @param[in] Minimal
      * @param[in] Maximal

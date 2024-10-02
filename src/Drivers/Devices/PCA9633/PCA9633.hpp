@@ -1,6 +1,6 @@
 /**
  * @file PCA9633.hpp
- * @author l.heywang
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define a class and basic function for the PCA9633 leds drivers.
  * @version 0.1
  * @date 2024-09-25
@@ -16,24 +16,8 @@
 #include "../../I2C/I2C.hpp"
 
 // ==============================================================================
-// IC REGISTER ADDRESSES
+// PUBLIC DEFINES
 // ==============================================================================
-
-#define PCA9633_DATA_SIZE 8
-
-#define MODE1 0x00
-#define MODE2 0x01
-#define PWM0 0x02
-#define PWM1 0x03
-#define PWM2 0x04
-#define PWM3 0x05
-#define GRPPPWM 0x06
-#define GRPFREQ 0x07
-#define LEDOUT 0x08
-#define SUBADDR1 0x09
-#define SUBADDR2 0x0A
-#define SUBADDR3 0x0B
-#define ALLCALLADR 0x0C
 
 // OE Status
 #define LED_OFF 0x00
@@ -41,6 +25,18 @@
 #define LED_IN 0x02
 #define LED_PWM 0x02
 #define LED_PWM_GLOB 0x03
+
+// Channels numbers
+#define CHANNEL0 0x00
+#define CHANNEL1 0x01
+#define CHANNEL2 0x02
+#define CHANNEL3 0x03
+
+// Sub address numbers
+#define ADDRESS1 0x09
+#define ADDRESS2 0x0A
+#define ADDRESS3 0x0B
+#define ADDRESS4 0x0C
 
 // ==============================================================================
 // IC CLASS FUNCTIONS

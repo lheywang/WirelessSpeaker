@@ -1,6 +1,6 @@
 /**
  * @file DS1882.cpp
- * @author l.heywang
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Source of the DS1882 functions
  * @version 0.1
  * @date 2024-09-25
@@ -16,6 +16,11 @@
 #include <cstdint>
 #include <stdio.h>
 #include "../../I2C/I2C.hpp"
+
+// ==============================================================================
+// IC REGISTER ADDRESSES
+// ==============================================================================
+#define CONFIG 0x80
 
 // =====================
 // CONSTRUCTORS

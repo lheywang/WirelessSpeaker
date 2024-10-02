@@ -1,11 +1,13 @@
 /**
  * @file I2C_Engine.hpp
- * @author l.heywang
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define basic functions to write or read to IC over I2C bus.
- * @version 0.1
+ * @version 1.0
  * @date 2024-09-25
  *
  * @copyright Copyright (c) 2024
+ *
+ * @remark Class was tested successfully on 01/10/2024.
  *
  */
 

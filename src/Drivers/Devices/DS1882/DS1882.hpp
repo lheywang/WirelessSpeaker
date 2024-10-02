@@ -1,6 +1,6 @@
 /**
  * @file DS1882.hpp
- * @author l.heywang
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define a class and functions to exploit the DS1882 Audio logarithmic potentiometer
  * @version 0.1
  * @date 2024-09-25
@@ -20,12 +20,8 @@
 // IC REGISTER ADDRESSES
 // ==============================================================================
 
-#define DS1882_DATA_SIZE 8 // 8b register here
-
-// wipers value (bits 6 and 7)
 #define WIPER_0 0x00
 #define WIPER_1 0x40
-#define CONFIG 0x80
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -76,8 +72,8 @@ public:
     /**
      * @brief
      *
-     * @param[inout] wiper0 Pointer to an int to store the Wiper0 value
-     * @param[inout] wiper1 Pointer to an int to store the Wiper1 value
+     * @param[out] wiper0 Pointer to an int to store the Wiper0 value
+     * @param[out] wiper1 Pointer to an int to store the Wiper1 value
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
@@ -91,9 +87,9 @@ public:
      * @brief Configure the potentiometer.
      *
      *
-     * @param Volatile Set to 1 to let the poti settings volatile
-     * @param ZeroCrossing Set to 1 to enable the Zero Crossing Change*
-     * @param PotiConfig Set to 1 to enable the 63 pos Poti unless of the 33 pos mode.
+     * @param[in] Volatile Set to 1 to let the poti settings volatile
+     * @param[in] ZeroCrossing Set to 1 to enable the Zero Crossing Change*
+     * @param[in] PotiConfig Set to 1 to enable the 63 pos Poti unless of the 33 pos mode.
      *
      * @return  0 : OK
      * @return -1 : IOCTL errror.

@@ -1,6 +1,6 @@
 /**
  * @file ADS1015.cpp
- * @author l.heywang
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Source for the ADS1015 ADC.
  * @version 0.1
  * @date 2024-09-25
@@ -15,6 +15,15 @@
 #include <cstdint>
 #include <unistd.h>
 #include <math.h>
+
+// ==============================================================================
+// IC REGISTER ADDRESSES
+// ==============================================================================
+
+#define CONVERSION_REGISTER 0x00
+#define CONFIG_REGISTER 0x01
+#define LOW_TRESHOLD_REGISTER 0x02
+#define HIGH_THRESHOLD_REGISTER 0x03
 
 // =====================
 // CONSTRUCTORS

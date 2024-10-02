@@ -2,10 +2,12 @@
  * @file I2C.hpp
  * @author l.heywang
  * @brief Define Basic I2C parameters on the project.
- * @version 0.1
+ * @version 1.0
  * @date 2024-09-25
  *
  * @copyright Copyright (c) 2024
+ *
+ * @remark Class was tested successfully on 01/10/2024.
  *
  */
 

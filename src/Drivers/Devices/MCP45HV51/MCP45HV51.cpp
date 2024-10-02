@@ -1,6 +1,6 @@
 /**
  * @file MCP45HV51.cpp
- * @author l.heywang
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Source of the functions of the MCP45HV51.
  * @version 0.1
  * @date 2024-09-25
@@ -14,6 +14,14 @@
 // Cpp modules
 #include <cstdint>
 #include "../../I2C/I2C.hpp"
+
+// ==============================================================================
+// IC REGISTER ADDRESSES
+// ==============================================================================
+
+// Registers
+#define TCON0 0x04
+#define WIPER_0 0x00
 
 // ==============================================================================
 // MACROS

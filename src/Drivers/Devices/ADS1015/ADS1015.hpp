@@ -1,6 +1,6 @@
 /**
  * @file ADS1015.hpp
- * @author l.heywang
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define a class and functions to exploit the ADS1015 ADC.
  * @version 0.1
  * @date 2024-09-25
@@ -15,17 +15,6 @@
 // type include
 #include <cstdint>
 #include "../../I2C/I2C.hpp"
-
-// ==============================================================================
-// IC REGISTER ADDRESSES
-// ==============================================================================
-
-#define DS1882_DATA_SIZE 8 // 8b register here
-
-#define CONVERSION_REGISTER 0x00
-#define CONFIG_REGISTER 0x01
-#define LOW_TRESHOLD_REGISTER 0x02
-#define HIGH_THRESHOLD_REGISTER 0x03
 
 // ==============================================================================
 // IC VARIOUS DEFINE

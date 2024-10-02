@@ -1,6 +1,6 @@
 /**
  * @file PCA9633.cpp
- * @author l.heywang
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Source of the functions for the PCA9633 Leds Drivers
  * @version 0.1
  * @date 2024-09-25
@@ -14,6 +14,26 @@
 // Cpp modules
 #include <cstdint>
 #include "../../I2C/I2C.hpp"
+
+#include <iostream>
+
+// ==============================================================================
+// IC REGISTER ADDRESSES
+// ==============================================================================
+
+#define MODE1 0x00
+#define MODE2 0x01
+#define PWM0 0x02
+#define PWM1 0x03
+#define PWM2 0x04
+#define PWM3 0x05
+#define GRPPPWM 0x06
+#define GRPFREQ 0x07
+#define LEDOUT 0x08
+#define SUBADDR1 0x09
+#define SUBADDR2 0x0A
+#define SUBADDR3 0x0B
+#define ALLCALLADR 0x0C
 
 // ==============================================================================
 // MACROS
@@ -74,10 +94,10 @@ int PCA9633::Configure(const int Mode,
 
     // MODE 2
     buf[1] = ((bool)Dimming) << 5;
-    buf[1] = ((bool)Inverter) << 4;
-    buf[1] = ((bool)Change) << 3;
-    buf[1] = ((bool)OutputDriver) << 2;
-    buf[1] = ((bool)OEStatus);
+    buf[1] |= ((bool)Inverter) << 4;
+    buf[1] |= ((bool)Change) << 3;
+    buf[1] |= ((bool)OutputDriver) << 2;
+    buf[1] |= (OEStatus);
 
     int res = I2C_Write(&this->I2C, this->address, REGISTER_WITH_INCREMENT_ALL(MODE1), buf, 2);
     if (res != 0)
@@ -88,9 +108,9 @@ int PCA9633::Configure(const int Mode,
 
 int PCA9633::ConfigureDutyCycle(const int FirstChannel, int *const Value, const int AutoIncrement)
 {
-    if ((FirstChannel > PWM3) | (FirstChannel < PWM0))
+    if ((FirstChannel > CHANNEL3) | (FirstChannel < CHANNEL0))
         return -1;
-    if ((FirstChannel + AutoIncrement) > PWM3)
+    if ((FirstChannel + AutoIncrement) > (CHANNEL3 + 1))
         return -2;
     if (AutoIncrement == 0)
         return -2;
@@ -101,6 +121,22 @@ int PCA9633::ConfigureDutyCycle(const int FirstChannel, int *const Value, const 
         buf[i] = Value[i];
 
     int Tregister = 0;
+    switch (FirstChannel)
+    {
+    case CHANNEL0:
+        Tregister = PWM0;
+        break;
+    case CHANNEL1:
+        Tregister = PWM1;
+        break;
+    case CHANNEL2:
+        Tregister = PWM2;
+        break;
+    case CHANNEL3:
+        Tregister = PWM3;
+        break;
+    }
+
     if (AutoIncrement == 1)
         Tregister = REGISTER_WITHOUT_INCREMENT(FirstChannel);
     else

@@ -1,11 +1,13 @@
 /**
  * @file MCP9808.cpp
- * @author l.heywang
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Source of the functions for the MCP9808 Temperature Sensor.
- * @version 0.1
+ * @version 1.0
  * @date 2024-09-25
  *
  * @copyright Copyright (c) 2024
+ *
+ * @remark Class was tested successfully on 01/10/2024.
  *
  */
 
@@ -16,6 +18,20 @@
 #include <cstdint>
 #include <math.h>
 #include "../../I2C/I2C.hpp"
+
+// ==============================================================================
+// IC REGISTER ADDRESSES
+// ==============================================================================
+
+// Register
+#define MCP9808_CONFIG 0x01
+#define UPPER_TEMP 0x02
+#define LOWER_TEMP 0x03
+#define CRIT_TEMP 0x04
+#define READ_TEMP 0x05
+#define MANUFACTURER 0x06
+#define DEVICEID 0x07
+#define TEMP_RESOLUTION 0x08
 
 // ==============================================================================
 // MACROS

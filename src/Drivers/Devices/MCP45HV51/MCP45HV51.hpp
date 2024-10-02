@@ -1,6 +1,6 @@
 /**
  * @file MCP45HV51.hpp
- * @author l.heywang
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define a class and functions for the MCP45HV51 linear digital potentiometer.
  * @version 0.1
  * @date 2024-09-25
@@ -14,16 +14,6 @@
 // type include
 #include <cstdint>
 #include "../../I2C/I2C.hpp"
-
-// ==============================================================================
-// IC REGISTER ADDRESSES
-// ==============================================================================
-
-#define MCP45HV51_DATA_SIZE 8 // 8b register here
-
-// Registers
-#define TCON0 0x04
-#define WIPER_0 0x00
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -84,7 +74,7 @@ public:
     /**
      * @brief Return the Poti value
      *
-     * @param Value A pointer to an integer to store the value
+     * @param[out] Value A pointer to an integer to store the value
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.

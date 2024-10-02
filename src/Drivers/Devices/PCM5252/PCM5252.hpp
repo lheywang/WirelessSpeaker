@@ -1,6 +1,6 @@
 /**
  * @file PCM5252.hpp
- * @author l.heywang
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define a class and functions to exploit the PCM5252 audio DAC.
  * @version 0.1
  * @date 2024-09-25
@@ -14,140 +14,11 @@
 #include <cstdint>
 #include "../../I2C/I2C.hpp"
 
-// ==============================================================================
-// IC REGISTER ADDRESSES
-// ==============================================================================
-
-// Theses are global defines
-#define PCM5252_DATA_SIZE 8 // 8b register here
-#define PAGE_SELECT 0x00
-
-// WARNING :
-// This device use multiple pages registers.
-// No checks are done in software, please verify your works.
-// Somes register contain RESERVED bits. Read the documentation before attempting write to it.
-
 // =====================
-// PAGE 0
+// PUBLIC DEFINES
 // =====================
-#define PAGE_0 0x00
-// PLL Config
-#define PLL_P_FACTOR 0x14
-#define PLL_J_FACTOR 0x15
-#define PLL_D_FACTOR_MSB 0x16
-#define PLL_D_FACTOR_LSB 0x17
-#define PLL_R_FACTOR 0x18
-#define PLL_CONTROL 0x04
-#define PLL_INPUT_SOURCE 0x0D
-#define PLL_INPUT_GPIO 0x12
-
-// GPIO Config
-#define GPIO1_OUTPUT_FUNCTION 0x50
-#define GPIO2_OUTPUT_FUNCTION 0x51
-#define GPIO3_OUTPUT_FUNCTION 0x52
-#define GPIO4_OUTPUT_FUNCTION 0x53
-#define GPIO5_OUTPUT_FUNCTION 0x54
-#define GPIO6_OUTPUT_FUNCTION 0x55
-#define GPIO_OUTPUT_STATUS 0x56
-#define GPIO_POLARITY 0x57
-#define EXTERNAL_DIGITAL_FILTER 0x7A
-#define GPIO12_EXTERNAL_FILTER 0x7B
-#define GPIO34_EXTERNAL_FILTER 0x7C
-#define GPIO56_EXTERNAL_FILTER 0x7D
-#define GPIO_INPUT_VALUES 0x77
-#define GPIO_CONTROL 0x08
-
-// SPI Config
-#define SPI_MISO_MODE 0x06
-
-// DSP Config
-#define DSP_CLOCK_DIVIDER 0x1B
-#define DSP_INPUT 0x0A
-#define DSP_OVERFLOW 0x5A
-#define DSP_PROGRAM_SELECT 0x2B
-#define AUDIO_DATA_PATH 0x2A
-#define SDOUT_EMPHASIS 0x07
-#define IDAC_MSB 0x23
-#define IDAC_LSB 0x24
-
-// I2S Config
-#define I2S_CLOCK_CONFIG 0x09
-#define I2S_CONFIG 0x28
-#define I2S_OFFSET 0x29
-#define FS_SPEED 0x22
-#define MASTER_MODE_CONTROL 0x0C
-
-// Clocks
-#define DAC_CLOCK_DIVIDER 0x1C
-#define IGNORE_DETECTION 0x25
-#define CLOCK_MISSING_DETECT 0x2C
-#define CLOCK_SYSTEM_STATUS 0x5E
-#define CLOCK_SYSTEM_ERRORS 0x5F
-#define DAC_CLOCK_SOURCE 0x0E
-#define DAC_RESYNC 0x13
-#define NCP_CLOCK_DIVIDER 0x1D
-#define OSR_CLOCK_DIVIDER 0x1E
-#define MASTER_BCK_DIVIDER 0x20
-#define LRCK_DIVIDER 0x21
-#define DETECTED_AUDIO_SPECS 0x5B
-#define DETECTED_BCK_RATIO_MSB 0x5C
-#define DETECTED_BCK_RATIO_LSB 0x5D
-
-// Misc. DAC Controls
-#define DAC_RESET 0x01
-#define POWER_CONTROL 0x02
-#define MUTE_CONTROL 0x03
-#define DAC_ARCHITECTURE 0x79
-
-// DAC Status (for most read-only)
-#define MUTE_STATUS 0x6C
-#define OUTPUT_SHORT_STATUS 0x6D
-#define XSMUTE_STATUS 0x72
-#define FS_SPEED_MONITOR 0x73
-#define DSP_STATUS 0x76
-#define AUTO_MUTE_STATUS 0x78
-
-// Analog Output Config
-#define AUTOMUTE_DELAY 0x3B
-#define GLOBAL_DIGITAL_VOLUME 0x3C
-#define LEFT_DIGITAl_VOLUME 0x3D
-#define RIGHT_DIGITAl_VOLUME 0x3E
-#define NORMAL_VOLUME_RAMPS 0x3F
-#define ERROR_VOLUME_RAMPS 0x40
-#define AUTO_MUTE 0x41
-
-// =====================
-// PAGE 1
-// =====================
-#define PAGE_1 0x01
-// Analog Config
-#define OUTPUT_AMPLITUDE_REF 0x01
-#define ANALOG_GAIN 0x02
-#define EXTERNAL_UVP 0x05
-#define ANALOG_MUTE 0x06
-#define ANALOG_GAIN_BOOST 0x07
-#define VCOM_RAMP 0x08
-#define VCOM_POWER 0x09
-
-// =====================
-// PAGE 44
-// =====================
-#define PAGE_44 0x2C
-#define DSP_ADAPTATIVE 0x01
-
-// =====================
-// PAGE 253
-// =====================
-#define PAGE_253 0xFD
-#define CLOCK_FLEX_1 0x3F
-#define CLOCK_FLEX_2 0x40
-
-// =====================
-// DSP INSTRUCTIONS / COEFFICIENTS
-// =====================
-#define BUFFER_A 0x2C
-#define BUFFER_B 0x3E
-#define INSTR 0x98
+#define BUFFER_A 0x2C /**DSP Buffer A Name */
+#define BUFFER_B 0x3E /**DSP Buffer B Name */
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -185,6 +56,10 @@ public:
     /**
      * @brief Configure the PLL Subsystem of the DAC.
      *
+     * @image html PCM5252_Clocks_Values.png "Dividers factors for the PCM5252 clocking circuit."
+     * @image latex PCM5252_Clocks_Values.png "Dividers factors for the PCM5252 clocking circuit."
+     *
+     * @warning Any error here may place the DAC into an astable state where the PLL isn't locked, blocking any further audio applications.
      *
      * @param[in] EnablePLL Enable the PLL
      * @param[in] PLLReference Select the PLL Reference Clock
@@ -212,6 +87,9 @@ public:
 
     /**
      * @brief Configure the GPIO Subsystem of the DAC. Some of the settings below may need an advanced clocking configuration before.
+     *
+     * @image html PCM5252_GPIOOutput.png "Values for the GPIO Outputs"
+     * @image latex PCM5252_GPIOOutput.png "Values for the GPIO Outputs"
      *
      * @param[in] MISOFunction Define the function of the MISO pin.
      * @param[in] GPIOEnable Define the state of all of the GPIO. Select Input or Output. Each bit mean 1 GPIO, thus a mask is required. 1 is output.
@@ -257,10 +135,10 @@ public:
      * @param[in] MasterModeBCKDivider Configure the Master BCK Divider
      * @param[in] MasterModeLRCLKDivider Configure the Master LRCLK Divider
      * @param[in] Enable16xInterpolation Enable the 16x Interpolation input.
-     * @param[in] FSSpeedMode Configure the FS mode (single, dual, quad or octal)
-     * @param[in] I2SDataFormat Configure the I2S Data Format
-     * @param[in] I2SWordLength Configure the I2S Data Length
-     * @param[in] I2SDataShift Configure how many BCK shift are applied to the I2S Data In
+     * @param[in] FSSpeedMode Configure the FS mode (single : 00, dual : 01, quad : 10 or octal : 11)
+     * @param[in] I2SDataFormat Configure the I2S Data Format (00 : I2S, 01 : TDM/DSP, 10 : RTJ, 11 : LTJ)
+     * @param[in] I2SWordLength Configure the I2S Data Length (00 = 16b, 01 = 20b, 10 = 24b, 11 = 32b)
+     * @param[in] I2SDataShift Configure how many BCK shift are applied to the I2S Data In (00 = 1 shift, 255 = 256 shifts)
      *
      * @return  0 : OK
      * @return -1 : Invalid FS Mode.
@@ -329,10 +207,10 @@ public:
     /**
      * @brief Configure the subsystem in charge for the Digital to Analog Conversion.
      *
-     * @param[in] DACClockSource Select the DAC Clock Source.
-     * @param[in] LeftDataSource Select the used input data for the left channel.
-     * @param[in] RightDataSource Select the used Input data for the right channel.
-     * @param[in] DigitalVolumeMode Select the digital volume mode.
+     * @param[in] DACClockSource Select the DAC Clock Source. (000 = MCLK, 001 = PLL, 011 = SCK, 100 = BCK)
+     * @param[in] LeftDataSource Select the used input data for the left channel. (00 = NULL, 01 = LEFT, 10 = RIGHT)
+     * @param[in] RightDataSource Select the used Input data for the right channel. (00 = NULL, 01 = RIGHT, 10 = LEFT)
+     * @param[in] DigitalVolumeMode Select the digital volume mode. (00 = Independant, 01 : right = left setting, 10 = left = right settings)
      * @param[in] DACArchitecture Select the DAC Architecture.
      * @param[in] RequestSync Request a sync for the clocks.
      *
@@ -358,12 +236,12 @@ public:
      * @param[in] RightEnableAutoMute Enable automute for right channel.
      * @param[in] LeftAutoMuteDelay Configure delay before automute for the left channel.
      * @param[in] RightAutoMuteDelay Configure delay before automute for the right channel.
-     * @param[in] VolumeRampDownSpeed Configure time between each step for ramp down.
-     * @param[in] VolumeRampDownStep Configure the step size for ramp down.
-     * @param[in] VolumeRampUpSpeed Configure the time between each step for ramp up.
-     * @param[in] VolumeRampUpStep Configure the step size for ramp up.
-     * @param[in] EmergencyVolumeRampDownSpeed Configure the emergency ramp down speed.
-     * @param[in] EMergencyVolumeRampDownStep Configure the emergency ramp down step size.
+     * @param[in] VolumeRampDownSpeed Configure time between each step for ramp down. (00 = 1 FS, 01 = 2 FS, 10 = 4 FS, 11 = INSTANT)
+     * @param[in] VolumeRampDownStep Configure the step size for ramp down. (00 = -4dB / update, 01 = -2dB / update, 10 = -1dB / update, 11 = -0.5dB / update)
+     * @param[in] VolumeRampUpSpeed Configure the time between each step for ramp up. Same as VolumeRampDownSpeed.
+     * @param[in] VolumeRampUpStep Configure the step size for ramp up. Same as VolumeRampDownStep.
+     * @param[in] EmergencyVolumeRampDownSpeed Configure the emergency ramp down speed. Same as VolumeRampDownSpeed.
+     * @param[in] EMergencyVolumeRampDownStep Configure the emergency ramp down step size. Same as VolumeRampDownStep.
      *
      * @return  0 : OK
      * @return -1 : Invalid Left Auto Mute delay value
@@ -420,6 +298,9 @@ public:
     /**
      * @brief Enable and configure the external Interpolation filter.
      *
+     * @image html PCM5252_InterpolFilter.png "GPIO functions, same for all"
+     * @image html PCM5252_InterpolFilter.png "GPIO functions, same for all"
+     *
      * @param[in] Enable Enable the functionnality.
      * @param[in] GPIO1OutputFunction Set the GPIO1 function for this mode.
      * @param[in] GPIO2OutputFunction Set the GPIO2 function for this mode.
@@ -466,7 +347,7 @@ public:
      * @param[in] IgnoreClockHaltDetection Ignore the Clock Halt Detection
      * @param[in] IgnoreLRCLKBCKDetection Ignore the LRCLK /  BCK detection.
      * @param[in] IgnorePLLUnlocks Ignore the PLL unlock detection.
-     * @param[in] ClockMissingDelay Configure the delay before triggering an error for missing clock.
+     * @param[in] ClockMissingDelay Configure the delay before triggering an error for missing clock. (000 for 1s, 111 for 8s)
      *
      * @param[in] AdvancedClock Set to 1 to enable advanced clock circuitry.
      *
@@ -486,12 +367,23 @@ public:
     /**
      * @brief Configure the various dividers on the clock tree !
      *
-     * @param[in] OSR Divider coefficient for the oversampling circuit. Source = DDAC
-     * @param[in] NCP Divider coefficient for the Negative Charge pump.  Source = DDAC
-     * @param[in] DDAC Divider frequency for the DAC circuit.  Source = PLL | SCK
-     * @param[in] DSP Divider coefficient for the DSP circuit. Source = PLL | SCK
-     * @param[in] BCK Divider coefficient for the BCK value (Master mode only). Source = SCK
-     * @param[in] LRLCK Divider coefficient for the LRLCK value. (Master mode only). Source = SCK
+     * @image html PCM5252_I2S_Clocks.png "I2S Clocking Divider schematic, from the TI's documentation"
+     * @image latex PCM5252_I2S_Clocks.png "I2S Clocking Divider schematic, from the TI's documentation"
+     *
+     * @image html PCM5252_Global_Clocks.png "Global clocking circuitry"
+     * @image latex PCM5252_Global_Clocks.png "Global clocking circuitry"
+     *
+     * @image html PCM5252_Clocks_Values.png "Dividers factors for the PCM5252 clocking circuit."
+     * @image latex PCM5252_Clocks_Values.png "Dividers factors for the PCM5252 clocking circuit."
+     *
+     * @warning Any error here may place the DAC into an astable state where the PLL isn't locked, blocking any further audio applications.
+     *
+     * @param[in] OSR Divider coefficient for the oversampling circuit. Source = DDAC. Shall be between 0 (divide by 1) and 127 (divider by 128)
+     * @param[in] NCP Divider coefficient for the Negative Charge pump.  Source = DDAC. Shall be between 0 (divide by 1) and 127 (divider by 128)
+     * @param[in] DDAC Divider frequency for the DAC circuit.  Source = PLL | SCK. Shall be between 0 (divide by 1) and 127 (divider by 128)
+     * @param[in] DSP Divider coefficient for the DSP circuit. Source = PLL | SCK. Shall be between 0 (divide by 1) and 127 (divider by 128)
+     * @param[in] BCK Divider coefficient for the BCK value (Master mode only). Source = SCK Shall be between 0 (divide by 1) and 127 (divider by 128)
+     * @param[in] LRLCK Divider coefficient for the LRLCK value. (Master mode only). Source = SCK Shall be between 0 (divide by 1) and 127 (divider by 128)
      *
      * @return -1 : Incorrect OSR Value.
      * @return -2 : Incorrect NCP Value.
@@ -539,6 +431,9 @@ public:
 
     /**
      * @brief Configure the volume (digital) for the DAC.
+     *
+     * @image html PCM5252_Digital_Volume.png "Values for the digital volume"
+     * @image latex PCM5252_Digital_Volume.png "Values for the digital volume"
      *
      * @param[in] LeftVolume Left volume value.
      * @param[in] RightVolume Right volume value.
