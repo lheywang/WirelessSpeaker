@@ -52,6 +52,7 @@ clean:
 	@rm -f -r $(OUTPUTDIR)
 	@rm -f -r doc/ 
 	@echo "Deleted doc/ build/ and executable (.arm)"
+	@cd tools/eeprom/ && make clean
 
 # Generic .o compiler. Used to compile all files.
 $(OUTPUTDIR)/%.o: %.cpp
@@ -73,15 +74,26 @@ $(EXECNAME).arm: $(fobjects)
 # They enable the ability to deploy and run the code to test it remotely, from your computer.
 
 install: $(EXECNAME).arm
-# This may need a password.
 	ssh -i $(KEY) pi@$(RPI) -f "touch /home/pi/$(EXECNAME).elf"
 	scp -i $(KEY) $(EXECNAME).arm pi@$(RPI):/home/pi/$(EXECNAME).elf 
 	ssh -i $(KEY) pi@$(RPI) -f "chmod +x /home/pi/$(EXECNAME).elf"
 
 ## SSH link to run the file from the host system.
 run: $(EXECNAME).arm install
-# This may need a password.
 	ssh -i $(KEY) pi@$(RPI) -f "cd /home/pi/ && ./$(EXECNAME).elf"
+
+## Define the software as autostart
+autostart: install
+
+# This recipe compile the eeprom generator, execute it, before copying the file to the RPi and deploying it.
+# Warning : This may take some time due to the large files sizes.
+# This recipe is independant since only needed once ! We don't want to flash our eeprom every time.
+eeprom: 
+	@cd tools/eeprom && make all
+	@cd tools/eeprom ./eepmake eeprom_settings.txt myhat.eep
+
+
+weeprom:
 
 # ===========================================================================================================
 # RECIPES FOR DOCUMENTATION
