@@ -16,6 +16,7 @@
 #include <cstdint>
 #include "../../I2C/I2C.hpp"
 #include <math.h>
+#include <cstdlib>
 #include <unistd.h>
 
 // ==============================================================================
@@ -816,7 +817,7 @@ int PCM5252::ConfigureClockDividers(const int OSR,
     return 0;
 }
 
-int PCM5252::ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values, const int CoeffNumber)
+int PCM5252::ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values, const size_t CoeffNumber)
 {
     if ((Buffer != BUFFER_A) & (Buffer != BUFFER_B))
         return -1;
@@ -846,7 +847,7 @@ int PCM5252::ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values, 
             coeff++;
 
             // Check if we reached the end coefficient, or the end of the provided list.
-            if ((coeff == CoeffNumber) | (coeff == 255))
+            if ((coeff == (int)CoeffNumber) | (coeff == 255))
             {
                 if (res != 0)
                     return -3;
@@ -857,7 +858,7 @@ int PCM5252::ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values, 
     return -4;
 }
 
-int PCM5252::ConfigureDSPIntructions(int *const Instructions, const int InstrNumber)
+int PCM5252::ConfigureDSPIntructions(int *const Instructions, const size_t InstrNumber)
 {
     if (InstrNumber > 1023)
         return -1;
@@ -884,7 +885,7 @@ int PCM5252::ConfigureDSPIntructions(int *const Instructions, const int InstrNum
             instr++;
 
             // Check if we reached the end instruction, or the end of the provided list.
-            if ((instr == InstrNumber) | (instr == 1023))
+            if ((instr == (int)InstrNumber) | (instr == 1023))
             {
                 if (res != 0)
                     return -2;

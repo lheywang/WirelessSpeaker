@@ -12,6 +12,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstdlib>
 #include "../../I2C/I2C.hpp"
 
 // =====================
@@ -413,7 +414,7 @@ public:
      * @return -2 : Invalid Values sizes
      * @return -3 : IOCTL error.
      */
-    int ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values, const int CoeffNumber);
+    int ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values, const size_t CoeffNumber);
 
     /**
      * @brief Write to a CRAM buffer a list of instructions for the DSP.
@@ -427,7 +428,7 @@ public:
      * @return -2 : IOCTL error.
      * @return -3 : Unknown error. Shoudln't get here, if you land here, good luck !
      */
-    int ConfigureDSPIntructions(int *const Instructions, const int InstrNumber);
+    int ConfigureDSPIntructions(int *const Instructions, const size_t InstrNumber);
 
     /**
      * @brief Configure the volume (digital) for the DAC.

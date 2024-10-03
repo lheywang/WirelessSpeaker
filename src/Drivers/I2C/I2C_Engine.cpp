@@ -16,6 +16,7 @@
 // ==============================================================================
 #include "I2C_Engine.hpp"
 #include "I2C.hpp"
+
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
@@ -63,7 +64,7 @@ I2C_Bus *I2C_GetInfos()
 
     if (I2C->I2C_file < 0)
     {
-        fprintf(stderr, "Could not open the requested I2C bus.");
+        fprintf(stderr, "[I2C] : Could not open the requested I2C bus.");
         I2C->I2C_file = (int)NULL;
     }
 
@@ -138,7 +139,7 @@ int I2C_ConfigureAddress(I2C_Bus *I2C, int Address)
 {
     if (ioctl(I2C->I2C_file, I2C_SLAVE, Address) < 0)
     {
-        fprintf(stderr, "Could not set address");
+        fprintf(stderr, "[I2C] : Could not set address");
         return -errno;
     }
     return 0;
