@@ -1,19 +1,22 @@
+/**
+ * @file GPIO.hpp
+ * @author l.heywang (leonard.heywang@gmail.com)
+ * @brief Define standard constants for the GPIO part of the speaker.
+ * @version 0.1
+ * @date 2024-10-03
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 // ==============================================================================
-//                              GPIO/GPIO.hpp
-//                              Wrote by lheywang
-//
-// Define our basic I2C settings on the boards, such as :
-// - Pins usage
+// INCLUDES
 // ==============================================================================
+#include "GPIO_Engine.hpp"
 
-// Only included one time
-#pragma once
-
-#include <linux/gpio.h>
-
 // ==============================================================================
-// STANDARD USAGES
+// PUBLIC DEFINES
 // ==============================================================================
+#define DEV_NAME "/dev/gpiochip0"
 
 // Amplifiers status
 #define AMP1_FAULT 17
