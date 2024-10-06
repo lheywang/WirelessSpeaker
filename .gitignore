@@ -39,3 +39,11 @@
 
 # Doxygen output
 doc/
+
+# Build outputs
+build/
+
+# Cmakes artifacts
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake

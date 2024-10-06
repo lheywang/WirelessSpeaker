@@ -1,4 +1,4 @@
-DTC_EXECNAME := Heywang-WirelessSpeakerV1
+DTC_EXECNAME := WirelessSpeaker
 
 include ../../Makefile
 
