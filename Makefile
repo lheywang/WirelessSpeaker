@@ -7,7 +7,6 @@ EXECNAME := build/WirelessSpeaker.arm
 # ===========================================================================================================
 clean:
 	-cd build/ && make clean
-	-cd tools/utils && make clean
 	-cd doc/ && make clean
 	-cd tools/device-tree && make dtc_clean
 	@echo "Removed build artifacts ! Cmake cache remains. Use clean_all to remove everything"
@@ -30,21 +29,3 @@ all:
 doc:
 	@doxygen Doxyfile
 	@cd ./doc/latex && make pdf
-
-# ===========================================================================================================
-# RECIPES FOR AUTOMATED DEPLOYEMENT
-# ===========================================================================================================
-
-
-
-## Define the software as autostart
-src_autostart: install
-
-# This recipe compile the eeprom generator, execute it, before copying the file to the RPi and deploying it.
-# Warning : This may take some time due to the large files sizes.
-# This recipe is independant since only needed once ! We don't want to flash our eeprom every time.
-src_eeprom: 
-	cd tools/eeprom && ./eepmake ../$(EEPROM).txt $(EEPROM).eep
-
-src_weeprom: src_eeprom
-	cd tools/eeprom && sudo ./eepflash.sh -w -t=24c32 -a=0x50 -f=$(EEPROM).eep

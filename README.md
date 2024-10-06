@@ -8,38 +8,28 @@ The goal is to produce a complete software stackup, capable of streaming audio o
 ## PCB : 
 The PCB is responsible for all of the electricals interractions, such as : 
 - RPi to the DAC (PCM5252)
-- DAC to filters (split every channels)
+- DAC to filters (split every channels and provide simple equalizer)
 - filters to amplifiers (TPA3128D2)
 - Overall management of temperature, and defaults
 - Power supplies (based on USB-C PD3 protocol)
 
+## Serial protocols
+The project is based on a lot of serial buses to manage everything !
+This include : 
+- I2S for the audio
+- I2C for all management IC
+- SPI for EEPROM (not the HAT one !)
+- UART for USB communication over with the battery
+
 **Notes**
 PCB is provided in a separated folder as it is, and isn't garanteed to be fully verified.
 
-## Software architecture
+## How to ?
+### How to install ?
+#### Configuration of the Pi
+You will need a Rpi, and, naturally the whole PCB for the project.
 
-## How to install ?
-### Tools
-If you want only to build to system, run this command :
-> sudo apt(-get) update && upgrade -y 
-> sudo apt(-get) install build-essentials libc6-dev make doxygen ssh libi2c-dev device-tree-compiler g++-aarch64-linux-gnu 
-
-And if you're developper, you're going to need theses :
-> sudo apt(-get) install texlive-full graphwiz libfdt-dev device-tree gcc 
-
-> **WARNING Sometimes, install may be broken. Be sure that everything as suceeded to be working as intended.**
-
-**Notes** : 
-*If somes want's to add support to another Pi, you're welcome !*
-
-### First, configure the Pi
-You're going to need a Pi, with an OS installed on it. We recommend RPi OS lite, since graphicals features that wont be used remain out, thus more performance ! 
-A basic setup shall be done, this include a Wi-fi connection. The remaining will be done automatically.
--> If you don't have a screen nor keyboard, don't panic ! You can always pre-configure Wi-Fi things by customizing the image using RPi-Imager tool. And for SSH, just add a file named ssh without extension at the root of the SD (on Windows).
-
-**Note** The user shall be configured as Pi, or you will need to edit it on the Makefile.
-
-### SSH Config
+#### SSH Config
 Since all compilation and generation steps are done on a computer, to save you some time, we extensively use SSH / SCP to copy files and commands.
 Every access will require you the password, and that's boring.
 Against that, we recommend using a public / private key pair !
@@ -49,47 +39,74 @@ To generate it, use :
 > ssh-copy-id -i [YOUR KEY].pub USER@DESTINATION
 And that's done !
 
-### Deploying the software
-Now, it's the big moment to compile all of the code and the EEPROM files, and deploy on the RPi.
-First, run 
-> make weeprom (to generate the hat.eep file and deploy it on the hat.)
-> make autostart (to compile the whole software (may take some time) and deploy it. Now, after each boot the software will be started)
+#### Deploying the software
+To deploy the software, two steps are needed ! We've developped sh scripts files that does everything for you !
+First, install all of the tools :
+> cd scripts 
+> open and edit the RPi IP and key in top of all of the scripts.
+> sh install.sh
+>**NOTES** : There is an install-dev.sh, which is intended for developpers. Contains several GB of tools that aren't required to build the software.
+> sh deploy.sh
 
-And that's done for you !
+AND... That's all ! The script as managed everything for you !
 
-## For more advanced users !
+### For more advanced users !
 ### Makefiles recipes, for more advanced users : 
-The makefile define differents steps where you can interract : 
-- **clean** : Clean all files
-- **all** : Compile only the files.
-- **install** : Compile if not already done and try to copy the output on the root of the raspberrypi.home home folder (pi user)
-- **run** : Install and then attempt an ssh log to launch the code.
-- **doc** : Create the HTML and PDF documentations for the project using Doxygen
-- **autostart** : Add an crontab request at boot to start the software.
-- **eeprom** : Generate the eeprom file.
-- **weeprom** : Genererate the eeprom file and write it on the hardware.
+The project is based on a mix of makefiles, CmakeLists.txt and other builds tools.
+A main Makefile is available for you, and exports : 
+- clean : Remove artifacts of build
+- clean_all : Remove all files related to builds (incl. Cmakes caches)
+- all : Build the executable 
+- doc : Build the pdf + html documentation.
 
-> **NOTES**
-> You can speed up the build process by using make [recipe] -j [core number]
-> You will then compile each file on a core, thus way faster.
-> The last step, the linking will be done on a single core.
+**Notes** : 
+*If somes want's to add support to another Pi, you're welcome !*
 
-> **NOTES**
-> - The last two steps may need login or configuration of the RPi on SSH.
-> - You can run any of the commands, if the prerequites aren't met they will be generated.
+## Global architecture
+On the project, the software is designed in the following way : 
 
-> **NOTES**
-> For using the ssh / scp functions, a properly configured RasbperryPi need to be present.
-> Please refer to their own documentation for theses functionnalities.
-
-> **NOTES**
-> For using Doxygen, a proper LaTeX suite shall be installed and configured.
-> Required modules : TexLive Full + graphwiz.
-
-
-**WARNING : This command make the assumption of the presence of a RPi on your network**
-
-Then, if you want you need to create the .sh script that start the software automatically.
-
-If you're developper, to compile the whole documentation run :
-> make doc
+📦data : Store all of the data used by some tools (doxygen !)
+📦scripts : Installation scripts !
+ ┣ 📜deploy.sh
+ ┣ 📜install-dev.sh
+ ┣ 📜install.sh
+ ┗ 📜update.sh
+ 📦src
+ ┣ 📂Drivers All of the drivers (incl. Devices and buses)
+ ┃ ┣ 📂Devices : All of the devices drivers.
+ ┃ ┣ 📂GPIO : GPIO Driver
+ ┃ ┃ ┣ 📜GPIO.hpp
+ ┃ ┃ ┣ 📜GPIO_Engine.cpp
+ ┃ ┃ ┗ 📜GPIO_Engine.hpp
+ ┃ ┣ 📂I2C : I2C Driver
+ ┃ ┃ ┣ 📂includes
+ ┃ ┃ ┃ ┣ 📜smbus.cpp
+ ┃ ┃ ┃ ┗ 📜smbus.h
+ ┃ ┃ ┣ 📜I2C.hpp
+ ┃ ┃ ┣ 📜I2C_Engine.cpp
+ ┃ ┃ ┗ 📜I2C_Engine.hpp
+ ┃ ┣ 📂SPI : SPI Driver
+ ┃ ┃ ┗ 📜SPI.hpp
+ ┃ ┗ 📂USB : USB Driver
+ ┣ 📂Modules : We define here some higher level interractions with the differents devices. We call from here the drivers. 
+ ┃ ┣ 📂UPNP
+ ┃ ┣ 📂LEDS
+ ┃ ┣ 📂Temperature
+ ┃ ┗ 📂UpSampler
+ ┣ 📜CMakeLists.txt
+ ┗ 📜main.cpp
+📦tools
+ ┣ 📂device-tree : Device tree compiler and source file 
+ ┃ ┣ 📜Makefile
+ ┃ ┗ 📜WirelessSpeakerV1.dts
+ ┣ 📂utils : Some utils, used to flash the eeprom or apply the dtoverlay !
+ ┃ ┣ 📂dtmerge
+ ┃ ┣ 📂eeptools
+ ┃ ┣ 📂kdtc
+ ┃ ┣ 📂otpset
+ ┃ ┣ 📂ovmerge
+ ┃ ┣ 📂pinctrl
+ ┃ ┣ 📂raspinfo
+ ┃ ┣ 📂vcgencmd
+ ┃ ┣ 📂vclog
+ ┃ ┣ 📂vcmailbox

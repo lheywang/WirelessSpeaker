@@ -23,9 +23,6 @@
         __overlay__ {
             status = "okay";
             clock-frequency = <400000>; // 400 kHz, supported by all devices.
-            sda-gpio = <2>; // Standard SDA
-            scl-gpio = <3>; // Standard SCL
-            // No fast more nor high speed mode.
         };
     };
 
@@ -35,7 +32,6 @@
         __overlay__ {
             status = "okay";
             clock-frequency = <16000000>; // 16 MHz
-            gpios = <4 1>; // GPIO 4 as Output.
         };
     };
 
@@ -46,7 +42,6 @@
             status = "okay";
             clock-frequency = <20000000>; // 20 MHz.
             mode = <0>; // MODE 0 : CPOL = 0 & CPHA = 0;
-            cs-gpios = <8 0>; // GPIO 8, default CE0.
         };
     };
 

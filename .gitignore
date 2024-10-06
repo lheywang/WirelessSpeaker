@@ -34,6 +34,13 @@
 *.arm
 *.x86
 
+# Device tree files
+*.dtbo
+*.dtb
+
+# EEPROM files
+*.eep
+
 # VSCODE artifacts
 .vscode/
 
@@ -47,3 +54,6 @@ build/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
+
+# Installation sub projects
+tools/utils
