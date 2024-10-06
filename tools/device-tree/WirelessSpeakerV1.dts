@@ -1,0 +1,125 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835"; // compatible with all Pi's !
+
+    // I2S
+    fragment@0 {
+        target = <&i2s>;
+        __overlay__ {
+            status = "okay";
+            data-width = <24>; // 24b audio.
+            frame-size = <1>; // One word per channel per LRLCK.
+            format = "i2s"; // I2S formated data. If changed, change also the DAC config.
+            stereo = <1>; // Redondant
+            channels = <2>; // Stereo
+        };
+    };
+
+    // I2C
+    fragment@1 {
+        target = <&i2c1>;
+        __overlay__ {
+            status = "okay";
+            clock-frequency = <400000>; // 400 kHz, supported by all devices.
+            sda-gpio = <2>; // Standard SDA
+            scl-gpio = <3>; // Standard SCL
+            // No fast more nor high speed mode.
+        };
+    };
+
+    // GPCLK0
+    fragment@2 {
+        target = <&gpclk0>;
+        __overlay__ {
+            status = "okay";
+            clock-frequency = <16000000>; // 16 MHz
+            gpios = <4 1>; // GPIO 4 as Output.
+        };
+    };
+
+    // SPI
+    fragment@3 {
+        target = <&spi0>;
+        __overlay__ {
+            status = "okay";
+            clock-frequency = <20000000>; // 20 MHz.
+            mode = <0>; // MODE 0 : CPOL = 0 & CPHA = 0;
+            cs-gpios = <8 0>; // GPIO 8, default CE0.
+        };
+    };
+
+    // UART0
+    fragment@4 {
+        target = <&serial0>;
+        __overlay__ {
+            status = "okay";
+            current-speed = <921600>; // 921.6 Mbaud. IC support 3M.
+            rx = <15>; // RX standard RPi Pin.
+            tx = <14>; // TX standard RPi Pin.
+            rts = <23>; // RTS on pin 23. Not standard.
+            cts = <24>; // CTS on pin 24. Not standard.
+        };
+    };
+
+    // Power INT GPIOS
+    fragment@5 {
+        target = <&gpios>;
+        __overlay__ {
+            pins = <17 27 22 >;  
+            direction  = <0 0 0>;
+            pull-up = <1 1 1>;
+        };
+    };
+
+    // External GPIO Interrupt.
+    fragment@6 {
+        target = <&gpios>;
+        __overlay__ {
+            pins = <5>;
+            direction = <0>;
+            pull-up = <1>;
+        };
+    };
+
+    // Two aRGB Outputs.
+    fragment@7 {
+        target = <&gpios>;
+        __overlay__ {
+            pins = <6 13>;
+            direction = <1 1>;
+            pull-up = <0>; // No pull ups.
+        };
+    };
+
+    // Touch sensor Interrupt.
+    fragment@8 {
+        target = <&gpios>;
+        __overlay__ {
+             pins = <26>;
+             direction = <0>;
+             pull-up = <1>;
+        };
+    };
+
+    // Battery Management Interrupt.
+    fragment@9 {
+        target = <&gpios>;
+        __overlay__ {
+             pins = <25>;
+             direction = <0>;
+             pull-up = <1>;
+        };
+    };
+
+    // Power system Interrupt.
+    fragment@10 {
+        target = <&gpios>;
+        __overlay__ {
+             pins = <16>;
+             direction = <0>;
+             pull-up = <1>;
+        };
+    };
+};

@@ -1,5 +1,8 @@
 # Define basic ouput name.
-EXECNAME = application
+SRC_EXECNAME = application
+
+# Define EEPROM Source
+EEPROM := Keywang-WirelessSpeakerV1
 
 # Output folder name
 OUTPUTDIR = build
@@ -44,11 +47,11 @@ fobjects = $(addprefix $(OUTPUTDIR)/, $(tobjects))
 # ===========================================================================================================
 
 # All only build the executable.
-all: $(EXECNAME).arm
+all: $(SRC_EXECNAME).arm
 
 # Clean the build artifacts + the previous doxygen build docs
 clean:
-	@rm -f *.arm $(EXECNAME)
+	@rm -f *.arm $(SRC_EXECNAME)
 	@rm -f -r $(OUTPUTDIR)
 	@rm -f -r doc/ 
 	@echo "Deleted doc/ build/ and executable (.arm)"
@@ -60,11 +63,11 @@ $(OUTPUTDIR)/%.o: %.cpp
 	$(arm_CC) $(arm_compiler_CFLAGS) -o build/$(@F) -c $<
 
 # Standard output file. Names as .arm to prevent any confusion with .elf files.
-$(EXECNAME).arm: $(fobjects)
+$(SRC_EXECNAME).arm: $(fobjects)
 	@echo "$(fobjects)"
-	@touch $(EXECNAME).arm
-	$(arm_CC) $(arm_linker_CFLAGS) -o $(EXECNAME).arm $(fobjects)
-	@chmod +x $(EXECNAME).arm
+	@touch $(SRC_EXECNAME).arm
+	$(arm_CC) $(arm_linker_CFLAGS) -o $(SRC_EXECNAME).arm $(fobjects)
+	@chmod +x $(SRC_EXECNAME).arm
 
 # ===========================================================================================================
 # RECIPES FOR DEPLOYEMENT.
@@ -73,35 +76,43 @@ $(EXECNAME).arm: $(fobjects)
 # Theses two rules assume a raspbeerypi is available on your network, and correctly configured.
 # They enable the ability to deploy and run the code to test it remotely, from your computer.
 
-install: $(EXECNAME).arm
-	ssh -i $(KEY) pi@$(RPI) -f "touch /home/pi/$(EXECNAME).elf"
-	scp -i $(KEY) $(EXECNAME).arm pi@$(RPI):/home/pi/$(EXECNAME).elf 
-	ssh -i $(KEY) pi@$(RPI) -f "chmod +x /home/pi/$(EXECNAME).elf"
+src_install: $(SRC_EXECNAME).arm
+	ssh -i $(KEY) pi@$(RPI) -f "touch /home/pi/$(SRC_EXECNAME).elf"
+	scp -i $(KEY) $(SRC_EXECNAME).arm pi@$(RPI):/home/pi/$(SRC_EXECNAME).elf 
+	ssh -i $(KEY) pi@$(RPI) -f "chmod +x /home/pi/$(SRC_EXECNAME).elf"
 
 ## SSH link to run the file from the host system.
-run: $(EXECNAME).arm install
-	ssh -i $(KEY) pi@$(RPI) -f "cd /home/pi/ && ./$(EXECNAME).elf"
+src_run: $(SRC_EXECNAME).arm install
+	ssh -i $(KEY) pi@$(RPI) -f "cd /home/pi/ && ./$(SRC_EXECNAME).elf"
 
 ## Define the software as autostart
-autostart: install
+src_autostart: install
 
 # This recipe compile the eeprom generator, execute it, before copying the file to the RPi and deploying it.
 # Warning : This may take some time due to the large files sizes.
 # This recipe is independant since only needed once ! We don't want to flash our eeprom every time.
-eeprom: 
-	@cd tools/eeprom && make all
-	@cd tools/eeprom ./eepmake eeprom_settings.txt myhat.eep
+src_eeprom: 
+	cd tools/eeprom && ./eepmake ../$(EEPROM).txt $(EEPROM).eep
 
-
-weeprom:
+src_weeprom: src_eeprom
+	cd tools/eeprom && sudo ./eepflash.sh -w -t=24c32 -a=0x50 -f=$(EEPROM).eep
 
 # ===========================================================================================================
 # RECIPES FOR DOCUMENTATION
 # ===========================================================================================================
 
 # If Doxygen is installed, it will generate the doc and build the PDF from the TeX source for the whole project.
-doc:
+src_doc:
 	@doxygen Doxyfile
 	@cd ./doc/latex && make pdf
 
+# ===========================================================================================================
+# RECIPES FOR EVERYONE !
+# ===========================================================================================================
+install_dependencies:
+	sudo apt-get install build-essential libc6-dev make doxygen ssh libi2c-dev device-tree-compiler g++-aarch64-linux-gnu
 
+install_dev-dependencies: install_dependencies
+	sudo apt-get install texlive-full libfdt-dev gcc 
+	cd tools/ && git clone https://github.com/raspberrypi/utils.git
+	cd tools/utils && cmake . && sudo make install

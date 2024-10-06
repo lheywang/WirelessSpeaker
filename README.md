@@ -22,8 +22,10 @@ PCB is provided in a separated folder as it is, and isn't garanteed to be fully 
 ### Tools
 If you want only to build to system, run this command :
 > sudo apt(-get) update && upgrade -y 
+> sudo apt(-get) install build-essentials libc6-dev make doxygen ssh libi2c-dev device-tree-compiler g++-aarch64-linux-gnu 
 
-> sudo apt(-get) install build-essentials libc6-dev make doxygen ssh libi2c-dev device-tree-compiler g++-aarch64-linux-gnu gcc texlive-full graphwiz 
+And if you're developper, you're going to need theses :
+> sudo apt(-get) install texlive-full graphwiz libfdt-dev device-tree gcc 
 
 > **WARNING Sometimes, install may be broken. Be sure that everything as suceeded to be working as intended.**
 
