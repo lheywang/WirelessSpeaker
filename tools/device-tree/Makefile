@@ -8,7 +8,7 @@ SOURCE := WirelessSpeakerV1.dts
 
 # Clean !
 dtc_clean:
-	@rm -r $(DTC_EXECNAME)
+	-rm -r $(DTC_EXECNAME).dtbo
 
 # Compile
 dtc_compile: WirelessSpeakerV1.dts

@@ -7,7 +7,7 @@ EXECNAME := build/WirelessSpeaker.arm
 # ===========================================================================================================
 clean:
 	-cd build/ && make clean
-	-cd doc/ && make clean
+	-cd doc/latex && make clean
 	-cd tools/device-tree && make dtc_clean
 	@echo "Removed build artifacts ! Cmake cache remains. Use clean_all to remove everything"
 

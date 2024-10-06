@@ -41,7 +41,7 @@ scp -i ${KEY} ${EXECNAME} pi@${RPI}:/home/pi/${EXECNAME}.elf
 
 # EEPROM hat
 ssh -i ${KEY} pi@${RPI} -f "touch /home/pi/eeprom.eep"
-scp -i ${KEY} ../tools/WirelessSpeaker.eep. pi@${RPI}:/home/pi/eeprom.eep 
+scp -i ${KEY} ../tools/WirelessSpeaker.eep pi@${RPI}:/home/pi/eeprom.eep 
 
 # Device tree
 ssh -i ${KEY} pi@${RPI} -f "touch /boot/overlays/WirelessSpeaker.dtb"
@@ -79,6 +79,8 @@ echo "Finished flashing EEPROM !"
 
 echo "Removng temporary files..."
 ssh -i ${KEY} pi@${RPI} -f "rm -f eepflash.sh eeprom.eep"
+rm ../tools/WirelessSpeaker.eep
+cd .. && make clean
 echo "Removed useless files"
 
 # =============================================================================
