@@ -1,6 +1,6 @@
 /**
  * @file MCP9808.hpp
- * @authorl.heywang (leonard.heywang@gmail.com)
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define a class and functions to exploit the MCP9808 Temperature Sensor.
  * @version 1.0
  * @date 2024-09-25

@@ -15,6 +15,7 @@
 #include <cstdint>
 
 /**
+ * @struct Config
  * @brief This struct store all of the elements to be configured once, and restored after each POR event.
  *        Values that are immutable arent stored here.
  *        All of theses settings are saved onto an SPI EEPROM.
@@ -27,35 +28,37 @@ struct Config
     std::string Board_Variant;  /*!< Field that cannot be edited. Contain the board minor variants (BOM).*/
 
     /**
+     * @struct Audio
      * @brief Structure that contain all of the Audio settings.
      *
-     * @struct Config::Audio::Trebbles
-     *         Structure that contain all of the settings relative to the Trebbles.
-     *         Configure the cutdown frequency for the low cutoff frequency played on theses speakers.
-     *         Configure the gain for this frequency range.
-     *         Thus, both can be used as a mixer.
-     * @struct Config::Audio::Medium
-     *         Structure that contain all of the settings relative to the Mediums.
-     *         Configure the cutdown frequency for the low and high cutoff frequencies played on theses speakers.
-     *         Configure the gain for this frequency range.
-     *         Thus, both can be used as a mixer.
-     * @struct Config::Audio::Bass
-     *         Structure that contain all of the settings relative to the Bass.
-     *         Configure the cutdown frequency for the high cutoff frequency played on theses speakers.
-     *         Configure the gain for this frequency range.
-     *         Thus, both can be used as a mixer.
-     * @struct Config::Audio::DAC
-     *         Structure that contain all of the settings relative to the Digital to Analog Conversion.
-     *         Configure paramters such as the frequency base played (44.1 kHz or 48 kHz).
-     *         Configure user selectable settings such as automute or independant volume control per channel.
-     * @struct Config::Audio::Global
-     *         Structure that contain all of the settings relative to the Global Analog Audio domain.
-     *         Store parameters that are global to the audio chain, such as the R-L balance or Analog Volume 2
+     * @var Config::Audio::Trebbles
+     *      Structure that contain all of the settings relative to the Trebbles.
+     *      Configure the cutdown frequency for the low cutoff frequency played on theses speakers.
+     *      Configure the gain for this frequency range.
+     *      Thus, both can be used as a mixer.
+     * @var Config::Audio::Medium
+     *      Structure that contain all of the settings relative to the Mediums.
+     *      Configure the cutdown frequency for the low and high cutoff frequencies played on theses speakers.
+     *      Configure the gain for this frequency range.
+     *      Thus, both can be used as a mixer.
+     * @var Config::Audio::Bass
+     *      Structure that contain all of the settings relative to the Bass.
+     *      Configure the cutdown frequency for the high cutoff frequency played on theses speakers.
+     *      Configure the gain for this frequency range.
+     *      Thus, both can be used as a mixer.
+     * @var Config::Audio::DAC
+     *      Structure that contain all of the settings relative to the Digital to Analog Conversion.
+     *      Configure paramters such as the frequency base played (44.1 kHz or 48 kHz).
+     *      Configure user selectable settings such as automute or independant volume control per channel.
+     * @var Config::Audio::Global
+     *      Structure that contain all of the settings relative to the Global Analog Audio domain.
+     *      Store parameters that are global to the audio chain, such as the R-L balance or Analog Volume 2
      *
      */
     struct Audio
     {
         /**
+         * @struct Trebbles
          * @var Config::Audio::Trebbles::HP_Value
          *      Value of the potentiometer that is used to set the high pass point for the trebbles speaker.
          * @var Config::Audio::Trebbles::Gain
@@ -69,6 +72,7 @@ struct Config
         } Trebbles;
 
         /**
+         * @struct Medium
          * @var Config::Audio::Medium::LP_Value
          *      Value of the potentiometer that is used to set the low pass point for the mediums speaker.
          * @var Config::Audio::Medium::HP_Value
@@ -85,6 +89,7 @@ struct Config
         } Medium;
 
         /**
+         * @struct Bass
          * @var Config::Audio::Bass::LP_Value
          *      Value of the potentiometer that is used to set the low pass point for the bass speaker.
          * @var Config::Audio::Bass::Gain
@@ -98,6 +103,7 @@ struct Config
         } Bass;
 
         /**
+         * @struct Global
          * @var Config::Audio::Global::Volume
          *      Analog gain for the volume. Used as master volume.
          *
@@ -108,6 +114,7 @@ struct Config
         } Global;
 
         /**
+         * @struct DAC
          * @var Config::Audio::DAC::Audio_44k
          *      Boolean that is set to True of the settings for the PLL need to be set to 44.1kHz playback. Will be overhiden by the 48k setting.
          * @var Config::Audio::DAC::Audio_48k
@@ -135,6 +142,7 @@ struct Config
     } Audio;
 
     /**
+     * @struct LEDS
      * @brief Structure that contain all of the LEDS setings.
      *        Store the brightness values.
      *        Store the group configuration values.
@@ -149,7 +157,8 @@ struct Config
     } LEDS;
 
     /**
-     *  @brief Structure that contain all of the Capacitive Sensor Settings such as the sensivity or the threshold values.
+     * @struct Capacitive
+     * @brief Structure that contain all of the Capacitive Sensor Settings such as the sensivity or the threshold values.
      *
      * @var Config::Capacitive::Threshold
      *      Contain the value of the peak that need to be measured to be considered as a touch.
@@ -165,6 +174,7 @@ struct Config
     } Capacitive;
 
     /**
+     * @struct Temperature
      * @brief Structure that contain all of the Temperature monitoring settings,
      *        and more precisely the values of the Interrupts at which an action shall be triggered (overheat ?)
      *

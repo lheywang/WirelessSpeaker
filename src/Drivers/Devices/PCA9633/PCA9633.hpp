@@ -119,6 +119,14 @@ public:
      *        This include a Dimming or Blinking engine
      * @warning Theses settings meaning depend on global IC configuration.
      *
+     *  Value  | Period
+     *  ------ | ------
+     *    0    | 0s
+     *    1    | 41 ms
+     *    2    | 82 ms
+     *   ...   | ...
+     *   255   | 10.83s
+     *
      * @param[in] DutyCycle The requested Duty Cycle
      * @param[in] Period The requested period in count of 41 ms (0 = 0s, 255 = 10.83s).
      *
@@ -131,7 +139,13 @@ public:
 
     /**
      * @brief Configure the leds action mode.
-     *        LED_ON, LED_OFF, LED_PWM (individual control only) and LED_PWM_GLOB are accepted.
+     *
+     *  Value        | LEDx
+     *  -------------| ------
+     *  LED_ON       | Always ON
+     *  LED_OFF      | Always OFF
+     *  LED_PWM      | Channel PWM
+     *  LED_PWM_GLOB | Channel PWM + Dimming
      *
      * @param[in] LED1 Setting for the LED1.
      * @param[in] LED2 Setting for the LED2.

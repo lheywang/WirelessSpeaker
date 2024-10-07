@@ -57,14 +57,32 @@ public:
     /**
      * @brief Configure the PLL Subsystem of the DAC.
      *
+     *  Value  | PLL Reference Clock
+     *  ------ | ------
+     *    0    | The PLL reference clock is SCK (default)
+     *    1    | The PLL reference clock is BCK
+     *    2    | /
+     *    3    | The PLL reference clock is GPIO
+     *   4-8   | /
+     *
+     *  Value  | PLL Source Clock
+     *  ------ | ------
+     *    0    | GPIO1 (Require Clock Flex Mode)(default)
+     *    1    | GPIO2
+     *    2    | GPIO3
+     *    3    | GPIO4
+     *    4    | GPIO5
+     *    4    | GPIO6
+     *   6-8   | /
+     *
      * @image html PCM5252_Clocks_Values.png "Dividers factors for the PCM5252 clocking circuit."
      * @image latex PCM5252_Clocks_Values.png "Dividers factors for the PCM5252 clocking circuit."
      *
      * @warning Any error here may place the DAC into an astable state where the PLL isn't locked, blocking any further audio applications.
      *
      * @param[in] EnablePLL Enable the PLL
-     * @param[in] PLLReference Select the PLL Reference Clock
-     * @param[in] PLLSource Select the PLL Source Clock
+     * @param[in] PLLReference Select the PLL Reference Clock (Select the Input Clock)
+     * @param[in] PLLSource Select the PLL Source Clock (Select the GPIO source if GPIO is selected as input)
      * @param[in] PLLP P Coefficient for the PLL
      * @param[in] PLLK K Coefficient for the PLL. J and D values are determined automatically.
      * @param[in] PLLR R Coefficient for the PLL
@@ -89,12 +107,29 @@ public:
     /**
      * @brief Configure the GPIO Subsystem of the DAC. Some of the settings below may need an advanced clocking configuration before.
      *
-     * @image html PCM5252_GPIOOutput.png "Values for the GPIO Outputs"
-     * @image latex PCM5252_GPIOOutput.png "Values for the GPIO Outputs"
+     *  Value  | GPIOxOutput
+     *  ------ | ------
+     *    0    | OFF (Low) (default)
+     *    1    | DSP GPIOx output
+     *    2    | Register GPIOx output
+     *    3    | Global Auto mute flag
+     *    4    | Left Auto mute flag
+     *    5    | Right Auto mute flag
+     *    6    | Clock invalid flag
+     *    7    | Serial audio interface data output
+     *    8    | Left Analog mute flag (Active low)
+     *    9    | Right Analog mute flag (Active low)
+     *    10   | PLL lock flag
+     *    11   | Charge pump clock
+     *  12-13  | /
+     *    14   | Under voltage flag (0.7 DVDD)
+     *    15   | Under voltage flag (0.3 DVDD)
+     *    16   | PLL Output/4 (Requires Clock Flex Register)
+     *  17-31  | /
      *
-     * @param[in] MISOFunction Define the function of the MISO pin.
-     * @param[in] GPIOEnable Define the state of all of the GPIO. Select Input or Output. Each bit mean 1 GPIO, thus a mask is required. 1 is output.
-     * @param[in] GPIO1Output Configure the output source for the GPIO1. --> Check Datasheet
+     * @param[in] MISOFunction Define the function of the MISO pin. (0 = SPI_MISO, 1  = GPIO1)
+     * @param[in] GPIOEnable Define the state of all of the GPIO. Select Input or Output. Each bit mean 1 GPIO, thus a mask is required. 1 is output, 0 is input.
+     * @param[in] GPIO1Output Configure the output source for the GPIO1.
      * @param[in] GPIO2Output Configure the output source for the GPIO2.
      * @param[in] GPIO3Output Configure the output source for the GPIO3.
      * @param[in] GPIO4Output Configure the output source for the GPIO4.
@@ -130,16 +165,44 @@ public:
     /**
      * @brief Configure the I2S Input of the DAC.
      *
+     *  Value  | FS Mode
+     *  ------ | ------
+     *    0    | Single (default)
+     *    1    | Dual
+     *    2    | Quad
+     *    3    | Octal
+     *
+     *  Value  | I2S Data Format
+     *  ------ | ------
+     *    0    | I2S (default)
+     *    1    | TDM / DSP
+     *    2    | RTJ
+     *    3    | LTJ
+     *
+     *  Value  | I2S Word Length
+     *  ------ | ------
+     *    0    | 16 bits
+     *    1    | 20 bits
+     *    2    | 24 bits (default)
+     *    3    | 32 bits
+     *
+     *  Value  | I2S Data Shift
+     *  ------ | ------
+     *    0    | 0 shift (default)
+     *    1    | 1 shitfs
+     *    ...  | ...
+     *    255  | 255 shifts
+     *
      * @param[in] BCKPolarity Configure the BCK polarity. Assert the data sampling on rising edges or falling edges.
      * @param[in] BCKOutputEnable Configure the I2S BCK mode (master or slave)
      * @param[in] LRCLKOutputEnable Configure the I2S LRCLK mode (master or slave)
      * @param[in] MasterModeBCKDivider Configure the Master BCK Divider
      * @param[in] MasterModeLRCLKDivider Configure the Master LRCLK Divider
      * @param[in] Enable16xInterpolation Enable the 16x Interpolation input.
-     * @param[in] FSSpeedMode Configure the FS mode (single : 00, dual : 01, quad : 10 or octal : 11)
-     * @param[in] I2SDataFormat Configure the I2S Data Format (00 : I2S, 01 : TDM/DSP, 10 : RTJ, 11 : LTJ)
-     * @param[in] I2SWordLength Configure the I2S Data Length (00 = 16b, 01 = 20b, 10 = 24b, 11 = 32b)
-     * @param[in] I2SDataShift Configure how many BCK shift are applied to the I2S Data In (00 = 1 shift, 255 = 256 shifts)
+     * @param[in] FSSpeedMode Configure the FS mode.
+     * @param[in] I2SDataFormat Configure the I2S Data Format.
+     * @param[in] I2SWordLength Configure the I2S Data Length.
+     * @param[in] I2SDataShift Configure how many BCK shift are applied to the I2S Data In.
      *
      * @return  0 : OK
      * @return -1 : Invalid FS Mode.
@@ -162,9 +225,9 @@ public:
     /**
      * @brief Configure the Analog Part of the DAC.
      *
-     * @param[in] OutputAmplitudeMode Configure the Output Amplitude mode (VCOM or GND)
-     * @param[in] LeftAnalogGain Configure the gain for Left channel (0dB or 6dB)
-     * @param[in] RightAnalogGain Configure the gain for Right channel (0dB or 6dB)
+     * @param[in] OutputAmplitudeMode Configure the Output Amplitude mode (1 : VCOM or 0 : GND)
+     * @param[in] LeftAnalogGain Configure the gain for Left channel (0 : 0dB or 1 : -6dB)
+     * @param[in] RightAnalogGain Configure the gain for Right channel (0 : 0dB or 1 : -6dB)
      * @param[in] AnalogMute Mute or unmute the analog part.
      * @param[in] LeftAnalogBoost Enable a 0.8 dB Analog boost on the Left Channel.
      * @param[in] RightAnalogBoost Enable a 0.8 dB Analog boost on the Right Channel.
@@ -208,11 +271,41 @@ public:
     /**
      * @brief Configure the subsystem in charge for the Digital to Analog Conversion.
      *
-     * @param[in] DACClockSource Select the DAC Clock Source. (000 = MCLK, 001 = PLL, 011 = SCK, 100 = BCK)
-     * @param[in] LeftDataSource Select the used input data for the left channel. (00 = NULL, 01 = LEFT, 10 = RIGHT)
-     * @param[in] RightDataSource Select the used Input data for the right channel. (00 = NULL, 01 = RIGHT, 10 = LEFT)
-     * @param[in] DigitalVolumeMode Select the digital volume mode. (00 = Independant, 01 : right = left setting, 10 = left = right settings)
-     * @param[in] DACArchitecture Select the DAC Architecture.
+     *  Value  | DAC Clock Source
+     *  ------ | ------
+     *    0    | Master clock (PLL/SCK and OSC auto-select)(default)
+     *    1    | PLL clock
+     *    2    | /
+     *    3    | SCK clock
+     *    4    | BCK clock
+     *   5-7   | /
+     *
+     *  Value  | Left Data Source
+     *  ------ | ------
+     *    0    | Zero data (mute)
+     *    1    | Left channel (default)
+     *    2    | Right channel data
+     *    3    | /
+     *
+     *  Value  | Left Data Source
+     *  ------ | ------
+     *    0    | Zero data (mute)
+     *    1    | Right channel (default)
+     *    2    | Left channel data
+     *    3    | /
+     *
+     *  Value  | Digital Volume Mode
+     *  ------ | ------
+     *    0    | Independant channels (default)
+     *    1    | right = left setting
+     *    2    | left = right settings
+     *    3    | /
+     *
+     * @param[in] DACClockSource Select the DAC Clock Source.
+     * @param[in] LeftDataSource Select the used input data for the left channel.
+     * @param[in] RightDataSource Select the used Input data for the right channel.
+     * @param[in] DigitalVolumeMode Select the digital volume mode.
+     * @param[in] DACArchitecture Select the DAC Architecture. (0 : New current segment architecure, 1 : PCM1792 architecture)
      * @param[in] RequestSync Request a sync for the clocks.
      *
      * @return  0 : OK
@@ -231,6 +324,20 @@ public:
 
     /**
      * @brief Configure the AutoMute subsystem.
+     *
+     *  Value  | Ramp down speed
+     *  ------ | ------
+     *    0    | Update every 1 FS period (default)
+     *    1    | Update every 2 FS periods
+     *    2    | Update every 4 FS periods
+     *    3    | Directly set the volume to zero (Instant mute)
+     *
+     *  Value  | Ramp down step
+     *  ------ | ------
+     *    0    | Decrement by 4 dB for each update
+     *    1    | Decrement by 2 dB for each update
+     *    2    | Decrement by 1 dB for each update (default)
+     *    3    | Decrement by 0.5 dB for each update
      *
      * @param[in] EnableAutoMute Enable and configure the AutoMute.
      * @param[in] LeftEnableAutoMute Enable automute for left channel.
@@ -272,7 +379,7 @@ public:
      * @warning This function doesn't configure the coefficients.
      *
      * @param[in] EnableDeEmphasis Enable De-Emphasis filter.
-     * @param[in] SelectSDOUT Select the SDOUT system.
+     * @param[in] SelectSDOUT Select the SDOUT system (0 = DSP Output, 1 = DSP input)
      * @param[in] GPIOInput Set the bit 16:8 of the external DSP GPIO Input.
      * @param[in] DSPProgramSelection Select the program used by the DSP.
      * @param[in] EnableAdaptativeMode Enable the Adaptive mode.
@@ -299,8 +406,16 @@ public:
     /**
      * @brief Enable and configure the external Interpolation filter.
      *
-     * @image html PCM5252_InterpolFilter.png "GPIO functions, same for all"
-     * @image html PCM5252_InterpolFilter.png "GPIO functions, same for all"
+     *  Value  | GPIOx Output Function
+     *  ------ | ------
+     *    0    | Logic low (default)
+     *    1    | MS
+     *    2    | BCK (256FS)
+     *    3    | WDCK (8FS)
+     *    4    | DATAL
+     *    5    | DATAR
+     *    6    | Raw DIN (from DIN pin)
+     *    7    | Raw LRCK (from LRCK pin)
      *
      * @param[in] Enable Enable the functionnality.
      * @param[in] GPIO1OutputFunction Set the GPIO1 function for this mode.
@@ -341,6 +456,13 @@ public:
     /**
      * @brief Configure the clocking subsystem for the whole chip.
      *
+     *  Value  | GPIOx Output Function
+     *  ------ | ------
+     *    0    | 1s (default)
+     *    1    | 2s
+     *   ...   | ...
+     *    7    | 8s
+     *
      * @param[in] AutoClockSet Enable or disable the autoset mode for the clocks.
      * @param[in] IgnoreFSDetection Ignore the FS detection.
      * @param[in] IgnoreBCKDetection Ignore the BCK detection.
@@ -348,8 +470,7 @@ public:
      * @param[in] IgnoreClockHaltDetection Ignore the Clock Halt Detection
      * @param[in] IgnoreLRCLKBCKDetection Ignore the LRCLK /  BCK detection.
      * @param[in] IgnorePLLUnlocks Ignore the PLL unlock detection.
-     * @param[in] ClockMissingDelay Configure the delay before triggering an error for missing clock. (000 for 1s, 111 for 8s)
-     *
+     * @param[in] ClockMissingDelay Configure the delay before triggering an error for missing clock.
      * @param[in] AdvancedClock Set to 1 to enable advanced clock circuitry.
      *
      * @return  0 : OK.
@@ -433,8 +554,17 @@ public:
     /**
      * @brief Configure the volume (digital) for the DAC.
      *
-     * @image html PCM5252_Digital_Volume.png "Values for the digital volume"
-     * @image latex PCM5252_Digital_Volume.png "Values for the digital volume"
+     *  Value  | Digital Volume
+     *  ------ | ------
+     *    0    | + 24.0 dB
+     *    1    | + 23.5 dB
+     *   ...   | ...
+     *    47   | + 0.5 dB
+     *    48   | + 0.0 dB (default)
+     *    49   | - 0.5 dB
+     *   ...   | ...
+     *   254   | - 103 dB
+     *   255   | Mute
      *
      * @param[in] LeftVolume Left volume value.
      * @param[in] RightVolume Right volume value.

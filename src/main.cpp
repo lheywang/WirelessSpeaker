@@ -34,8 +34,8 @@ int main()
 
     PCA9633 LED0 = PCA9633(I2C, 0x61);
     int buf[4] = {63, 127, 195, 255};
-    std::cout << LED0.Configure(0, 1, 1, 1, 1, 1, 1, 1, 1, LED_ON) << std::endl;
-    std::cout << LED0.SetLedStatus(LED_PWM, LED_PWM_GLOB, LED_ON, LED_OFF) << std::endl;
+    std::cout << LED0.Configure(0, 1, 1, 1, 1, 1, 0, 0, 0, LED_ON) << std::endl;
+    std::cout << LED0.SetLedStatus(LED_PWM, LED_PWM, LED_PWM, LED_PWM) << std::endl;
     std::cout << LED0.ConfigureDutyCycle(CHANNEL0, buf, 4) << std::endl;
 
     // std::cout << LED0.ConfigureGlobalDimming(50, 127) << std::endl;

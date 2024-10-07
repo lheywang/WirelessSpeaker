@@ -14,6 +14,7 @@
 #include <linux/gpio.h>
 
 /**
+ * @struct GPIO
  * @brief GPIO struct, used as base handle for GPIO manipulations.
  *        This is custom struct for our needs.
  *

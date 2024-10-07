@@ -1,6 +1,6 @@
 /**
  * @file MCP23009.hpp
- * @authorl.heywang (leonard.heywang@gmail.com)
+ * @author l.heywang (leonard.heywang@gmail.com)
  * @brief MCP23009 Base class.
  * @version 0.1
  * @date 2024-10-02
