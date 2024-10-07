@@ -20,6 +20,10 @@ all:
 	@mkdir -p build/
 	@cd build/ && cmake ../src/CMakeLists.txt
 	@cd build/ && make all -j$(MAX_CORES)
+	@echo "--------------------------------------------------------------------"
+	@echo "Compile source on $(shell pwd)/build/WirelessSpeaker.arm"
+	@echo "You can now execute it on the target !"
+	@echo "--------------------------------------------------------------------"
 
 # ===========================================================================================================
 # RECIPES FOR DOCUMENTATION
@@ -28,4 +32,8 @@ all:
 # If Doxygen is installed, it will generate the doc and build the PDF from the TeX source for the whole project.
 doc:
 	@doxygen Doxyfile
-	@cd ./doc/latex && make pdf
+	@cd ./doc/latex && make pdf > log-file 2>&1
+	@echo "--------------------------------------------------------------------"
+	@echo "Generated PDF doc on $(shell pwd)/doc/latex/refman.pdf"
+	@echo "Generated PDF doc on file://///wsl.localhost/Debian$(shell pwd)/doc/latex/refman.pdf"
+	@echo "--------------------------------------------------------------------"
