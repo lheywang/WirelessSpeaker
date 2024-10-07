@@ -54,6 +54,7 @@ build/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
+src/Makefile
 
 # Installation sub projects
 tools/utils

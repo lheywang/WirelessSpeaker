@@ -29,14 +29,16 @@
     // GPCLK0
     fragment@2 {
         target-path = "/clocks";
-        clock_routing {
-            vco@PLLA { freq = <1966080000>; };
-            chan@APER { div = <64>; };
-            clock@GPCLK0 { pll = "PLLA"; chan = "APER"; };
-        };
+        __overlay__{
+            clock_routing {
+                vco@PLLA { freq = <1966080000>; };
+                chan@APER { div = <64>; };
+                clock@GPCLK0 { pll = "PLLA"; chan = "APER"; };
+            };
 
-        clock_setup {
-            clock@GPCLK0 { freq = <16000000>; };
+            clock_setup {
+                clock@GPCLK0 { freq = <16000000>; };
+            };
         };
     };
 

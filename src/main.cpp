@@ -32,26 +32,11 @@ int main()
 
     I2C_Bus *I2C = I2C_GetInfos();
 
-    struct gpiochip_info info;
-    GetGPIOChipInfos(&info);
-
-    std::cout << info.label << std::endl;
-
-    struct GPIO GPIO;
-    GPIO.PinNumber = 16;
-    GetGPIOInfo(&GPIO);
-
-    std::cout << GPIO.Name << std::endl;
-    std::cout << GPIO.InOut << std::endl;
-    std::cout << GPIO.Polarity << std::endl;
-    std::cout << GPIO.Type << std::endl;
-    std::cout << GPIO.Kernel << std::endl;
-
-    int Status = 0;
-    ReadGPIO(&GPIO, &Status);
-    std::cout << Status << std::endl;
-
-    WriteGPIO(&GPIO, 1);
+    PCA9633 LED0 = PCA9633(I2C, 0x61);
+    int buf[4] = {63, 127, 195, 255};
+    std::cout << LED0.Configure(0, 1, 1, 1, 1, 1, 1, 1, 1, LED_ON) << std::endl;
+    std::cout << LED0.SetLedStatus(LED_PWM, LED_PWM_GLOB, LED_ON, LED_OFF) << std::endl;
+    std::cout << LED0.ConfigureDutyCycle(CHANNEL0, buf, 4) << std::endl;
 
     // std::cout << LED0.ConfigureGlobalDimming(50, 127) << std::endl;
     // std::cout << LED0.ConfigureSubAddress(SUBADDR1, 0x50) << std::endl;
@@ -120,6 +105,29 @@ int main()
      *      usleep(500'000);
      *   }
      * }
+     */
+
+    /* GPIO
+     *  struct gpiochip_info info;
+     *  GetGPIOChipInfos(&info);
+     *
+     *  std::cout << info.label << std::endl;
+     *
+     *  struct GPIO GPIO;
+     *  GPIO.PinNumber = 16;
+     *  GetGPIOInfo(&GPIO);
+     *
+     *  std::cout << GPIO.Name << std::endl;
+     *  std::cout << GPIO.InOut << std::endl;
+     *  std::cout << GPIO.Polarity << std::endl;
+     *  std::cout << GPIO.Type << std::endl;
+     *  std::cout << GPIO.Kernel << std::endl;
+     *
+     *  int Status = 0;
+     *  ReadGPIO(&GPIO, &Status);
+     *  std::cout << Status << std::endl;
+     *
+     *  WriteGPIO(&GPIO, 1);
      */
 
     /* PCA9633
