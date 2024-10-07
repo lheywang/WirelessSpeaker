@@ -30,7 +30,6 @@ set(PeripheralDrivers   ${CMAKE_SOURCE_DIR}/Drivers/I2C/includes/smbus.cpp\\
 # ========================================================================================
 # CMAKES SETTINGS
 # ========================================================================================
-set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR aarch64)
 set(CMAKE_C_COMPILER /usr/bin/aarch64-linux-gnu-gcc)
 set(CMAKE_CXX_COMPILER /usr/bin/aarch64-linux-gnu-g++)
@@ -39,7 +38,6 @@ set(CMAKE_CXX_COMPILER /usr/bin/aarch64-linux-gnu-g++)
 # COMPILERS SETTINGS
 # ========================================================================================
 add_compile_options(-mcpu=cortex-a53 -O3 -MMD -std=c++20 -Wall -Wextra)
-add_link_options(-r)
 
 # ========================================================================================
 # EXECUTABLES

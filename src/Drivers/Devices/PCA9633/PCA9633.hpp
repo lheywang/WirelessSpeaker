@@ -36,7 +36,7 @@
 #define ADDRESS1 0x09
 #define ADDRESS2 0x0A
 #define ADDRESS3 0x0B
-#define ADDRESS4 0x0C
+#define ALL_ADDRESS 0x0C
 
 // ==============================================================================
 // IC CLASS FUNCTIONS

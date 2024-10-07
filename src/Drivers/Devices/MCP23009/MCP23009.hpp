@@ -2,10 +2,12 @@
  * @file MCP23009.hpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief MCP23009 Base class.
- * @version 0.1
+ * @version 1.0
  * @date 2024-10-02
  *
  * @copyright Copyright (c) 2024
+ *
+ * @remark Class was tested successfully on 07/10/2024.
  *
  */
 

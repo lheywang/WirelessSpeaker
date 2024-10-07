@@ -15,13 +15,7 @@
 #include <unistd.h>
 
 #include "Drivers/I2C/I2C.hpp"
-#include "Drivers/Devices/DS1882/DS1882.hpp"
-#include "Drivers/Devices/AT42QT1070/AT42QT1070.hpp"
-#include "Drivers/Devices/MCP9808/MCP9808.hpp"
-#include "Drivers/Devices/PCM5252/PCM5252.hpp"
-#include "Drivers/Devices/ADS1015/ADS1015.hpp"
-#include "Drivers/Devices/MCP45HV51/MCP45HV51.hpp"
-#include "Drivers/Devices/PCA9633/PCA9633.hpp"
+#include "Drivers/Devices/Devices.hpp"
 #include "Drivers/SPI/SPI.hpp"
 #include "Drivers/GPIO/GPIO.hpp"
 
@@ -31,15 +25,6 @@ int main()
     std::cout << "Hello World !" << std::endl;
 
     I2C_Bus *I2C = I2C_GetInfos();
-
-    PCA9633 LED0 = PCA9633(I2C, 0x61);
-    int buf[4] = {63, 127, 195, 255};
-    std::cout << LED0.Configure(0, 1, 1, 1, 1, 1, 0, 0, 0, LED_ON) << std::endl;
-    std::cout << LED0.SetLedStatus(LED_PWM, LED_PWM, LED_PWM, LED_PWM) << std::endl;
-    std::cout << LED0.ConfigureDutyCycle(CHANNEL0, buf, 4) << std::endl;
-
-    // std::cout << LED0.ConfigureGlobalDimming(50, 127) << std::endl;
-    // std::cout << LED0.ConfigureSubAddress(SUBADDR1, 0x50) << std::endl;
 
     /* MCP 9808
      *
@@ -141,5 +126,31 @@ int main()
      *
      */
 
+    /*
+     * MCP23009 GPIO0 = MCP23009(I2C, 0x20);
+     *
+     * int Inputs = 0;
+     * int Port = 0;
+     *
+     * std::cout << GPIO0.ReadInputs(&Inputs) << std::endl;
+     * std::cout << Inputs << std::endl;
+     *
+     * std::cout << GPIO0.Configure(1, 1) << std::endl;
+     * std::cout << GPIO0.ConfigureGPIO(0x1F, 0x00, 0x00, 0x00, 0x00, 0x00) << std::endl;
+     * std::cout << GPIO0.SetOutputs(0x00) << std::endl; // Inverted logic, set to 0 !
+     * std::cout << GPIO0.ReadInterrupts(&Inputs, &Port) << std::endl; // To check hardware principle. Driver OK !
+     * std::cout << Inputs << " | " << Port << std::endl;
+     */
+
+    /*
+     * PCA9633 LED0 = PCA9633(I2C, 0x61);
+     *
+     * int buf[4] = {200, 150, 100, 50};
+     * std::cout << LED0.Configure(1, 0, 0, 0, 0, 1, 0, 0, 0, LED_OFF) << std::endl;
+     * std::cout << LED0.SetLedStatus(LED_PWM_GLOB, LED_PWM_GLOB, LED_PWM_GLOB, LED_PWM_GLOB) << std::endl;
+     * std::cout << LED0.ConfigureDutyCycle(CHANNEL0, buf, 4) << std::endl;
+     * std::cout << LED0.ConfigureGlobalDimming(50, 128) << std::endl; // A bit confusing to use, but OK !
+     * std::cout << LED0.ConfigureSubAddress(ADDRESS1, 0x50) << std::endl; // OK
+     */
     return 0;
 }

@@ -2,10 +2,12 @@
  * @file PCA9633.cpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Source of the functions for the PCA9633 Leds Drivers
- * @version 0.1
+ * @version 1.0
  * @date 2024-09-25
  *
  * @copyright Copyright (c) 2024
+ *
+ * @remark Class was tested successfully on 07/10/2024.
  *
  */
 // Header file
@@ -86,18 +88,18 @@ int PCA9633::Configure(const int Mode,
     int buf[2] = {0};
 
     // MODE 1
-    buf[0] = ((bool)Mode) << 4;
-    buf[0] |= ((bool)SubAddr1Response) << 3;
-    buf[0] |= ((bool)SubAddr2Response) << 2;
-    buf[0] |= ((bool)SubAddr3Response) << 1;
-    buf[0] |= ((bool)AllAddrResponse);
+    buf[0] = (!(bool)Mode);
+    buf[0] = buf[0] << 1 | (bool)SubAddr1Response;
+    buf[0] = buf[0] << 1 | (bool)SubAddr2Response;
+    buf[0] = buf[0] << 1 | (bool)SubAddr3Response;
+    buf[0] = buf[0] << 1 | (bool)AllAddrResponse;
 
     // MODE 2
-    buf[1] = ((bool)Dimming) << 5;
-    buf[1] |= ((bool)Inverter) << 4;
-    buf[1] |= ((bool)Change) << 3;
-    buf[1] |= ((bool)OutputDriver) << 2;
-    buf[1] |= (OEStatus);
+    buf[1] = ((bool)Dimming);
+    buf[1] = buf[1] << 1 | (bool)Inverter;
+    buf[1] = buf[1] << 1 | (bool)Change;
+    buf[1] = buf[1] << 1 | (bool)OutputDriver;
+    buf[1] = buf[1] << 2 | OEStatus;
 
     int res = I2C_Write(&this->I2C, this->address, REGISTER_WITH_INCREMENT_ALL(MODE1), buf, 2);
     if (res != 0)
@@ -138,9 +140,9 @@ int PCA9633::ConfigureDutyCycle(const int FirstChannel, int *const Value, const 
     }
 
     if (AutoIncrement == 1)
-        Tregister = REGISTER_WITHOUT_INCREMENT(FirstChannel);
+        Tregister = REGISTER_WITHOUT_INCREMENT(Tregister);
     else
-        Tregister = REGISTER_WITH_INCREMENT_LEDS(FirstChannel);
+        Tregister = REGISTER_WITH_INCREMENT_LEDS(Tregister);
 
     // Write the number of channels we want.
     int res = I2C_Write(&this->I2C, this->address, Tregister, buf, AutoIncrement);
@@ -157,8 +159,11 @@ int PCA9633::ConfigureGlobalDimming(const int DutyCycle, const int Period)
     if ((Period < 0x00) | (Period > 0xFF))
         return -2;
 
-    int TempDuty = ((DutyCycle * 2.56) / 100);
-    int buf[2] = {TempDuty, Period};
+    int TempDuty = (DutyCycle * 2.56);
+    int buf[2] = {0};
+
+    buf[0] = TempDuty;
+    buf[1] = Period;
 
     int res = I2C_Write(&this->I2C, this->address, REGISTER_WITH_INCREMENT_CTRL(GRPPPWM), buf, 2);
     if (res != 0)

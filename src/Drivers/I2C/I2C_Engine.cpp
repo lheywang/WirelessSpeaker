@@ -94,11 +94,13 @@ int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, i
     I2C_ConfigureAddress(I2C, (uint8_t)Address);
 
     for (int i = 0; i < Size; i++)
+    {
         if (DataSize == 1)
             res = i2c_smbus_write_byte_data(I2C->I2C_file, Register + i, (uint8_t)Payload[i]);
         else
             // We do the byte swapping directly here.
             res = i2c_smbus_write_word_data(I2C->I2C_file, Register + i, (uint16_t)SWAP_BYTES(Payload[i]));
+    }
 
     if (res != 0)
         return -4;
