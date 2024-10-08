@@ -2,7 +2,7 @@
  * @file GPIO.cpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Source for the GPIO base functions
- * @version 0.1
+ * @version 1.0
  * @date 2024-10-03
  *
  * @copyright Copyright (c) 2024

@@ -27,6 +27,8 @@ int main()
     I2C_Bus *I2C = I2C_GetInfos();
 
     initClock(2, 18, 0, 0); // Output a 12 MHz square.
+    usleep(3'000'000);
+    termClock();
 
     /* MCP 9808
      *

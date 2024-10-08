@@ -1,10 +1,13 @@
-// ==============================================================================
-//                              GPIO/GPIO.hpp
-//                              Wrote by lheywang
-//
-// Define our basic I2C settings on the boards, such as :
-// - Pins usage
-// ==============================================================================
+/**
+ * @file GPIO_Engine.hpp
+ * @author l.heywang (leonard.heywang@gmail.com)
+ * @brief Header for custom GPIO functions, that rely on the linux kernel functions.
+ * @version 1.0
+ * @date 2024-10-08
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 
 // Only included one time
 #pragma once

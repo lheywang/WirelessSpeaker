@@ -2,7 +2,7 @@
  * @file clk.hpp
  * @author ddouglass
  * @brief This file contain header code for GPCLK0 module on RPi Zero 2W. Original made by ddouglass (https://github.com/LCOGT/minimal_clk/tree/main)
- * @version 0.1
+ * @version 1.0
  * @date 2022-07-05
  *
  * @copyright Copyright (c) 2022

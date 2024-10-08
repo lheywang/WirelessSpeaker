@@ -2,7 +2,7 @@
  * @file clk.cpp
  * @author ddouglass
  * @brief This file contain source code for GPCLK0 module on RPi Zero 2W. Original made by ddouglass (https://github.com/LCOGT/minimal_clk/tree/main)
- * @version 0.1
+ * @version 1.0
  * @date 2022-07-05
  *
  * @copyright Copyright (c) 2022
@@ -47,11 +47,6 @@
 
 #define CLK_SRCS 4
 
-static double cfreq[CLK_SRCS] = {500e6, 19.2e6, 216e6, 1000e6};
-static char *clocks[CLK_SRCS] = {"PLLD", " OSC", "HDMI", "PLLC"};
-static double clk_min_freq = 4687.5;
-static double clk_max_freq = 250e6;
-
 #define CLK_CTL_SRC_OSC 1  /* 19.2 MHz or 54 MHz (Pi4)*/
 #define CLK_CTL_SRC_PLLC 5 /* 1000 MHz */
 #define CLK_CTL_SRC_PLLD 6 /*  500 MHz  or 750 MHz (Pi4)*/
@@ -72,9 +67,9 @@ static double clk_max_freq = 250e6;
 #define PI_INPUT 0
 #define PI_ALT0 4
 
-static volatile uint32_t *gpioReg = (uint32_t *)MAP_FAILED;
-static volatile uint32_t *systReg = (uint32_t *)MAP_FAILED;
-static volatile uint32_t *clkReg = (uint32_t *)MAP_FAILED;
+static uint32_t *gpioReg = (uint32_t *)MAP_FAILED;
+static uint32_t *systReg = (uint32_t *)MAP_FAILED;
+static uint32_t *clkReg = (uint32_t *)MAP_FAILED;
 
 // ==============================================================================
 // PRIVATE FUNCTIONS
@@ -137,16 +132,13 @@ int initClock(int source, int divI, int divF, int MASH)
         return -1;
     gpioSetMode(4, PI_ALT0);
 
-    int ctl[] = {CLK_GP0_CTL, CLK_GP2_CTL};
-    int div[] = {CLK_GP0_DIV, CLK_GP2_DIV};
     int src[CLK_SRCS] =
         {CLK_CTL_SRC_PLLD,
          CLK_CTL_SRC_OSC,
          CLK_CTL_SRC_HDMI,
          CLK_CTL_SRC_PLLC};
 
-    int clkCtl, clkDiv, clkSrc;
-    uint32_t setting;
+    int clkSrc;
 
     if ((source < 0) || (source > 3))
         return -3;
@@ -157,22 +149,19 @@ int initClock(int source, int divI, int divF, int MASH)
     if ((MASH < 0) || (MASH > 3))
         return -6;
 
-    clkCtl = ctl[0];
-    clkDiv = div[0];
     clkSrc = src[source];
-    clkReg[clkCtl] = CLK_PASSWD | CLK_CTL_KILL;
 
     /* wait for clock to stop */
-    while (clkReg[clkCtl] & CLK_CTL_BUSY)
+    while (*clkReg & CLK_CTL_BUSY)
     {
         usleep(10);
     }
 
-    clkReg[clkDiv] = (CLK_PASSWD | CLK_DIV_DIVI(divI) | CLK_DIV_DIVF(divF));
+    *clkReg = (CLK_PASSWD | CLK_DIV_DIVI(divI) | CLK_DIV_DIVF(divF));
     usleep(10);
-    clkReg[clkCtl] = (CLK_PASSWD | CLK_CTL_MASH(MASH) | CLK_CTL_SRC(clkSrc));
+    *clkReg = (CLK_PASSWD | CLK_CTL_MASH(MASH) | CLK_CTL_SRC(clkSrc));
     usleep(10);
-    clkReg[clkCtl] |= (CLK_PASSWD | CLK_CTL_ENAB);
+    *clkReg |= (CLK_PASSWD | CLK_CTL_ENAB);
 
     return 0;
 }
@@ -180,15 +169,10 @@ int initClock(int source, int divI, int divF, int MASH)
 int termClock()
 {
     gpioSetMode(4, PI_INPUT);
-
-    int ctl[] = {CLK_GP0_CTL, CLK_GP2_CTL};
-    int clkCtl;
-
-    clkCtl = ctl[0];
-    clkReg[clkCtl] = CLK_PASSWD | CLK_CTL_KILL;
+    *clkReg = CLK_PASSWD | CLK_CTL_KILL; // Segfault if original syntax.
 
     /* wait for clock to stop */
-    while (clkReg[clkCtl] & CLK_CTL_BUSY)
+    while (*clkReg & CLK_CTL_BUSY)
     {
         usleep(10);
     }

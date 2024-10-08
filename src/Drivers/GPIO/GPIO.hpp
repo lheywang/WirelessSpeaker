@@ -2,7 +2,7 @@
  * @file GPIO.hpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define standard constants for the GPIO part of the speaker.
- * @version 0.1
+ * @version 1.0
  * @date 2024-10-03
  *
  * @copyright Copyright (c) 2024
