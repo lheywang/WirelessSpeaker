@@ -159,3 +159,7 @@ int WriteGPIO(GPIO *info, const int Status)
     info->InOut = true;
     return 0;
 }
+
+// GpioInitialize ? Output ?
+// InitClock
+// TermClock

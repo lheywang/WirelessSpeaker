@@ -26,34 +26,8 @@
         };
     };
 
-    // GPCLK0
-    fragment@2 {
-        target-path = "/clocks";
-        __overlay__{
-            clock_routing {
-                vco@PLLA { freq = <1966080000>; };
-                chan@APER { div = <64>; };
-                clock@GPCLK0 { pll = "PLLA"; chan = "APER"; };
-            };
-
-            clock_setup {
-                clock@GPCLK0 { freq = <16000000>; };
-            };
-        };
-    };
-
-    fragment@3 {
-        target = <&gpio>;
-        __overlay__ {
-            clock_pin: clock_pin {
-            brcm,pins = <4>;
-            brcm,function = <4>;
-            };
-        };
-    };
-
     // SPI
-    fragment@4 {
+    fragment@2 {
         target = <&spi0>;
         __overlay__ {
             status = "okay";
@@ -63,7 +37,7 @@
     };
 
     // UART0
-    fragment@5 {
+    fragment@3 {
         target = <&serial0>;
         __overlay__ {
             status = "okay";
@@ -75,63 +49,4 @@
         };
     };
 
-    // Power INT GPIOS
-    fragment@6 {
-        target = <&gpios>;
-        __overlay__ {
-            pins = <17 27 22 >;  
-            direction  = <0 0 0>;
-            pull-up = <1 1 1>;
-        };
-    };
-
-    // External GPIO Interrupt.
-    fragment@7 {
-        target = <&gpios>;
-        __overlay__ {
-            pins = <5>;
-            direction = <0>;
-            pull-up = <1>;
-        };
-    };
-
-    // Two aRGB Outputs.
-    fragment@8 {
-        target = <&gpios>;
-        __overlay__ {
-            pins = <6 13>;
-            direction = <1 1>;
-            pull-up = <0>; // No pull ups.
-        };
-    };
-
-    // Touch sensor Interrupt.
-    fragment@9 {
-        target = <&gpios>;
-        __overlay__ {
-             pins = <26>;
-             direction = <0>;
-             pull-up = <1>;
-        };
-    };
-
-    // Battery Management Interrupt.
-    fragment@10 {
-        target = <&gpios>;
-        __overlay__ {
-             pins = <25>;
-             direction = <0>;
-             pull-up = <1>;
-        };
-    };
-
-    // Power system Interrupt.
-    fragment@11 {
-        target = <&gpios>;
-        __overlay__ {
-             pins = <16>;
-             direction = <0>;
-             pull-up = <1>;
-        };
-    };
 };
