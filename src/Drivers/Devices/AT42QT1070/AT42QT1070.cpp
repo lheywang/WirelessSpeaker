@@ -140,7 +140,7 @@ int AT42QT1070::GetKeySignals(const int Key, int *const Value)
 {
     if (!(Key & 0x01)) // prevent from accessing to LSByte directly.
         return -1;
-    if ((Key < KEY0) | (Key > KEY7))
+    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
         return -1;
 
     int buf[2] = {0};
@@ -161,7 +161,7 @@ int AT42QT1070::GetKeyReferenceSignal(const int Key, int *const Value)
 {
     if (!(Key & 0x01)) // prevent from accessing to LSByte directly.
         return -1;
-    if ((Key < KEY0) | (Key > KEY7))
+    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
         return -1;
 
     int buf[2] = {0};
@@ -180,7 +180,7 @@ int AT42QT1070::GetKeyReferenceSignal(const int Key, int *const Value)
 
 int AT42QT1070::SetReferenceThreshold(const int Key, const int Value)
 {
-    if ((Key < KEY0) | (Key > KEY7))
+    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
         return -1;
 
     int buf = Value;
@@ -196,7 +196,7 @@ int AT42QT1070::SetReferenceThreshold(const int Key, const int Value)
 
 int AT42QT1070::GetReferenceThreshold(const int Key, int *const Value)
 {
-    if ((Key < KEY0) | (Key > KEY7))
+    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
         return -1;
 
     int res = 0;
@@ -214,7 +214,7 @@ int AT42QT1070::GetReferenceThreshold(const int Key, int *const Value)
 
 int AT42QT1070::SetAdjacentKeySuppresion(const int Key, const int Value)
 {
-    if ((Key < KEY0) | (Key > KEY7))
+    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
         return -1;
 
     int buf = Value;
@@ -230,7 +230,7 @@ int AT42QT1070::SetAdjacentKeySuppresion(const int Key, const int Value)
 
 int AT42QT1070::GetAdjacentKeySuppresion(const int Key, int *const Value)
 {
-    if ((Key < KEY0) | (Key > KEY7))
+    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
         return -1;
 
     int res = 0;
@@ -248,7 +248,7 @@ int AT42QT1070::GetAdjacentKeySuppresion(const int Key, int *const Value)
 
 int AT42QT1070::SetDetectionIntegrator(const int Key, const int Value)
 {
-    if ((Key < KEY0) | (Key > KEY7))
+    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
         return -1;
 
     int buf = Value;
@@ -264,7 +264,7 @@ int AT42QT1070::SetDetectionIntegrator(const int Key, const int Value)
 
 int AT42QT1070::GetDetectionIntegrator(const int Key, int *const Value)
 {
-    if ((Key < KEY0) | (Key > KEY7))
+    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
         return -1;
 
     int res = 0;

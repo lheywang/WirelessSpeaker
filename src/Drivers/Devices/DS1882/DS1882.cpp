@@ -48,7 +48,7 @@ DS1882::~DS1882()
 // =====================
 int DS1882::WriteWiper(const int wiper, const int value)
 {
-    if ((wiper != WIPER_0) && (wiper != WIPER_1))
+    if ((wiper != LOG_WIPER_0) && (wiper != LOG_WIPER_1))
         return -1;
 
     if (value > (this->b_PotiConfig ? 0x3F : 0x1F))

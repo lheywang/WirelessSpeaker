@@ -19,13 +19,13 @@
 // =====================
 // PUBLIC DEFINES
 // =====================
-#define FAST_SWAP_DISABLED 0x00
-#define DEFAULT_USB_POWER 0x01
-#define V5_A1_5 0x02
-#define V5_A3 0x03
+#define USB_FAST_SWAP_DISABLED 0x00
+#define USB_DEFAULT_USB_POWER 0x01
+#define USB_V5_A1_5 0x02
+#define USB_V5_A3 0x03
 
-#define ENABLE_PPS 0x01
-#define FIXED_PD2 0x00
+#define USB_ENABLE_PPS 0x01
+#define USB_FIXED_PD2 0x00
 
 // =====================
 // CUSTOM PDO OBJECTS
@@ -48,14 +48,14 @@
  */
 struct PDO
 {
-    int FixedSupply = FIXED_PD2;
+    int FixedSupply = USB_FIXED_PD2;
     bool DualRole = false;
     bool HighCapability = false;
     bool UnconstrainedPower = false;
     bool USBCommCapable = true;
     bool DualRoleData = false;
 
-    int FastSwap = FAST_SWAP_DISABLED;
+    int FastSwap = USB_FAST_SWAP_DISABLED;
 
     float Voltage;
     float Current;

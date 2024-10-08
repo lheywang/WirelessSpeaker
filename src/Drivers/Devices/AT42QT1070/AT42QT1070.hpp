@@ -25,14 +25,14 @@
 #define AT42QT1070_ADDRESS 0x1B
 
 // Keys
-#define KEY0 0x00
-#define KEY1 0x01
-#define KEY2 0x02
-#define KEY3 0x03
-#define KEY4 0x04
-#define KEY5 0x05
-#define KEY6 0x06
-#define KEY7 0x07
+#define TOUCH_KEY0 0x00
+#define TOUCH_KEY1 0x01
+#define TOUCH_KEY2 0x02
+#define TOUCH_KEY3 0x03
+#define TOUCH_KEY4 0x04
+#define TOUCH_KEY5 0x05
+#define TOUCH_KEY6 0x06
+#define TOUCH_KEY7 0x07
 
 // ==============================================================================
 // IC CLASS FUNCTIONS

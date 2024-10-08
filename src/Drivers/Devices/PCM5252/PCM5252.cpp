@@ -819,7 +819,7 @@ int PCM5252::ConfigureClockDividers(const int OSR,
 
 int PCM5252::ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values, const size_t CoeffNumber)
 {
-    if ((Buffer != BUFFER_A) & (Buffer != BUFFER_B))
+    if ((Buffer != DAC_BUFFER_A) & (Buffer != DAC_BUFFER_B))
         return -1;
     if (CoeffNumber > 255)
         return -2;

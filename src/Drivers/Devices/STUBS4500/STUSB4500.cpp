@@ -370,9 +370,9 @@ int STUSB4500::GetPDO(const int PDONumber, PDO *const PDO)
 
 int STUSB4500::SetPDO(const int PDONumber, const PDO PDO)
 {
-    if ((FIXED_PD2 > PDO.FixedSupply) | (PDO.FixedSupply > ENABLE_PPS))
+    if ((USB_FIXED_PD2 > PDO.FixedSupply) | (PDO.FixedSupply > USB_ENABLE_PPS))
         return -1;
-    if ((FAST_SWAP_DISABLED > PDO.FastSwap) | (PDO.FastSwap > V5_A3))
+    if ((USB_FAST_SWAP_DISABLED > PDO.FastSwap) | (PDO.FastSwap > USB_V5_A3))
         return -2;
     if (!PDO.HighCapability) // Check if we go higher than 3A without enabling High Capability bool
     {

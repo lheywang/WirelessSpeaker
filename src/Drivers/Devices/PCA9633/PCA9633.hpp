@@ -27,16 +27,16 @@
 #define LED_PWM_GLOB 0x03
 
 // Channels numbers
-#define CHANNEL0 0x00
-#define CHANNEL1 0x01
-#define CHANNEL2 0x02
-#define CHANNEL3 0x03
+#define LED_CHANNEL0 0x00
+#define LED_CHANNEL1 0x01
+#define LED_CHANNEL2 0x02
+#define LED_CHANNEL3 0x03
 
 // Sub address numbers
-#define ADDRESS1 0x09
-#define ADDRESS2 0x0A
-#define ADDRESS3 0x0B
-#define ALL_ADDRESS 0x0C
+#define LED_ADDRESS1 0x09
+#define LED_ADDRESS2 0x0A
+#define LED_ADDRESS3 0x0B
+#define LED_ALL_ADDRESS 0x0C
 
 // ==============================================================================
 // IC CLASS FUNCTIONS

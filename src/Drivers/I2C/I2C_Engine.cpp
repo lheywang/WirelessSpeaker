@@ -26,11 +26,6 @@
 #include <errno.h>
 #include <cstdint>
 
-// ==============================================================================
-// MACROS
-// ==============================================================================
-#define SWAP_BYTES(x) (((x & 0x00FF) << 8) | (x & 0xFF00) >> 8)
-
 // Custom builded smbus.h file, from the original repo : https://github.com/Sensirion/i2c-tools/tree/master
 // Only includes path were modified.
 // File extension was changed to C++ to make the compilation easier.
@@ -99,7 +94,7 @@ int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, i
             res = i2c_smbus_write_byte_data(I2C->I2C_file, Register + i, (uint8_t)Payload[i]);
         else
             // We do the byte swapping directly here.
-            res = i2c_smbus_write_word_data(I2C->I2C_file, Register + i, (uint16_t)SWAP_BYTES(Payload[i]));
+            res = i2c_smbus_write_word_data(I2C->I2C_file, Register + i, (uint16_t)Payload[i]);
     }
 
     if (res != 0)

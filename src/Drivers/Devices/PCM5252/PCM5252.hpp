@@ -18,8 +18,8 @@
 // =====================
 // PUBLIC DEFINES
 // =====================
-#define BUFFER_A 0x2C /**DSP Buffer A Name */
-#define BUFFER_B 0x3E /**DSP Buffer B Name */
+#define DAC_BUFFER_A 0x2C /**DSP Buffer A Name */
+#define DAC_BUFFER_B 0x3E /**DSP Buffer B Name */
 
 // ==============================================================================
 // IC CLASS FUNCTIONS

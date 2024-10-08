@@ -86,10 +86,10 @@ static void FloatToInts(const float Input, int *const OutputBuf)
 
 int MCP9808::ConfigureResolution(const int Resolution)
 {
-    if ((Resolution > C0_0625) & (Resolution < C0_5))
+    if ((Resolution > TEMP_C0_0625) & (Resolution < TEMP_C0_5))
         return -1;
 
-    int TResolution = Resolution;
+    int TResolution = SWAP_BYTES(Resolution);
     int res = I2C_Write(&this->I2C, this->address, REGISTER(TEMP_RESOLUTION), &TResolution, 1, 1);
 
     if (res != 0)
@@ -107,7 +107,7 @@ int MCP9808::Configure(const int Hysteresis,
                        const int AlertPolarity,
                        const int AlertMode)
 {
-    if ((Hysteresis > HYST_6) & (Hysteresis < HYST_0))
+    if ((Hysteresis > TEMP_HYST_6) & (Hysteresis < TEMP_HYST_0))
         return -1;
 
     int buf = 0;
@@ -127,6 +127,7 @@ int MCP9808::Configure(const int Hysteresis,
     buf = (buf << 1) | (bool)AlertMode;
 
     int res = 0;
+    buf = SWAP_BYTES(buf);
     res = I2C_Write(&this->I2C, this->address, REGISTER(MCP9808_CONFIG), &buf, 1, 2);
 
     if (res != 0)
@@ -139,12 +140,14 @@ int MCP9808::GetIDs(int *const DeviceID, int *const DeviceRevision, int *const M
     int res = 0;
     int buf = 0;
     res += I2C_Read(&this->I2C, this->address, REGISTER(DEVICEID), &buf, 1, 2);
+    buf = SWAP_BYTES(buf);
 
     *DeviceID = buf & 0x00FF;
     *DeviceRevision = buf & 0xFF00;
 
     buf = 0;
     res += I2C_Read(&this->I2C, this->address, REGISTER(MANUFACTURER), &buf, 1, 2);
+    buf = SWAP_BYTES(buf);
     *ManufacturerID = buf;
 
     if (res != 0)
@@ -170,6 +173,10 @@ int MCP9808::SetAlertTemperatures(const float Minimal, const float Maximal, cons
     FloatToInts(Maximal, &BufMax);
     FloatToInts(Critical, &BufCrit);
 
+    BufMin = SWAP_BYTES(BufMin);
+    BufMax = SWAP_BYTES(BufMax);
+    BufCrit = SWAP_BYTES(BufCrit);
+
     int res = 0;
     res += I2C_Write(&this->I2C, this->address, REGISTER(UPPER_TEMP), &BufMax, 1, 2);
     res += I2C_Write(&this->I2C, this->address, REGISTER(LOWER_TEMP), &BufMin, 1, 2);
@@ -184,6 +191,7 @@ int MCP9808::ReadTemperature(float *const Temperature, int *const Status)
 {
     int buf = 0;
     int res = I2C_Read(&this->I2C, this->address, REGISTER(READ_TEMP), &buf, 1, 2);
+    buf = SWAP_BYTES(buf);
 
     if (res != 0)
         return -1;

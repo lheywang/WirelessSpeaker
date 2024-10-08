@@ -110,9 +110,9 @@ int PCA9633::Configure(const int Mode,
 
 int PCA9633::ConfigureDutyCycle(const int FirstChannel, int *const Value, const int AutoIncrement)
 {
-    if ((FirstChannel > CHANNEL3) | (FirstChannel < CHANNEL0))
+    if ((FirstChannel > LED_CHANNEL3) | (FirstChannel < LED_CHANNEL0))
         return -1;
-    if ((FirstChannel + AutoIncrement) > (CHANNEL3 + 1))
+    if ((FirstChannel + AutoIncrement) > (LED_CHANNEL3 + 1))
         return -2;
     if (AutoIncrement == 0)
         return -2;
@@ -125,16 +125,16 @@ int PCA9633::ConfigureDutyCycle(const int FirstChannel, int *const Value, const 
     int Tregister = 0;
     switch (FirstChannel)
     {
-    case CHANNEL0:
+    case LED_CHANNEL0:
         Tregister = PWM0;
         break;
-    case CHANNEL1:
+    case LED_CHANNEL1:
         Tregister = PWM1;
         break;
-    case CHANNEL2:
+    case LED_CHANNEL2:
         Tregister = PWM2;
         break;
-    case CHANNEL3:
+    case LED_CHANNEL3:
         Tregister = PWM3;
         break;
     }

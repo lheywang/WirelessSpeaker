@@ -22,16 +22,16 @@
 // ==============================================================================
 
 // Resolution
-#define C0_5 0x00
-#define C0_25 0x01
-#define C0_125 0x02
-#define C0_0625 0x03
+#define TEMP_C0_5 0x00
+#define TEMP_C0_25 0x01
+#define TEMP_C0_125 0x02
+#define TEMP_C0_0625 0x03
 
 // Hysteresis Settings
-#define HYST_0 0x00
-#define HYST_1 0x01
-#define HYST_3 0x02
-#define HYST_6 0x03
+#define TEMP_HYST_0 0x00
+#define TEMP_HYST_1 0x01
+#define TEMP_HYST_3 0x02
+#define TEMP_HYST_6 0x03
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
