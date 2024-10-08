@@ -20,25 +20,25 @@
 // IC VARIOUS DEFINE
 // ==============================================================================
 // Single ended channels, as we're using them
-#define CHANNEL_0 0x04
-#define CHANNEL_1 0x05
-#define CHANNEL_2 0x06
-#define CHANNEL_3 0x07
+#define ADC_CHANNEL_0 0x04
+#define ADC_CHANNEL_1 0x05
+#define ADC_CHANNEL_2 0x06
+#define ADC_CHANNEL_3 0x07
 
-#define GAIN_6V00 0x00
-#define GAIN_4V00 0x01
-#define GAIN_2V00 0x02
-#define GAIN_1V00 0x03
-#define GAIN_0V50 0x04
-#define GAIN_0V25 0x07
+#define ADC_GAIN_6V00 0x00
+#define ADC_GAIN_4V00 0x01
+#define ADC_GAIN_2V00 0x02
+#define ADC_GAIN_1V00 0x03
+#define ADC_GAIN_0V50 0x04
+#define ADC_GAIN_0V25 0x07
 
-#define SPS_128 0x00
-#define SPS_250 0x01
-#define SPS_490 0x02
-#define SPS_920 0x03
-#define SPS_1600 0x04
-#define SPS_2400 0x05
-#define SPS_3300 0x07
+#define ADC_SPS_128 0x00
+#define ADC_SPS_250 0x01
+#define ADC_SPS_490 0x02
+#define ADC_SPS_920 0x03
+#define ADC_SPS_1600 0x04
+#define ADC_SPS_2400 0x05
+#define ADC_SPS_3300 0x07
 
 // ==============================================================================
 // IC CLASS FUNCTIONS

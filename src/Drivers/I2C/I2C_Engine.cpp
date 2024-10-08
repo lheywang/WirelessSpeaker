@@ -93,7 +93,6 @@ int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, i
         if (DataSize == 1)
             res = i2c_smbus_write_byte_data(I2C->I2C_file, Register + i, (uint8_t)Payload[i]);
         else
-            // We do the byte swapping directly here.
             res = i2c_smbus_write_word_data(I2C->I2C_file, Register + i, (uint16_t)Payload[i]);
     }
 
@@ -124,8 +123,7 @@ int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, in
         if (DataSize == 1)
             res = i2c_smbus_read_byte_data(I2C->I2C_file, Register + i);
         else if (DataSize == 2)
-            // Don't forget to swap in the other direction !
-            res = SWAP_BYTES(i2c_smbus_read_word_data(I2C->I2C_file, Register + i));
+            res = i2c_smbus_read_word_data(I2C->I2C_file, Register + i);
         Payload[i] = res;
     }
     return 0;

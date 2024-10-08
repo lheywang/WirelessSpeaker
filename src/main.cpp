@@ -26,9 +26,24 @@ int main()
 
     I2C_Bus *I2C = I2C_GetInfos();
 
-    initClock(2, 18, 0, 0); // Output a 12 MHz square.
-    usleep(3'000'000);
-    termClock();
+    ADS1015 ADC = ADS1015(I2C, 0x48);
+    ADC.Configure_ADC(1, ADC_CHANNEL_3, ADC_GAIN_4V00, 1, ADC_SPS_128, 0, 1, 0, 0);
+
+    float value = 0;
+    std::cout << ADC.Read_Voltage(ADC_CHANNEL_2, &value) << std::endl;
+    std::cout << value << std::endl;
+    // std::cout << ADC.Read_Voltage(ADC_CHANNEL_1, &value) << std::endl;
+    // std::cout << value << std::endl;
+    // std::cout << ADC.Read_Voltage(ADC_CHANNEL_2, &value) << std::endl;
+    // std::cout << value << std::endl;
+    // std::cout << ADC.Read_Voltage(ADC_CHANNEL_3, &value) << std::endl;
+    // std::cout << value << std::endl;
+
+    // Devboard values !
+    // AIN 0 : 3.17 V
+    // AIN 1 : 0.110 V
+    // AIN 2 : 2.487 V
+    // AIN 3 : 0.816 V
 
     /* MCP 9808
      *
@@ -155,6 +170,13 @@ int main()
      * std::cout << LED0.ConfigureDutyCycle(CHANNEL0, buf, 4) << std::endl;
      * std::cout << LED0.ConfigureGlobalDimming(50, 128) << std::endl; // A bit confusing to use, but OK !
      * std::cout << LED0.ConfigureSubAddress(ADDRESS1, 0x50) << std::endl; // OK
+     */
+
+    /* GPCLK0
+     *
+     * initClock(2, 18, 0, 0); // Output a 12 MHz square.
+     * usleep(3'000'000);
+     * termClock();
      */
     return 0;
 }
