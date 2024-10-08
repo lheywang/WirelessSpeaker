@@ -165,11 +165,11 @@ public:
     /**
      * @brief Get the Power Delivery 3 Protocol status
      *
-     * @param[out] VBUSHigh
-     * @param[out] VBUSLow
-     * @param[out] VBUSReady
-     * @param[out] VBUSSafe
-     * @param[out] VBUSValid
+     * @param[out] VBUSHigh VBUS is on high voltage
+     * @param[out] VBUSLow VBUS is on low voltage
+     * @param[out] VBUSReady VBUS is ready to be used
+     * @param[out] VBUSSafe VBUS is on safe level
+     * @param[out] VBUSValid VBUS connection is valid.
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
@@ -183,13 +183,13 @@ public:
     /**
      * @brief Get the Hardware status
      *
-     * @param[out] OVPTrans
-     * @param[out] VPUValidTrans
-     * @param[out] VbusDischFaultTrans
-     * @param[out] OVPFault
-     * @param[out] VPUValid
-     * @param[out] VbusDischFault
-     * @param[out] VsrcDischFault
+     * @param[out] OVPTrans A transistion on the OVP has occured
+     * @param[out] VPUValidTrans A transisition on the valid VPU transistion has occured
+     * @param[out] VbusDischFaultTrans A transistion on the fault on the discharge has occured.
+     * @param[out] OVPFault An OVP fault is currently active
+     * @param[out] VPUValid the VPU is valid.
+     * @param[out] VbusDischFault A fault occur currently on the Vbus Discharge
+     * @param[out] VsrcDischFault A fault occur currently on the Vrsc Discharge
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
@@ -260,10 +260,10 @@ public:
     /**
      * @brief Configure the VBUS Monitoring Status
      *
-     * @param[in] DischargeThreshold
-     * @param[in] OVPLevel
-     * @param[in] UVPLevel
-     * @param[in] EnableReset
+     * @param[in] DischargeThreshold Configure the discharge threshold
+     * @param[in] OVPLevel Configure the OVP Level
+     * @param[in] UVPLevel Configure the UVP Level
+     * @param[in] EnableReset Enable global reset
      *
      * @return  0 : OK
      * @return -1 : Incorrect OVP Value
@@ -278,10 +278,10 @@ public:
     /**
      * @brief Configure the way the IC is going to drop the VBUS to the right level.
      *
-     * @param[in] DischargeTo0V
-     * @param[in] DischargeToNext
-     * @param[in] EnableVBUSPath
-     * @param[in] ForceAssertion
+     * @param[in] DischargeTo0V Configure the time to discharge to 0V, in ms.
+     * @param[in] DischargeToNext Configure the time to discharge to next VBUS value, in ms.
+     * @param[in] EnableVBUSPath Enable the VBUS Discharge path
+     * @param[in] ForceAssertion Force the assersion of the VBUS path
      *
      * @return  0 : OK
      * @return -1 : Incorrect Discharge to 0V Value
@@ -297,7 +297,7 @@ public:
     /**
      * @brief Configure the state of the GPIO3
      *
-     * @param[in] Status
+     * @param[in] Status Set to 1 to enable, 0 for HghZ. Active LOW, open drain.
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
@@ -307,7 +307,7 @@ public:
     /**
      * @brief Return the RX Header
      *
-     * @param[out] Header
+     * @param[out] Header GEt the RX header of the comunication.
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
@@ -317,8 +317,8 @@ public:
     /**
      * @brief Return a PDO
      *
-     * @param[in] PDONumber
-     * @param[out] PDO
+     * @param[in] PDONumber The PDO Number to set
+     * @param[out] PDO A pointer to a PDO Object filed.
      *
      * @return  0 : OK
      * @return -1 : Wrong PDO Number
@@ -329,8 +329,8 @@ public:
     /**
      * @brief Define a PDO
      *
-     * @param[in] PDONumber
-     * @param[out] PDO
+     * @param[in] PDONumber The PDO Number to set
+     * @param[out] PDO A PDO Object filed.
      *
      * @return  0 : OK
      * @return -1 : Wrong PDO Number
@@ -341,7 +341,7 @@ public:
     /**
      * @brief Return the RDO and read the selected PDO.
      *
-     * @param[in] RDO
+     * @param[in] RDO Read the requested data object
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.

@@ -327,7 +327,7 @@ public:
      *
      *  Value  | Ramp down speed
      *  ------ | ------
-     *    0    | Update every 1 FS period (default)
+     *    0    | Update every 1 FS period
      *    1    | Update every 2 FS periods
      *    2    | Update every 4 FS periods
      *    3    | Directly set the volume to zero (Instant mute)
@@ -336,7 +336,7 @@ public:
      *  ------ | ------
      *    0    | Decrement by 4 dB for each update
      *    1    | Decrement by 2 dB for each update
-     *    2    | Decrement by 1 dB for each update (default)
+     *    2    | Decrement by 1 dB for each update
      *    3    | Decrement by 0.5 dB for each update
      *
      * @param[in] EnableAutoMute Enable and configure the AutoMute.
