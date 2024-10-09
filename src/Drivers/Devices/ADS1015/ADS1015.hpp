@@ -2,7 +2,7 @@
  * @file ADS1015.hpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define a class and functions to exploit the ADS1015 ADC.
- * @version 0.1
+ * @version 1.0
  * @date 2024-09-25
  *
  * @copyright Copyright (c) 2024
@@ -38,7 +38,7 @@
 #define ADC_SPS_920 0x03
 #define ADC_SPS_1600 0x04
 #define ADC_SPS_2400 0x05
-#define ADC_SPS_3300 0x07
+#define ADC_SPS_3300 0x06
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -63,7 +63,6 @@ private:
     int ActualComparator_latching;
     int ActualComparator_queue;
 
-    float ReferenceVoltage;
     float HighThreshold;
     float LowThreshold;
 
@@ -83,19 +82,9 @@ public:
     ~ADS1015();
 
     /**
-     * @brief Define the upper reference of voltage used to compute the real value.
-     *        Ideally, this value shall be measured with a DMM.
-     *        By default to 3.300000V.
-     *
-     * @param Reference The value.
-     *
-     * @return  0 : OK
-     */
-    int ConfigureVoltageReference(const float Reference);
-
-    /**
      * @brief Read back the seen value on the selected input.
      * @warning This function block the code execution for a 2/Fsampling (between 60us and 15ms, depending on the settings).
+     * @warning The function use float computation, and thus return a number which may be very long. From experience, after the second (or maybe third) value, the number may be signifiant anymore.
      *
      * @param[in] channel The selected channel
      * @param[out] value The value converted in volts.

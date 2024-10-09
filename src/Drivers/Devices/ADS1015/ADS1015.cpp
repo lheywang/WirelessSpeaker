@@ -2,7 +2,7 @@
  * @file ADS1015.cpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Source for the ADS1015 ADC.
- * @version 0.1
+ * @version 1.0
  * @date 2024-09-25
  *
  * @copyright Copyright (c) 2024
@@ -36,8 +36,6 @@ ADS1015::ADS1015(const I2C_Bus *I2C, const int address)
     this->address = (uint8_t)address;
     this->I2C = *I2C;
 
-    this->ReferenceVoltage = 3.30000000;
-    this->HighThreshold = this->ReferenceVoltage;
     this->LowThreshold = 0.0;
     this->ActualGain = 0x02;
     this->ActualMode = 0x01;
@@ -62,11 +60,6 @@ ADS1015::~ADS1015()
 // =====================
 // FUNCTIONS
 // =====================
-int ADS1015::ConfigureVoltageReference(const float Reference)
-{
-    this->ReferenceVoltage = Reference;
-    return 0;
-}
 
 int ADS1015::Read_Voltage(const int channel, float *const value)
 {
@@ -88,49 +81,57 @@ int ADS1015::Read_Voltage(const int channel, float *const value)
                                this->ActualComparator_latching,
                                this->ActualComparator_queue);
 
-    int microseconds = 0;
+    /*
+    This block of code compute the delay to wait until the the delta-sigma has finished it's job.
+    I'm using an empiric method to compute them since the original version didn't want (why ? We'll never know...)
 
-    switch (this->ActualSampling)
+    The idea is to divide with a defined factor at each iteration to compute the right value.
+    This factor is 1.7. It may be smaller, this does'nt affect the behavior. If greater, the faster settings won't match the data availability.
+
+    The validity of this settings has been done on Microsoft Excel.
+    The base setting assume of at least 2* margin from the minimal time reported to the waited time.
+    */
+    int microseconds = 15625;
+    for (int i = 0; i < this->ActualSampling; i++)
     {
-    case ADC_SPS_128:
-        microseconds = (1 / 128) * 5 * 1000; // (1 / 128Hz) * 5 in microseconds.
-        break;
-    case ADC_SPS_250:
-        microseconds = (1 / 250) * 5 * 1000; // (1 / 250Hz) * 5 in microseconds.
-        break;
-    case ADC_SPS_490:
-        microseconds = (1 / 490) * 5 * 1000; // (1 / 490Hz) * 5 in microseconds.
-        break;
-    case ADC_SPS_920:
-        microseconds = (1 / 920) * 5 * 1000; // (1 / 920Hz) * 5 in microseconds.
-        break;
-    case ADC_SPS_1600:
-        microseconds = (1 / 1600) * 5 * 1000; // (1 / 1.6kHz) * 5 in microseconds.
-        break;
-    case ADC_SPS_2400:
-        microseconds = (1 / 2400) * 5 * 1000; // (1 / 2.4kHz) * 5 in microseconds.
-        break;
-    case ADC_SPS_3300:
-        microseconds = (1 / 3300) * 5 * 1000; // (1 / 3.3kHz) * 5 in microseconds.
-        break;
+        microseconds = round(microseconds / 1.7);
     }
-
-    // Wait until the conversion has finished.
     usleep(microseconds);
 
     res += I2C_Read(&this->I2C, this->address, CONVERSION_REGISTER, &buf, 1, 2);
-    std::cout << std::hex << buf << std::endl;
     buf = SWAP_BYTES(buf);
-
-    // 0V = 0d
-    // Vref = 4095d
-    // XV = 3102d (example) --> Code * 3.30000 / 4095
-
-    std::cout << (buf >> 4) << std::endl;
-    *value = (float)(buf >> 4) / 2047.0 * 4.096000;
 
     if (res != 0)
         return -2;
+
+    float multiplier = 0;
+    switch (this->ActualGain)
+    {
+    case ADC_GAIN_0V25:
+        multiplier = 0.256000;
+        break;
+    case ADC_GAIN_0V50:
+        multiplier = 0.512000;
+        break;
+    case ADC_GAIN_1V00:
+        multiplier = 1.024000;
+        break;
+    case ADC_GAIN_2V00:
+        multiplier = 2.048000;
+        break;
+    case ADC_GAIN_4V00:
+        multiplier = 4.096000;
+        break;
+    case ADC_GAIN_6V00:
+        multiplier = 6.144000;
+        break;
+    default:
+        multiplier = 0.0;
+        break;
+    }
+
+    // 2047 is the code for full range !
+    *value = (float)(buf >> 4) / 2047.0 * multiplier;
 
     return 0;
 }
@@ -180,6 +181,7 @@ int ADS1015::Configure_ADC(const int OS,
     buf = (buf << 1) | (bool)comparator_latching;
     buf = (buf << 2) | comparator_queue;
 
+    buf = SWAP_BYTES(buf);
     res = I2C_Write(&this->I2C, this->address, CONFIG_REGISTER, &buf, 1, 2);
 
     if (res != 0)
@@ -189,7 +191,7 @@ int ADS1015::Configure_ADC(const int OS,
 
 int ADS1015::ConfigureLowThreshold(const float Value)
 {
-    if ((Value < 0.0) | (Value > this->ReferenceVoltage))
+    if ((Value < 0.0) | (Value > 3.300))
         return -1;
     if (Value > this->HighThreshold)
         return -1;
@@ -198,10 +200,37 @@ int ADS1015::ConfigureLowThreshold(const float Value)
 
     int buf = 0;
     int res = 0;
-    int temp = (int)floor((Value * 4095) / this->ReferenceVoltage) << 4;
 
+    float multiplier = 0;
+    switch (this->ActualGain)
+    {
+    case ADC_GAIN_0V25:
+        multiplier = 0.256000;
+        break;
+    case ADC_GAIN_0V50:
+        multiplier = 0.512000;
+        break;
+    case ADC_GAIN_1V00:
+        multiplier = 1.024000;
+        break;
+    case ADC_GAIN_2V00:
+        multiplier = 2.048000;
+        break;
+    case ADC_GAIN_4V00:
+        multiplier = 4.096000;
+        break;
+    case ADC_GAIN_6V00:
+        multiplier = 6.144000;
+        break;
+    default:
+        multiplier = 0.0;
+        break;
+    }
+
+    int temp = ((int)round((Value / multiplier) * 2047)) >> 4;
     buf = temp & 0xFFFF;
 
+    buf = SWAP_BYTES(buf);
     res = I2C_Write(&this->I2C, this->address, LOW_TRESHOLD_REGISTER, &buf, 1, 2);
 
     if (res != 0)
@@ -210,7 +239,7 @@ int ADS1015::ConfigureLowThreshold(const float Value)
 }
 int ADS1015::ConfigureHighThreshold(const float Value)
 {
-    if ((Value < 0.0) | (Value > this->ReferenceVoltage))
+    if ((Value < 0.0) | (Value > 3.300))
         return -1;
     if (Value < this->LowThreshold)
         return -1;
@@ -219,10 +248,37 @@ int ADS1015::ConfigureHighThreshold(const float Value)
 
     int buf = 0;
     int res = 0;
-    int temp = (int)floor((Value * 4095) / this->ReferenceVoltage) << 4;
 
+    float multiplier = 0;
+    switch (this->ActualGain)
+    {
+    case ADC_GAIN_0V25:
+        multiplier = 0.256000;
+        break;
+    case ADC_GAIN_0V50:
+        multiplier = 0.512000;
+        break;
+    case ADC_GAIN_1V00:
+        multiplier = 1.024000;
+        break;
+    case ADC_GAIN_2V00:
+        multiplier = 2.048000;
+        break;
+    case ADC_GAIN_4V00:
+        multiplier = 4.096000;
+        break;
+    case ADC_GAIN_6V00:
+        multiplier = 6.144000;
+        break;
+    default:
+        multiplier = 0.0;
+        break;
+    }
+
+    int temp = ((int)round((Value / multiplier) * 2047)) >> 4;
     buf = temp & 0xFFFF;
 
+    buf = SWAP_BYTES(buf);
     res = I2C_Write(&this->I2C, this->address, HIGH_THRESHOLD_REGISTER, &buf, 1, 2);
 
     if (res != 0)
