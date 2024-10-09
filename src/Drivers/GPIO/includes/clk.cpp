@@ -102,7 +102,7 @@ int gpioInitialise()
     if (fd < 0)
     {
         fprintf(stderr,
-                "This program needs root privileges.  Try using sudo\n");
+                "[ GPCLK0 ][ gpioInitialise ] : This program needs root privileges. Try using sudo\n");
         return -1;
     }
 
@@ -116,7 +116,7 @@ int gpioInitialise()
         (systReg == MAP_FAILED) ||
         (clkReg == MAP_FAILED))
     {
-        fprintf(stderr, "Bad, mmap failed\n");
+        fprintf(stderr, "[ GPCLK0 ][ gpioInitialise ] : Bad, mmap failed\n");
         return -1;
     }
     return 0;

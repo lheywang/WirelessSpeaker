@@ -27,17 +27,17 @@ int main()
     I2C_Bus *I2C = I2C_GetInfos();
 
     ADS1015 ADC = ADS1015(I2C, 0x48);
-    ADC.Configure_ADC(1, ADC_CHANNEL_3, ADC_GAIN_4V00, 1, ADC_SPS_128, 0, 1, 0, 0);
+    ADC.Configure_ADC(0, ADC_CHANNEL_3, ADC_GAIN_4V00, 1, ADC_SPS_3300, 0, 1, 0, 0);
 
     float value = 0;
-    std::cout << ADC.Read_Voltage(ADC_CHANNEL_2, &value) << std::endl;
+    ADC.Read_Voltage(ADC_CHANNEL_0, &value);
     std::cout << value << std::endl;
-    // std::cout << ADC.Read_Voltage(ADC_CHANNEL_1, &value) << std::endl;
-    // std::cout << value << std::endl;
-    // std::cout << ADC.Read_Voltage(ADC_CHANNEL_2, &value) << std::endl;
-    // std::cout << value << std::endl;
-    // std::cout << ADC.Read_Voltage(ADC_CHANNEL_3, &value) << std::endl;
-    // std::cout << value << std::endl;
+    ADC.Read_Voltage(ADC_CHANNEL_1, &value);
+    std::cout << value << std::endl;
+    ADC.Read_Voltage(ADC_CHANNEL_2, &value);
+    std::cout << value << std::endl;
+    ADC.Read_Voltage(ADC_CHANNEL_3, &value);
+    std::cout << value << std::endl;
 
     // Devboard values !
     // AIN 0 : 3.17 V

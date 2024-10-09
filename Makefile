@@ -9,19 +9,24 @@ clean:
 	-cd build/ && make clean
 	-cd doc/latex && make clean
 	-cd tools/device-tree && make dtc_clean
-	@echo "Removed build artifacts ! Cmake cache remains. Use clean_all to remove everything"
+	@echo "--------------------------------------------------------------------"
+	@echo "Cleaned build/ doc/ and tools/ !"
+	@echo "--------------------------------------------------------------------"
 
 clean_all: clean
 	@echo "Removing caches..."
 	-rm -r -f build/
 	-rm -r -f doc/
+	@echo "--------------------------------------------------------------------"
+	@echo "Deleted build/ doc/ !"
+	@echo "--------------------------------------------------------------------"
 
 all:
 	@mkdir -p build/
 	@cd build/ && cmake ../src/CMakeLists.txt
 	@cd build/ && make all -j$(MAX_CORES)
 	@echo "--------------------------------------------------------------------"
-	@echo "Compile source on $(shell pwd)/build/WirelessSpeaker.arm"
+	@echo "Compiled source on $(shell pwd)/build/WirelessSpeaker.arm"
 	@echo "You can now execute it on the target !"
 	@echo "--------------------------------------------------------------------"
 
