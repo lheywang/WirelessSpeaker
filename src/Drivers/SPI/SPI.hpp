@@ -13,7 +13,19 @@
 
 #include "SPI_Engine.hpp"
 #include "structs/Struct.hpp"
+#include "linux/spi/spidev.h"
 
-#define EEPROM_STRUCT_SIZE (sizeof(Config) * 4)
+// ==============================================================================
+// CONSTANTS
+// ==============================================================================
+#define EEPROM_STRUCT_UL_SIZE sizeof(Config) * 4
 #define EEPROM_SIZE 256'000
-#define EEPROM_VALID EEPROM_STRUCT_SIZE <= EEPROM_SIZE
+#define BUS_SPEED 20'000'000
+#define BUS_WORD_SIZE 8
+#define BUS_MODE SPI_MODE_0
+
+// ==============================================================================
+// CS
+// ==============================================================================
+#define EEPROM 0
+#define NONE 1 // Unused. Using it does nothing.
