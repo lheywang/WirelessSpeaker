@@ -16,10 +16,10 @@
  * @struct SPI_Bus
  * @brief Store SPI Bus configuration.
  *
- * @var SPI_Bus::SPI_file Store the file descriptor.
- * @var SPI_Bus::SPI_Filename : The name of the openned file
- * @var SPI_Bus::SPI_Bus : The number of the SPI Bus
- * @var SPI_Bus::CS_Number : The number of CS availables.
+ * @param SPI_Bus::SPI_file Store the file descriptor.
+ * @param SPI_Bus::SPI_Filename The name of the openned file
+ * @param SPI_Bus::SPI_Bus The number of the SPI Bus
+ * @param SPI_Bus::CS_Number The number of CS availables.
  */
 struct SPI_Bus
 {
@@ -69,6 +69,8 @@ int SPI_ConfigureBUS(SPI_Bus *SPI, int Mode, int WordSize, int Speed);
 
 /**
  * @brief Read N bytes from the bus.
+ *
+ * @todo To be completed. Actually this function bug !
  *
  * @param[inout] SPI A SPI_Bus struct that serve as base
  * @param[in] address The address of the data to be wrote. This will be appended at the beginning of the InputBuffer.

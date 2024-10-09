@@ -13,9 +13,9 @@
  * @struct BasicPDO
  * @brief Define the basic elements of a PDO
  *
- * @var BasicPDO::EnablePPS Do we need to support PPS ?
- * @var BasicPDO::Voltage Defined output voltage. Must be correct for all of the subcircuits.
- * @var BasicPDO::Current Defined current output. Less current means less power.
+ * @param BasicPDO::EnablePPS Do we need to support PPS ?
+ * @param BasicPDO::Voltage Defined output voltage. Must be correct for all of the subcircuits.
+ * @param BasicPDO::Current Defined current output. Less current means less power.
  */
 struct BasicPDO
 {

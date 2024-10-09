@@ -24,30 +24,30 @@
  * @struct Config
  * @brief Store all of the configuration settings into a user accessible struct, stored on a local EEPROM.
  *
- * @var Config::Speaker_Name Store the speaker friendly name
+ * @param Config::Speaker_Name Store the speaker friendly name
  *
- * @var Config::LedsBack Store the leds at the back configuration.
- * @var Config::LedsTop1 Store the leds at the top configuration for first bank.
- * @var Config::LedsTop2 Store the leds at the top configuration for second bank.
- * @var Config::LedsTop3 Store the leds at the top configuration for third bank.
+ * @param Config::LedsBack Store the leds at the back configuration.
+ * @param Config::LedsTop1 Store the leds at the top configuration for first bank.
+ * @param Config::LedsTop2 Store the leds at the top configuration for second bank.
+ * @param Config::LedsTop3 Store the leds at the top configuration for third bank.
  *
- * @var Config::Capacitive Store the touch sensor parameters
+ * @param Config::Capacitive Store the touch sensor parameters
  *
- * @var Config::TemperatureAmpBass Store the settings for the bass amplifier temperature sensor.
- * @var Config::TemperatureAmpRight Store the settings for the right amplifier temperature sensor.
- * @var Config::TemperatureAmpLeft Store the settings for the left amplifier temperature sensor.
- * @var Config::TemperatureDac Store the settings for the DAC temperature sensor.
- * @var Config::TemperatureAnalog Store the settings for the Analog filters temperature sensor.
- * @var Config::TemperaturePowerInput Store the settings for the power input area temperature sensor.
- * @var Config::TemperatureMainBuck Store the settings for the main supply temperature sensor.
- * @var Config::TemperatureAuxBuck Store the settings for the auxialliary supply temperature sensor.
+ * @param Config::TemperatureAmpBass Store the settings for the bass amplifier temperature sensor.
+ * @param Config::TemperatureAmpRight Store the settings for the right amplifier temperature sensor.
+ * @param Config::TemperatureAmpLeft Store the settings for the left amplifier temperature sensor.
+ * @param Config::TemperatureDac Store the settings for the DAC temperature sensor.
+ * @param Config::TemperatureAnalog Store the settings for the Analog filters temperature sensor.
+ * @param Config::TemperaturePowerInput Store the settings for the power input area temperature sensor.
+ * @param Config::TemperatureMainBuck Store the settings for the main supply temperature sensor.
+ * @param Config::TemperatureAuxBuck Store the settings for the auxialliary supply temperature sensor.
  *
- * @var Config::MainMonitor Store the settings for the main supply voltage monitor
- * @var Config::AnalogSupplyMonitor Store the settings for the aux. supply voltage monitor
+ * @param Config::MainMonitor Store the settings for the main supply voltage monitor
+ * @param Config::AnalogSupplyMonitor Store the settings for the aux. supply voltage monitor
  *
- * @var Config::PDProfile1 Store the settings for the first power delivery profile
- * @var Config::PDProfile2 Store the settings for the second power delivery profile
- * @var Config::PDProfile3 Store the settings for the third power delivery profile
+ * @param Config::PDProfile1 Store the settings for the first power delivery profile
+ * @param Config::PDProfile2 Store the settings for the second power delivery profile
+ * @param Config::PDProfile3 Store the settings for the third power delivery profile
  *
  */
 struct Config

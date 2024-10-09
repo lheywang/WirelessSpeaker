@@ -140,7 +140,6 @@ public:
      * @return  0 : OK
      * @return -1 : IOCTL error.
      *
-     * @test Verify correct conversion.
      */
     int ReadTemperature(float *const Temperature, int *const Status);
 };

@@ -34,16 +34,16 @@
  * @struct PDO
  * @brief Structure that store the elements that constitute a PDO object.
  *
- * @var PDO::Voltage The exact voltage requested.
- * @var PDO::Current The minimal current requestet.
+ * @param PDO::Voltage The exact voltage requested.
+ * @param PDO::Current The minimal current requestet.
  *
- * @var PDO::FixedSupply Select the working mode of the IC.
- * @var PDO::DualRole Can the IC source current ?
- * @var PDO::HighCapability Enable 5A profile.
- * @var PDO::UnconstrainedPower Remove any constraints for the POWER
- * @var PDO::USBCommCapable Enable USB Communication
- * @var PDO::DualRoleData Enable DFP or UFP Data mode.
- * @var PDO::FastSwap Enable fast swap on defined profile.
+ * @param PDO::FixedSupply Select the working mode of the IC.
+ * @param PDO::DualRole Can the IC source current ?
+ * @param PDO::HighCapability Enable 5A profile.
+ * @param PDO::UnconstrainedPower Remove any constraints for the POWER
+ * @param PDO::USBCommCapable Enable USB Communication
+ * @param PDO::DualRoleData Enable DFP or UFP Data mode.
+ * @param PDO::FastSwap Enable fast swap on defined profile.
  *
  */
 struct PDO
@@ -65,16 +65,16 @@ struct PDO
  * @struct RDO
  * @brief Structure that store the elements that constitute a PDO object.
  *
- * @var PDO::MinimalCurrent The exact voltage requested.
- * @var PDO::NominalCurrent The minimal current requestet.
+ * @param PDO::MinimalCurrent The exact voltage requested.
+ * @param PDO::NominalCurrent The minimal current requestet.
  *
- * @var PDO::RequestedPDOID Select the working mode of the IC.
- * @var PDO::RequestedPDO PDO Object that has been requested.
+ * @param PDO::RequestedPDOID Select the working mode of the IC.
+ * @param PDO::RequestedPDO PDO Object that has been requested.
  *
- * @var PDO::GiveBackFlag Can the IC source current ?
- * @var PDO::CapabilityMismatch Enable 5A profile.
- * @var PDO::USBSuspend Enable fast swap on defined profile.
- * @var PDO::UnchunkedMessages Enable fast swap on defined profile.
+ * @param PDO::GiveBackFlag Can the IC source current ?
+ * @param PDO::CapabilityMismatch Enable 5A profile.
+ * @param PDO::USBSuspend Enable fast swap on defined profile.
+ * @param PDO::UnchunkedMessages Enable fast swap on defined profile.
  *
  */
 struct RDO
@@ -129,6 +129,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int GetNormsRevision(int *const PD, int *const TYPEC);
 
@@ -154,6 +156,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int GetPortStatus(int *const Transition,
                       int *const AttachedDeviceStatus,
@@ -173,6 +177,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int GetPD3Status(int *const VBUSHigh,
                      int *const VBUSLow,
@@ -193,6 +199,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int GetHardwareFault(int *const OVPTrans,
                          int *const VPUValidTrans,
@@ -254,6 +262,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int GetTypeCStatus(int *const TypeCStatus, int *const ConnectionOrientation, int *const FSMStatus);
 
@@ -269,6 +279,8 @@ public:
      * @return -1 : Incorrect OVP Value
      * @return -2 : Incorrect UVP Value
      * @return -3 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int SetVBUSMonitoring(const int DischargeThreshold,
                           const int OVPLevel,
@@ -287,6 +299,8 @@ public:
      * @return -1 : Incorrect Discharge to 0V Value
      * @return -2 : Incorrect Dischagre to next value
      * @return -3 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int SetVBUSDischarge(const int DischargeTo0V,
                          const int DischargeToNext,
@@ -301,6 +315,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int SetGPIO3(const int Status);
 
@@ -311,6 +327,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int GetRXHeader(int *const Header);
 
@@ -323,6 +341,8 @@ public:
      * @return  0 : OK
      * @return -1 : Wrong PDO Number
      * @return -2 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int GetPDO(const int PDONumber, PDO *const PDO);
 
@@ -335,6 +355,8 @@ public:
      * @return  0 : OK
      * @return -1 : Wrong PDO Number
      * @return -2 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int SetPDO(const int PDONumber, const PDO PDO);
 
@@ -345,6 +367,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int GetRDO(RDO *const RDO);
 };

@@ -6,17 +6,17 @@ EXECNAME := build/WirelessSpeaker.arm
 # GLOBAL RECIPES
 # ===========================================================================================================
 clean:
-	-cd build/ && make clean
-	-cd doc/latex && make clean
-	-cd tools/device-tree && make dtc_clean
+	@-cd build/ && make clean
+	@-cd doc/latex && make clean
+	@-cd tools/device-tree && make dtc_clean
 	@echo "--------------------------------------------------------------------"
 	@echo "Cleaned build/ doc/ and tools/ !"
 	@echo "--------------------------------------------------------------------"
 
 clean_all: clean
 	@echo "Removing caches..."
-	-rm -r -f build/
-	-rm -r -f doc/
+	@-rm -r -f build/
+	@-rm -r -f doc/
 	@echo "--------------------------------------------------------------------"
 	@echo "Deleted build/ doc/ !"
 	@echo "--------------------------------------------------------------------"

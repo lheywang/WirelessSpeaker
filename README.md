@@ -36,7 +36,7 @@ Against that, we recommend using a public / private key pair !
 
 To generate it, use : 
 > ssh-keygen (on your root folder)
-> ssh-copy-id -i [YOUR KEY].pub USER@DESTINATION
+> ssh-copy-id -i [YOUR KEY].pub USER @ DESTINATION
 And that's done !
 
 #### Deploying the software

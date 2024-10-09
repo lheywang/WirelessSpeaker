@@ -1,5 +1,5 @@
 /**
- * @file struct_temperature.hpp
+ * @file struct_internal.hpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define internal behaviors of the speaker
  * @version 0.1
@@ -21,8 +21,8 @@
  * @brief Structure that contain all of the Temperature monitoring settings,
  *        and more precisely the values of the Interrupts at which an action shall be triggered (overheat ?)
  *
- * @var Temperature::Maximal_Temperature Maximal Temperature that is accepted.
- * @var Temperature::Minimal_Temperature Minimal Temperature that is accepted.
+ * @param Temperature::Maximal_Temperature Maximal Temperature that is accepted.
+ * @param Temperature::Minimal_Temperature Minimal Temperature that is accepted.
  *
  */
 struct Temperature
@@ -35,17 +35,17 @@ struct Temperature
  * @struct VoltageMonitor
  * @brief Define voltage monitor settings.
  *
- * @var VoltageMonitor::GainChannelA Gain for channel A
- * @var VoltageMonitor::GainChannelB Gain for channel B
- * @var VoltageMonitor::GainChannelC Gain for channel C
- * @var VoltageMonitor::GainChannelD Gain for channel D
+ * @param VoltageMonitor::GainChannelA Gain for channel A
+ * @param VoltageMonitor::GainChannelB Gain for channel B
+ * @param VoltageMonitor::GainChannelC Gain for channel C
+ * @param VoltageMonitor::GainChannelD Gain for channel D
  *
- * @var VoltageMonitor::ChannelANominal Standard value for channel A
- * @var VoltageMonitor::ChannelBNominal Standard value for channel B
- * @var VoltageMonitor::ChannelCNominal Standard value for channel C
- * @var VoltageMonitor::ChannelDNominal Standard value for channel D
+ * @param VoltageMonitor::ChannelANominal Standard value for channel A
+ * @param VoltageMonitor::ChannelBNominal Standard value for channel B
+ * @param VoltageMonitor::ChannelCNominal Standard value for channel C
+ * @param VoltageMonitor::ChannelDNominal Standard value for channel D
  *
- * @var VoltageMonitor::Tolerance Tolerance in % of excursion before triggering a failure.
+ * @param VoltageMonitor::Tolerance Tolerance in % of excursion before triggering a failure.
  *
  */
 struct VoltageMonitor

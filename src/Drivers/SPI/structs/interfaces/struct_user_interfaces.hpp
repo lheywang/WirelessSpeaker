@@ -1,5 +1,5 @@
 /**
- * @file struct_leds.hpp
+ * @file struct_user_interfaces.hpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define User accessible interfaces behavior.
  * @version 0.1
@@ -22,18 +22,18 @@
  *        Store the brightness values.
  *        Store the group configuration values.
  *
- * @var LEDS::Brightness The maximal brightness of the leds. Some inferior levels will be indexed from it.
- * @var LEDS::MaximalBrightness THe maximal brighness settings for the leds.
+ * @param LEDS::Brightness The maximal brightness of the leds. Some inferior levels will be indexed from it.
+ * @param LEDS::MaximalBrightness THe maximal brighness settings for the leds.
  *
- * @var LEDS::Address1 The I2C sub address 1
- * @var LEDS::Address2 The I2C sub address 2
- * @var LEDS::Address3 The I2C sub address 3
- * @var LEDS::Global The I2C global sub address
+ * @param LEDS::Address1 The I2C sub address 1
+ * @param LEDS::Address2 The I2C sub address 2
+ * @param LEDS::Address3 The I2C sub address 3
+ * @param LEDS::Global The I2C global sub address
  *
- * @var LEDS::Address1Response The I2C sub address 1 enable boolean
- * @var LEDS::Address2Response The I2C sub address 2 enable boolean
- * @var LEDS::Address3Response The I2C sub address 3 enable boolean
- * @var LEDS::GlobalResponse The I2C global sub address enable boolean
+ * @param LEDS::Address1Response The I2C sub address 1 enable boolean
+ * @param LEDS::Address2Response The I2C sub address 2 enable boolean
+ * @param LEDS::Address3Response The I2C sub address 3 enable boolean
+ * @param LEDS::GlobalResponse The I2C global sub address enable boolean
  *
  */
 struct LEDS
@@ -56,8 +56,8 @@ struct LEDS
  * @struct Capacitive
  * @brief Structure that contain all of the Capacitive Sensor Settings such as the sensivity or the threshold values.
  *
- * @var Capacitive::Threshold Contain the value of the peak that need to be measured to be considered as a touch.
- * @var Capacitive::Sensivity Contain the value of the number of consecutive touch to be measured before considering the touch valid.
+ * @param Capacitive::Threshold Contain the value of the peak that need to be measured to be considered as a touch.
+ * @param Capacitive::Sensivity Contain the value of the number of consecutive touch to be measured before considering the touch valid.
  *
  */
 struct Capacitive

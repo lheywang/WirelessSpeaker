@@ -21,14 +21,14 @@
  * @brief GPIO struct, used as base handle for GPIO manipulations.
  *        This is custom struct for our needs.
  *
- * @var GPIO::PinNumber The number of the GPIO that is used. WARNING : This is BCM Convention and not RPi one.
- * @var GPIO::FuncName A custom string to describe to which function this GPIO is used.
- * @var GPIO::InOut Boolean that store the direction of this GPIO. Take True if set as Output.
- * @var GPIO::Polarity Boolean to store the polarity of the GPIO. Take True if active low.
- * @var GPIO::Type Integer that take different values depending on the type of the electrical type. (1 if Open-Drain, 2 if Open-Source, 0 if neither)
- * @var GPIO::Kernel Integer set to 1 if the Linux kernel is using it.
- * @var GPIO::Used A boolean to identify which GPIO are used by another code. Is filled by any definition functions.
- * @var GPIO::FuncName A string that store the function identifier that is currently linked to.
+ * @param GPIO::PinNumber The number of the GPIO that is used. WARNING : This is BCM Convention and not RPi one.
+ * @param GPIO::FuncName A custom string to describe to which function this GPIO is used.
+ * @param GPIO::InOut Boolean that store the direction of this GPIO. Take True if set as Output.
+ * @param GPIO::Polarity Boolean to store the polarity of the GPIO. Take True if active low.
+ * @param GPIO::Type Integer that take different values depending on the type of the electrical type. (1 if Open-Drain, 2 if Open-Source, 0 if neither)
+ * @param GPIO::Kernel Integer set to 1 if the Linux kernel is using it.
+ * @param GPIO::Used A boolean to identify which GPIO are used by another code. Is filled by any definition functions.
+ * @param GPIO::FuncName A string that store the function identifier that is currently linked to.
  *
  */
 struct GPIO

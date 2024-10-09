@@ -983,7 +983,7 @@ int PCM5252::ReadDSPStatus(int *const DSPBootStatus,
                            int *const UsedCRAM,
                            int *const ActiveCRAM,
                            int *const IDAC,
-                           int *const DPSOverflow)
+                           int *const DSPOverflow)
 {
     int res = 0;
     int buf[5] = {0};
@@ -1003,7 +1003,7 @@ int PCM5252::ReadDSPStatus(int *const DSPBootStatus,
     *DSPBootStatus = (buf[0] & 0x80) >> 7;
     *DSPState = buf[0] & 0x0F;
 
-    *DPSOverflow = buf[1] & 0x3F;
+    *DSPOverflow = buf[1] & 0x3F;
 
     *IDAC = buf[2] << 8 | buf[3];
 

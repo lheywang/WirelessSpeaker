@@ -1,5 +1,5 @@
 /**
- * @file Audio.hpp
+ * @file struct_audio.hpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define the main audio struct
  * @version 0.1
@@ -22,17 +22,17 @@
  * @struct Audio
  * @brief Structure that contain all of the Audio settings.
  *
- * @var Audio::Trebbles Analog configuration for the trebbles
- * @var Audio::Medium Analog configuration for the mediums
- * @var Audio::Bass Analog cofnfiguration for the bass
+ * @param Audio::Trebbles Analog configuration for the trebbles
+ * @param Audio::Medium Analog configuration for the mediums
+ * @param Audio::Bass Analog cofnfiguration for the bass
  *
- * @var Audio::DAC Digital to analog conversion settings.
+ * @param Audio::DAC Digital to analog conversion settings.
  *
- * @var Audio::Global Global volume en RL equalization settings
+ * @param Audio::Global Global volume en RL equalization settings
  *
- * @var Audio::BassAmp Settings for the bass amp
- * @var Audio::LeftAmp Settings for the left amp
- * @var Audio::RightAmp Settings for the right amp
+ * @param Audio::BassAmp Settings for the bass amp
+ * @param Audio::LeftAmp Settings for the left amp
+ * @param Audio::RightAmp Settings for the right amp
  *
  */
 struct Audio

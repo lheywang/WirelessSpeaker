@@ -54,6 +54,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigurePotentiometer(const int HardwareShutdownMode,
                                const int R0A,
@@ -68,6 +70,8 @@ public:
      * @return  0 : OK
      * @return -1 : Invalid Value
      * @return -2 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int WriteWiper(const int Value);
 
@@ -78,6 +82,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ReadWiper(int *const Value);
 
@@ -86,6 +92,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error (the wiper may be at one end !! --> Generate a NACK)
+     *
+     * @test Function to test !
      */
     int IncrementWiper();
 
@@ -94,6 +102,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error (the wiper may be at one end !! --> Generate a NACK)
+     *
+     * @test Function to test !
      */
     int DecrementWiper();
 };

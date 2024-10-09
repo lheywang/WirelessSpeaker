@@ -95,6 +95,8 @@ public:
      * @return -4 : Invalid PLLP Value
      * @return -5 : Fractionnal value of PLLK > 9999.
      * @return -6 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigurePLL(const int EnablePLL,
                      const int PLLReference,
@@ -150,6 +152,8 @@ public:
      * @return -9 : Invalid output polarity.
      * @return -10 : Invalid output inversion.
      * @return -11 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigureGPIO(const int MISOFunction,
                       const int GPIOEnable,
@@ -210,6 +214,8 @@ public:
      * @return -3 : Invalid I2S Word Length.
      * @return -4 : Invalid I2C Data Shift.
      * @return -5 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigureI2S(const int BCKPolarity,
                      const int BCKOutputEnable,
@@ -236,6 +242,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigureAnalogOutput(const int OutputAmplitudeMode,
                               const int LeftAnalogGain,
@@ -254,6 +262,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigureReset(const int Registers, const int DSP);
 
@@ -265,6 +275,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigureLowPower(const int Standby, const int PowerDown);
 
@@ -314,6 +326,8 @@ public:
      * @return -3 : Invalid right data input.
      * @return -4 : Invalid digital volume mode.
      * @return -5 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigureDAC(const int DACClockSource,
                      const int LeftDataSource,
@@ -361,6 +375,8 @@ public:
      * @return -7 : Invalid Emergency Volume Ramp down speed value
      * @return -8 : Invalid Emergency Volume Ramp down step value.
      * @return -9 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigureAutoMute(const int EnableAutoMute,
                           const int LeftEnableAutoMute,
@@ -388,6 +404,8 @@ public:
      * @return -1 : Invalid GPIO Input value
      * @return -2 : Invalid DSP Program value
      * @return -3 : IOCTL Error.
+     *
+     * @test Function to test !
      */
     int ConfigureDSP(const int EnableDeEmphasis,
                      const int SelectSDOUT,
@@ -400,6 +418,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int DSPSwitchCRAM();
 
@@ -433,6 +453,8 @@ public:
      * @return -5 : Invalid GPIO5 Function
      * @return -6 : Invalid GPIO7 Function
      * @return -7 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigureExternalInterpolationFilter(const int Enable,
                                              const int GPIO1OutputFunction,
@@ -450,6 +472,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigureVoltageProtection(const int EnableXSMUTEPowerLoss, const int EnableInternalPowerLoss);
 
@@ -476,6 +500,8 @@ public:
      * @return  0 : OK.
      * @return -1 : Incorrect Clock Missing Delay.
      * @return -2 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigureClockErrors(const int AutoClockSet,
                              const int IgnoreFSDetection,
@@ -514,6 +540,8 @@ public:
      * @return -5 : Incorrect BCK Value.
      * @return -6 : Incorrect LRLCK Value.
      * @return -7 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigureClockDividers(const int OSR,
                                const int NCP,
@@ -534,6 +562,8 @@ public:
      * @return -1 : Invalid Buffer
      * @return -2 : Invalid Values sizes
      * @return -3 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values, const size_t CoeffNumber);
 
@@ -541,13 +571,15 @@ public:
      * @brief Write to a CRAM buffer a list of instructions for the DSP.
      * @warning This function is slow and blocking due to the large amount of Data to transfer.
      *
-     * @param[in] Values An array of instructions to be wrote.
+     * @param[in] Instructions An array of instructions to be wrote.
      * @param[in] InstrNumber The number of instructions to write.
      *
      * @return  0 : OK
      * @return -1 : Invalid Values sizes
      * @return -2 : IOCTL error.
      * @return -3 : Unknown error. Shoudln't get here, if you land here, good luck !
+     *
+     * @test Function to test !
      */
     int ConfigureDSPIntructions(int *const Instructions, const size_t InstrNumber);
 
@@ -574,6 +606,8 @@ public:
      * @return -2 : Invalid Right Volume
      * @return -3 : IOCTL error.
      * @return -4 : Unknown error. Shoudln't get here, if you land here, good luck !
+     *
+     * @test Function to test !
      */
     int ConfigureVolume(const int LeftVolume, const int RightVolume);
 
@@ -585,6 +619,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int Mute(const int MuteLeft, const int MuteRight);
 
@@ -595,6 +631,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ReadGPIOInput(int *const GPIOInputStatus);
 
@@ -606,7 +644,7 @@ public:
      * @param[out] PLLLocked Is the PLL locked ?
      * @param[out] LRCLKBCKPresent Are the LRCLK or BCK present ?
      * @param[out] SCKRatio Is the SCK Ratio valid ?
-     * @param[out] SCKValid Is the SCK Valid ?
+     * @param[out] SCKRatioValid Is the SCK Ration Valid ?
      * @param[out] BCKValid Is the BCK Valid ?
      * @param[out] FSValid Is the FS mode valid ?
      * @param[out] LatchedClockHalt Does the clock has halted ?
@@ -619,6 +657,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ReadClockStatus(int *const DetectedBCKRatio,
                         int *const SCKPresent,
@@ -647,6 +687,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ReadMuteStatus(int *const AnalogLeftMute,
                        int *const AnalogRightMute,
@@ -666,13 +708,15 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ReadDSPStatus(int *const DSPBootStatus,
                       int *const DSPState,
                       int *const UsedCRAM,
                       int *const ActiveCRAM,
                       int *const IDAC,
-                      int *const DPSOverflow);
+                      int *const DSPOverflow);
 
     /**
      * @brief Read the Analog Output Status
@@ -682,6 +726,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ReadAnalogStatus(int *const ShortCircuitOccuring,
                          int *const ShortCircuitDetected);

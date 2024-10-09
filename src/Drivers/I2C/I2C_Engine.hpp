@@ -25,11 +25,11 @@
 /**
  * @brief
  *
- * @var I2C_Bus::I2C_file
+ * @param I2C_Bus::I2C_file
  *      The file descriptor that is used to perform IO operations on the I2C Bus
- * @var I2C_Bus::I2C_filename
+ * @param I2C_Bus::I2C_filename
  *      The human name of the file used to perform IO operations on the I2C Bus
- * @var I2C_Bus::I2C_bus
+ * @param I2C_Bus::I2C_bus
  *      The number of the bus used for IO operations. Defiined in the header due to hardware limitations of the RPi Zero 2W.
  *
  */

@@ -67,6 +67,8 @@ public:
      * @return -3 : Incorrect Current ADC Resolution
      * @return -4 : Incorrect Mode.
      * @return -5 : IOCTL error
+     *
+     * @test Function to test !
      */
     int Configure(const int Reset, const int BusVoltageRange, const int SetPGAGain, const int BusVoltageADCResolution, const int BusCurrentADCResolution, const int OperatingMode);
 
@@ -77,6 +79,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ReadShuntVoltage(float *const Value);
 
@@ -87,6 +91,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ReadBusVoltage(float *const Value);
 
@@ -97,6 +103,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ReadPower(float *const Value);
 
@@ -107,6 +115,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int ReadCurrent(float *const Value);
 
@@ -118,6 +128,8 @@ public:
      * @return  0 : OK
      * @return -1 : Error while casting the number.
      * @return -2 : IOCTL error.
+     *
+     * @test Function to test !
      */
     int SetCalibration(const float Value);
 };
