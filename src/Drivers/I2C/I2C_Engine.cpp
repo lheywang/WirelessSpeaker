@@ -14,7 +14,6 @@
 // ==============================================================================
 // INCLUDES
 // ==============================================================================
-#include "I2C_Engine.hpp"
 #include "I2C.hpp"
 
 #include <linux/i2c-dev.h>
@@ -25,6 +24,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <cstdint>
+#include <string.h>
 
 // Custom builded smbus.h file, from the original repo : https://github.com/Sensirion/i2c-tools/tree/master
 // Only includes path were modified.
@@ -59,7 +59,7 @@ I2C_Bus *I2C_GetInfos()
 
     if (I2C->I2C_file < 0)
     {
-        fprintf(stderr, "[I2C] : Could not open the requested I2C bus.");
+        fprintf(stderr, "[ I2C ][ GetInfos ] : Could not open the requested I2C bus : %s\n", strerror(errno));
         I2C->I2C_file = (int)NULL;
     }
 
@@ -134,7 +134,7 @@ int I2C_ConfigureAddress(I2C_Bus *I2C, int Address)
 {
     if (ioctl(I2C->I2C_file, I2C_SLAVE, Address) < 0)
     {
-        fprintf(stderr, "[I2C] : Could not set address");
+        fprintf(stderr, "[ I2C ][ ConfigureAddress ] : Could not set address : %s\n", strerror(errno));
         return -errno;
     }
     return 0;
