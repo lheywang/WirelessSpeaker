@@ -23,6 +23,8 @@
 #define BUS_SPEED 20'000'000
 #define BUS_WORD_SIZE 8
 #define BUS_MODE SPI_MODE_0
+#define BUS_MAX_CS 1
+#define BUS_NUMBER 0
 
 // ==============================================================================
 // CS

@@ -24,26 +24,23 @@ int main()
 {
     std::cout << "Hello World !" << std::endl;
 
-    I2C_Bus *I2C = I2C_GetInfos();
+    // I2C_Bus *I2C = I2C_GetInfos();
+    // std::cout << I2C->I2C_filename << std::endl;
+    // std::cout << I2C->I2C_file << std::endl;
+    // I2C_Close(I2C);
 
-    ADS1015 ADC = ADS1015(I2C, 0x48);
-    ADC.Configure_ADC(0, ADC_CHANNEL_3, ADC_GAIN_4V00, 1, ADC_SPS_3300, 0, 1, 0, 0);
+    SPI_Bus *SPI = SPI_GetInfos(EEPROM, BUS_NUMBER);
+    std::cout << SPI->SPI_Filename << std::endl;
+    std::cout << SPI->SPI_file << std::endl;
 
-    float value = 0;
-    ADC.Read_Voltage(ADC_CHANNEL_0, &value);
-    std::cout << value << std::endl;
-    ADC.Read_Voltage(ADC_CHANNEL_1, &value);
-    std::cout << value << std::endl;
-    ADC.Read_Voltage(ADC_CHANNEL_2, &value);
-    std::cout << value << std::endl;
-    ADC.Read_Voltage(ADC_CHANNEL_3, &value);
-    std::cout << value << std::endl;
+    int TX[] = {0x1F, 0xFF};
+    int RX[] = {0x00, 0x00, 0x00};
 
-    // Devboard values !
-    // AIN 0 : 3.17 V
-    // AIN 1 : 0.110 V
-    // AIN 2 : 2.487 V
-    // AIN 3 : 0.816 V
+    SPI_ConfigureBUS(SPI, SPI_MODE_0, BUS_WORD_SIZE, BUS_SPEED);
+    SPI_Transfer(SPI, 0x03, TX, RX, 2, 3);
+    std::cout << RX[0] << RX[1] << RX[2] << std::endl;
+
+    SPI_CloseDevice(SPI);
 
     /* MCP 9808
      *
@@ -178,5 +175,28 @@ int main()
      * usleep(3'000'000);
      * termClock();
      */
+
+    /*
+     * ADS1015 ADC = ADS1015(I2C, 0x48);
+     * ADC.Configure_ADC(0, ADC_CHANNEL_3, ADC_GAIN_4V00, 1, ADC_SPS_3300, 0, 1, 0, 0);
+     *
+     * float value = 0;
+     * ADC.Read_Voltage(ADC_CHANNEL_0, &value);
+     * std::cout << value << std::endl;
+     * ADC.Read_Voltage(ADC_CHANNEL_1, &value);
+     * std::cout << value << std::endl;
+     * ADC.Read_Voltage(ADC_CHANNEL_2, &value);
+     * std::cout << value << std::endl;
+     * ADC.Read_Voltage(ADC_CHANNEL_3, &value);
+     * std::cout << value << std::endl;
+     *
+     * // Devboard values !
+     * // AIN 0 : 3.17 V
+     * // AIN 1 : 0.110
+     * // AIN 2 : 2.487 V
+     * // AIN 3 : 0.816 V
+     *
+     */
+
     return 0;
 }
