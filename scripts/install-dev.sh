@@ -6,4 +6,9 @@ apt-get install texlive-full libfdt-dev gcc graphviz
 cd ../tools/ && git clone https://github.com/raspberrypi/utils.git
 cd ../tools/utils && cmake . && sudo make install
 
+echo "--------------------------------------------------------------------"
+echo "Installed everything on your computer !"
+echo "You can now compile and update the project on github !"
+echo "--------------------------------------------------------------------"
+
 exit

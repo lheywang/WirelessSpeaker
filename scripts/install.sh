@@ -6,3 +6,8 @@ cd ../tools/ && git clone https://github.com/raspberrypi/utils.git
 cd ../tools/utils && cmake . && sudo make install
 echo "If no errors occureds, all tools are installed sucessfully"
 exit
+
+echo "--------------------------------------------------------------------"
+echo "Installed everything on your computer !"
+echo "You can now compile the project"
+echo "--------------------------------------------------------------------"
