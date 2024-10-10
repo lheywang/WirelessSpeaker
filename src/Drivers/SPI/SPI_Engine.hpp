@@ -9,6 +9,8 @@
  *
  */
 
+#include <cstdint>
+
 // ==============================================================================
 // DATA STRUCTURES
 // ==============================================================================
@@ -27,6 +29,13 @@ struct SPI_Bus
     char SPI_Filename[30];
     int SPI_Bus;
     int CS_number;
+
+    unsigned int speed;
+    unsigned char delay;
+    unsigned char bits;
+    unsigned char change;
+    unsigned char tx_nbits;
+    unsigned char rx_nbits;
 };
 
 // ==============================================================================
@@ -73,12 +82,13 @@ int SPI_ConfigureBUS(SPI_Bus *SPI, int Mode, int WordSize, int Speed);
  * @todo To be completed. Actually this function bug !
  *
  * @param[inout] SPI A SPI_Bus struct that serve as base
- * @param[in] address The address of the data to be wrote. This will be appended at the beginning of the InputBuffer.
  * @param[in] InputBuffer The payload to be written.
  * @param[out] OutputBufer The payload to be read.
  * @param[in] WriteLen The lengh of data to be written.
- * @param[in] ReadLen The lengh of data to be rode.
  *
  * @return  0 : OK
+ * @return -1 : Error while allocating Input buffer
+ * @return -2 : Error while allocating Output buffer
+ * @return -3 : IOCTL error.
  */
-int SPI_Transfer(SPI_Bus *SPI, const int address, int *const InputBuffer, int *const OutputBufer, const int WriteLen, const int ReadLen);
+int SPI_Transfer(SPI_Bus *SPI, int *const InputBuffer, int *const OutputBufer, const int Len);

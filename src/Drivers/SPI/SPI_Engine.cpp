@@ -118,43 +118,53 @@ int SPI_ConfigureBUS(SPI_Bus *SPI, int Mode, int WordSize, int Speed)
         return -3;
     }
 
+    // Store configuration settings for future use.
+    SPI->speed = (unsigned int)Speed;
+    SPI->tx_nbits = (unsigned char)1;
+    SPI->rx_nbits = (unsigned char)1;
+    SPI->bits = (unsigned char)WordSize;
+    SPI->change = (unsigned char)0;
+    SPI->delay = (unsigned char)1;
+
     return 0;
 }
 
-int SPI_Transfer(SPI_Bus *SPI, const int address, int *const InputBuffer, int *const OutputBufer, const int WriteLen, const int ReadLen)
+int SPI_Transfer(SPI_Bus *SPI, int *const InputBuffer, int *const OutputBufer, const int Len)
 {
     // Allocate a unsigned long long buffer to store the data to be written.
-    __u64 *TX = (__u64 *)malloc(sizeof(__u64) * (WriteLen + 1));
+    __u8 *TX = (__u8 *)malloc(sizeof(__u8) * Len);
     if (TX == 0)
     {
         fprintf(stderr, "[ SPI ][ Read ] : Could not allocate the input buffer : %s\n", strerror(errno));
         return -1;
     }
-    TX[0] = address;
-    memcpy(TX + sizeof(__u64), (__u64 *)InputBuffer, WriteLen);
+    // Let's copy all of the input data to the new one !
+    for (int i = 0; i < Len; i++)
+        TX[i] = (__u8)InputBuffer[i] << 1;
 
     // Allocate a unsigned long long buffer to the data to be rode.
-    __u64 *RX = (__u64 *)malloc(sizeof(__u64) * ReadLen);
+    __u8 *RX = (__u8 *)malloc(sizeof(__u8) * Len);
     if (RX == 0)
     {
         fprintf(stderr, "[ SPI ][ Read ] : Could not allocate the output buffer : %s\n", strerror(errno));
         return -2;
     }
-    memset(RX, 0x00, ReadLen);
+    memset(RX, 0x00, Len * sizeof(__u8));
 
-    /*
-    Data isn't correctly copied here.
-    I need to look a bit more !
-    */
-    std::cout << "Input Buffer " << std::hex << InputBuffer[0] << InputBuffer[1] << std::endl;
-    std::cout << "TX " << std::hex << TX[0] << RX[1] << std::endl;
-
-    // Manage transfer structure
-    struct spi_ioc_transfer message;
-    memset(&message, 0, sizeof(message));
-    message.rx_buf = (__u64)RX;
-    message.tx_buf = (__u64)TX;
-    message.len = (__u32)sizeof(RX);
+    struct spi_ioc_transfer message =
+        {
+            .tx_buf = (unsigned long)TX,
+            .rx_buf = (unsigned long)RX,
+            .len = (unsigned int)Len,
+            .speed_hz = SPI->speed,
+            .delay_usecs = SPI->delay,
+            .bits_per_word = SPI->bits,
+            .cs_change = SPI->change,
+            .tx_nbits = SPI->tx_nbits,
+            .rx_nbits = SPI->rx_nbits,
+            .word_delay_usecs = SPI->delay,
+            .pad = 0, // padding, remain at 0
+        };
 
     // Perform IOCTL
     int res = 0;
@@ -167,8 +177,9 @@ int SPI_Transfer(SPI_Bus *SPI, const int address, int *const InputBuffer, int *c
         return -3;
     }
 
-    // Copy the returned data.
-    memcpy(OutputBufer, (int *)RX, ReadLen);
+    // Let's copy all of the output data.
+    for (int i = 0; i < Len; i++)
+        OutputBufer[i] = (int)RX[i];
 
     // Free de allocated buffers.
     free(RX);

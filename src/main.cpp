@@ -30,15 +30,15 @@ int main()
     // I2C_Close(I2C);
 
     SPI_Bus *SPI = SPI_GetInfos(EEPROM, BUS_NUMBER);
-    std::cout << SPI->SPI_Filename << std::endl;
-    std::cout << SPI->SPI_file << std::endl;
 
-    int TX[] = {0x1F, 0xFF};
-    int RX[] = {0x00, 0x00, 0x00};
+    int TX[] = {0x03, 0xAA, 0xAA, 0x88, 0x45};
+    int RX[5] = {0};
 
-    SPI_ConfigureBUS(SPI, SPI_MODE_0, BUS_WORD_SIZE, BUS_SPEED);
-    SPI_Transfer(SPI, 0x03, TX, RX, 2, 3);
-    std::cout << RX[0] << RX[1] << RX[2] << std::endl;
+    SPI_ConfigureBUS(SPI, SPI_MODE_1, BUS_WORD_SIZE, 500'000);
+    SPI_Transfer(SPI, TX, RX, 5);
+
+    for (int i = 0; i < 5; i++)
+        std::cout << RX[i] << std::endl;
 
     SPI_CloseDevice(SPI);
 
