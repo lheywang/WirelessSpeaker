@@ -65,14 +65,14 @@ SPI_Bus *SPI_GetInfos(int CS, int Bus)
     return SPI;
 }
 
-int SPI_CloseDevice(SPI_Bus *SPI)
+int SPI_Close(SPI_Bus *SPI)
 {
     close(SPI->SPI_file);
     delete SPI;
     return 0;
 }
 
-int SPI_ConfigureBUS(SPI_Bus *SPI, int Mode, int WordSize, int Speed)
+int SPI_Configure(SPI_Bus *SPI, int Mode, int WordSize, int Speed)
 {
     int res = 0;
 
@@ -138,6 +138,7 @@ int SPI_Transfer(SPI_Bus *SPI, int *const InputBuffer, int *const OutputBufer, c
         fprintf(stderr, "[ SPI ][ Read ] : Could not allocate the input buffer : %s\n", strerror(errno));
         return -1;
     }
+
     // Let's copy all of the input data to the new one !
     for (int i = 0; i < Len; i++)
         TX[i] = (__u8)InputBuffer[i];

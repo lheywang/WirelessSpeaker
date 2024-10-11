@@ -34,13 +34,13 @@ int main()
     int TX[] = {0x03, 0xAA, 0xAA, 0x88, 0x45};
     int RX[5] = {0};
 
-    SPI_ConfigureBUS(SPI, SPI_MODE_1, BUS_WORD_SIZE, 500'000);
+    SPI_Configure(SPI, SPI_MODE_1, BUS_WORD_SIZE, 500'000);
     SPI_Transfer(SPI, TX, RX, 5);
 
     for (int i = 0; i < 5; i++)
         std::cout << RX[i] << std::endl;
 
-    SPI_CloseDevice(SPI);
+    SPI_Close(SPI);
 
     /* MCP 9808
      *

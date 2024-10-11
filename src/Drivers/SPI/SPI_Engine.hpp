@@ -22,6 +22,13 @@
  * @param SPI_Bus::SPI_Filename The name of the openned file
  * @param SPI_Bus::SPI_Bus The number of the SPI Bus
  * @param SPI_Bus::CS_Number The number of CS availables.
+ *
+ * @param SPI_Bus::speed The speed of the bus. Defined automatically.
+ * @param SPI_Bus::delau The delay between CS and first clock
+ * @param SPI_Bus::bits The number of bits per transfer
+ * @param SPI_Bus::change The delay between the last clock and CS
+ * @param SPI_Bus::tx_nbits The number of bits per transfer on the TX line
+ * @param SPI_Bus::rx_nbits The number of bits per transfer on the RX line
  */
 struct SPI_Bus
 {
@@ -59,7 +66,7 @@ SPI_Bus *SPI_GetInfos(int CS, int Bus);
  *
  * @return  0 : OK
  */
-int SPI_CloseDevice(SPI_Bus *bus);
+int SPI_Close(SPI_Bus *bus);
 
 /**
  * @brief Configure the parameters of an SPI Bus
@@ -74,12 +81,10 @@ int SPI_CloseDevice(SPI_Bus *bus);
  * @return -2 : Could not set IOCTL for WordSize
  * @return -3 : Could not set IOCTL for Speed
  */
-int SPI_ConfigureBUS(SPI_Bus *SPI, int Mode, int WordSize, int Speed);
+int SPI_Configure(SPI_Bus *SPI, int Mode, int WordSize, int Speed);
 
 /**
- * @brief Read N bytes from the bus.
- *
- * @todo To be completed. Actually this function bug !
+ * @brief Read N bytes from the bus. The order of bytes to transfer is leaved at the appreciation of an higher level code.
  *
  * @param[inout] SPI A SPI_Bus struct that serve as base
  * @param[in] InputBuffer The payload to be written.
