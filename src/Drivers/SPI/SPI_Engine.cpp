@@ -140,7 +140,7 @@ int SPI_Transfer(SPI_Bus *SPI, int *const InputBuffer, int *const OutputBufer, c
     }
     // Let's copy all of the input data to the new one !
     for (int i = 0; i < Len; i++)
-        TX[i] = (__u8)InputBuffer[i] << 1;
+        TX[i] = (__u8)InputBuffer[i];
 
     // Allocate a unsigned long long buffer to the data to be rode.
     __u8 *RX = (__u8 *)malloc(sizeof(__u8) * Len);
