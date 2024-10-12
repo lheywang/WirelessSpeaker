@@ -19,20 +19,12 @@
 // CONSTANTS
 // ==============================================================================
 
-/**
- * @brief Define SPI Bus operating parameters.
- *
- * @enumvalue SPI_SETTINGS::BUS_SPEED Define SCLK Frequency
- * @enumvalue SPI_SETTINGS::BUS_WORD_SIZE Define number of bits per cycle
- * @enumvalue SPI_SETTINGS::BUS_MODE Define SPI Mode.
- * @enumvalue SPI_SETTINGS::BUS_MAX_CS Define the maximal number of CS. Selected by the device tree.
- * @enumvalue SPI_SETTINGS::BUS_NUMBER Define the bus number, defined by RPi design.
- */
+/*! Define parameters of the SPI bus */
 enum class SPI_SETTINGS
 {
-    BUS_SPEED = 20'000'000,
-    BUS_WORD_SIZE = 8,
-    BUS_MODE = SPI_MODE_0,
-    BUS_MAX_CS = 1,
-    BUS_NUMBER = 0,
+    BUS_SPEED = 20'000'000, /*!< Bus speed (20 MHz)*/
+    BUS_WORD_SIZE = 8,      /*!< Bus word size (8 bits)*/
+    BUS_MODE = SPI_MODE_0,  /*!< Bus mode (= 0 : CPOL = 0 and CPHA = 0)*/
+    BUS_MAX_CS = 1,         /*!< Number of CS : 1*/
+    BUS_NUMBER = 0,         /*!< Bus number : 0*/
 };

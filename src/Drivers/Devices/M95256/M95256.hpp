@@ -16,19 +16,22 @@
 // ==============================================================================
 // PUBLIC DEFINES
 // ==============================================================================
-
+/*! Define values protection bits of the EEPROM */
 enum class EEPROM_WP
 {
-    SOFT_WP_DISABLED = 0x00,
-    SOFT_WP_UPPER_QUARTER = 0x01,
-    SOFT_WP_UPPER_HALF = 0x02,
-    SOFT_WP_FULL = 0x03,
+    SOFT_WP_DISABLED = 0x00,      /*!< No protected sector*/
+    SOFT_WP_UPPER_QUARTER = 0x01, /*!< Upper quarter protected*/
+    SOFT_WP_UPPER_HALF = 0x02,    /*!< Upper half protected*/
+    SOFT_WP_FULL = 0x03,          /*!< Full memory protected*/
 };
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
 // ==============================================================================
-
+/**
+ * @brief Base class to exploit M95256 EEPROM
+ *
+ */
 class M95256
 {
 private:
@@ -95,7 +98,7 @@ public:
     /**
      * @brief Read data of the EEPROM
      *
-     * @param Adresss Address of the first byte to be read.
+     * @param Address Address of the first byte to be read.
      * @param Data A pointer to a list of Len elements to store the output.
      * @param Len The number of bytes to read.
      *

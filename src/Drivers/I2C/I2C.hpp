@@ -19,170 +19,97 @@
 // IC ADDRESSES
 // ==============================================================================
 
-inline constexpr int I2C_BUS_NUMBER = 1;
+inline constexpr int I2C_BUS_NUMBER = 1; /*!< Define the used bus on the RPi.*/
 
-/**
- * @brief Define MCP9808 Temperature sensor addresses
- *
- * @enumvalue TEMP_SENSOR:TEMP_0 Device temperature sensor 0
- * @enumvalue TEMP_SENSOR:TEMP_1 Device temperature sensor 1
- * @enumvalue TEMP_SENSOR:TEMP_2 Device temperature sensor 2
- * @enumvalue TEMP_SENSOR:TEMP_3 Device temperature sensor 3
- * @enumvalue TEMP_SENSOR:TEMP_4 Device temperature sensor 4
- * @enumvalue TEMP_SENSOR:TEMP_5 Device temperature sensor 5
- * @enumvalue TEMP_SENSOR:TEMP_6 Device temperature sensor 6
- * @enumvalue TEMP_SENSOR:TEMP_7 Device temperature sensor 7
- */
+/*! Define I2C addresses for MCP9808 temperature sensor */
 enum class TEMP_SENSOR
 {
-    TEMP_0 = 0x18,
-    TEMP_1 = 0x19,
-    TEMP_2 = 0x1A,
-    TEMP_3 = 0x1B,
-    TEMP_4 = 0x1C,
-    TEMP_5 = 0x1D,
-    TEMP_6 = 0x1E,
-    TEMP_7 = 0x1F,
+    TEMP_0 = 0x18, /*!< Sensor 0*/
+    TEMP_1 = 0x19, /*!< Sensor 1*/
+    TEMP_2 = 0x1A, /*!< Sensor 2*/
+    TEMP_3 = 0x1B, /*!< Sensor 3*/
+    TEMP_4 = 0x1C, /*!< Sensor 4*/
+    TEMP_5 = 0x1D, /*!< Sensor 5*/
+    TEMP_6 = 0x1E, /*!< Sensor 6*/
+    TEMP_7 = 0x1F, /*!< Sensor 7*/
 };
 
-/**
- * @brief Define PCM5252 Adresses
- *
- * @enumvalue DAC::DAC_0 Define the address of the DAC.
- */
+/*! Define I2C addresses for PCM5252 DAC */
 enum class DAC
 {
-    DAC_0 = 0x4C,
+    DAC_0 = 0x4C, /*!< DAC 0*/
 };
 
-/**
- * @brief Define Touch sensor addresses
- *
- * @enumvalue TOUCHSENSOR::TOUCH_0 Address for the first touch sensor.
- */
+/*! Define I2C addresses for AT42QT1070 Touch sensor*/
 enum class TOUCHSENSOR
 {
-    TOUCH_0 = 0x1B,
+    TOUCH_0 = 0x1B, /*!< Sensor 0*/
 };
 
-/**
- * @brief Define address for the ADS1015 ADC
- *
- * @enumvalue VOLTAGE_MONITOR::ADC_0 ADS1015 Address for IC 0
- * @enumvalue VOLTAGE_MONITOR::ADC_1 ADS1015 Address for IC 1
- * @enumvalue VOLTAGE_MONITOR::ADC_2 ADS1015 Address for IC 2
- * @enumvalue VOLTAGE_MONITOR::ADC_3 ADS1015 Address for IC 3
- */
+/*! Define I2C addresses for ADS1015 ADC */
 enum class VOLTAGE_MONITOR
 {
-    ADC_0 = 0x90,
-    ADC_1 = 0x91,
-    ADC_2 = 0x92,
-    ADC_3 = 0x93,
+    ADC_0 = 0x90, /*!< ADC 0*/
+    ADC_1 = 0x91, /*!< ADC 0*/
+    ADC_2 = 0x92, /*!< ADC 0*/
+    ADC_3 = 0x93, /*!< ADC 0*/
 };
 
-/**
- * @brief Define Logarithmic potentiometer address, used for analog configuration.
- *
- * @enumvalue LOG_POTI::POTI_0 Address of potentiometer 0
- * @enumvalue LOG_POTI::POTI_1 Address of potentiometer 1
- * @enumvalue LOG_POTI::POTI_2 Address of potentiometer 2
- * @enumvalue LOG_POTI::POTI_3 Address of potentiometer 3
- * @enumvalue LOG_POTI::POTI_4 Address of potentiometer 4
- * @enumvalue LOG_POTI::POTI_5 Address of potentiometer 5
- * @enumvalue LOG_POTI::POTI_6 Address of potentiometer 6
- * @enumvalue LOG_POTI::POTI_7 Address of potentiometer 7
- */
+/*! Define I2C addresses for DS1882 logarithmic potentiometer*/
 enum class LOG_POTI
 {
-    POTI_0 = 0x28,
-    POTI_1 = 0x29,
-    POTI_2 = 0x2A,
-    POTI_3 = 0x2B,
-    POTI_4 = 0x2C,
-    POTI_5 = 0x2D,
-    POTI_6 = 0x2E,
-    POTI_7 = 0x2F,
+    POTI_0 = 0x28, /*!< Poti 0*/
+    POTI_1 = 0x29, /*!< Poti 1*/
+    POTI_2 = 0x2A, /*!< Poti 2*/
+    POTI_3 = 0x2B, /*!< Poti 3*/
+    POTI_4 = 0x2C, /*!< Poti 4*/
+    POTI_5 = 0x2D, /*!< Poti 5*/
+    POTI_6 = 0x2E, /*!< Poti 6*/
+    POTI_7 = 0x2F, /*!< Poti 7*/
 };
 
-/**
- * @brief Define address for MCP45HV51 addresses
- *
- * @enumvalue LIN_POTI::POTI_0 Address for linear potentiometer 0
- * @enumvalue LIN_POTI::POTI_1 Address for linear potentiometer 1
- * @enumvalue LIN_POTI::POTI_2 Address for linear potentiometer 2
- * @enumvalue LIN_POTI::POTI_3 Address for linear potentiometer 3
- */
+/*! Define I2C addresses for MCP45HV51 linear potentiometer*/
 enum class LIN_POTI
 {
-    POTI_0 = 0X78,
-    POTI_1 = 0x79,
-    POTI_2 = 0x7A,
-    POTI_3 = 0x7B,
+    POTI_0 = 0X78, /*!< Poti 1*/
+    POTI_1 = 0x79, /*!< Poti 2*/
+    POTI_2 = 0x7A, /*!< Poti 3*/
+    POTI_3 = 0x7B, /*!< Poti 4*/
 };
 
-/**
- * @brief Define I2C Address for PCA9633 ICs.
- *
- * @enumvalue LED_DRIVERS::DRIVER_0 Address for PCA9633 0
- * @enumvalue LED_DRIVERS::DRIVER_1 Address for PCA9633 1
- * @enumvalue LED_DRIVERS::DRIVER_2 Address for PCA9633 2
- * @enumvalue LED_DRIVERS::DRIVER_3 Address for PCA9633 3
- */
+/*! Define I2C addresses for PCA9633 leds drivers IC*/
 enum class LED_DRIVERS
 {
-    DRIVER_0 = 0xC2,
-    DRIVER_1 = 0xC3,
-    DRIVER_2 = 0xC4,
-    DRIVER_3 = 0xC5,
+    DRIVER_0 = 0xC2, /*!< Adress 0*/
+    DRIVER_1 = 0xC3, /*!< Adress 0*/
+    DRIVER_2 = 0xC4, /*!< Adress 0*/
+    DRIVER_3 = 0xC5, /*!< Adress 0*/
 };
 
-/**
- * @brief Define I2C_Adresses for the STUSB4500 IC
- *
- * @enumvalue USB_PD::PD_0 Define the address of the first interface.
- */
+/*! Define I2C addresses for STUSB4500 Power delivery management IC*/
 enum class USB_PD
 {
-    PD_0 = 0x28,
+    PD_0 = 0x28, /*!< IC 0*/
 };
 
-/**
- * @brief Define I2C Address for the GPIO Expanders
- *
- * @enumvalue GPIO_EXPANDER::GPIO_0 I2C Address for the GPIO Expander 0
- * @enumvalue GPIO_EXPANDER::GPIO_1 I2C Address for the GPIO Expander 1
- * @enumvalue GPIO_EXPANDER::GPIO_2 I2C Address for the GPIO Expander 2
- * @enumvalue GPIO_EXPANDER::GPIO_3 I2C Address for the GPIO Expander 3
- * @enumvalue GPIO_EXPANDER::GPIO_4 I2C Address for the GPIO Expander 4
- * @enumvalue GPIO_EXPANDER::GPIO_5 I2C Address for the GPIO Expander 5
- * @enumvalue GPIO_EXPANDER::GPIO_6 I2C Address for the GPIO Expander 6
- * @enumvalue GPIO_EXPANDER::GPIO_7 I2C Address for the GPIO Expander 7
- */
+/*! Define I2C addresses for MCP23009 GPIO expander*/
 enum class GPIO_EXPANDER
 {
-    GPIO_0 = 0x20,
-    GPIO_1 = 0x21,
-    GPIO_2 = 0x22,
-    GPIO_3 = 0x23,
-    GPIO_4 = 0x24,
-    GPIO_5 = 0x25,
-    GPIO_6 = 0x26,
-    GPIO_7 = 0x27,
+    GPIO_0 = 0x20, /*!< GPIO Expander 0*/
+    GPIO_1 = 0x21, /*!< GPIO Expander 1*/
+    GPIO_2 = 0x22, /*!< GPIO Expander 2*/
+    GPIO_3 = 0x23, /*!< GPIO Expander 3*/
+    GPIO_4 = 0x24, /*!< GPIO Expander 4*/
+    GPIO_5 = 0x25, /*!< GPIO Expander 5*/
+    GPIO_6 = 0x26, /*!< GPIO Expander 6*/
+    GPIO_7 = 0x27, /*!< GPIO Expander 7*/
 };
 
-/**
- * @brief Define INA219 Current monitor addresses
- *
- * @enumvalue CURRENT_MONITOR::SHUNT_0 I2C Address for INA219 0
- * @enumvalue CURRENT_MONITOR::SHUNT_1 I2C Address for INA219 1
- * @enumvalue CURRENT_MONITOR::SHUNT_2 I2C Address for INA219 2
- * @enumvalue CURRENT_MONITOR::SHUNT_3 I2C Address for INA219 3
- */
+/*! Define I2C addresses for INA219 Current monitor */
 enum class CURRENT_MONITOR
 {
-    SHUNT_0 = 0x40,
-    SHUNT_1 = 0x41,
-    SHUNT_2 = 0x42,
-    SHUNT_3 = 0x43,
+    SHUNT_0 = 0x40, /*!< Current monitor 0*/
+    SHUNT_1 = 0x41, /*!< Current monitor 1*/
+    SHUNT_2 = 0x42, /*!< Current monitor 2*/
+    SHUNT_3 = 0x43, /*!< Current monitor 3*/
 };

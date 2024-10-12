@@ -16,49 +16,25 @@
 #include <iostream>
 #include <cstdint>
 
-/**
- * @struct Temperature
- * @brief Structure that contain all of the Temperature monitoring settings,
- *        and more precisely the values of the Interrupts at which an action shall be triggered (overheat ?)
- *
- * @param Temperature::Maximal_Temperature Maximal Temperature that is accepted.
- * @param Temperature::Minimal_Temperature Minimal Temperature that is accepted.
- *
- */
+/*! Define values that are stored on the EEPROM for the temperature sensor */
 struct Temperature
 {
-    uint16_t Maximal_Temperature;
-    uint16_t Minimal_Temperature;
+    uint16_t Maximal_Temperature; /*!< Define maximal temperature before triggering an interrupt*/
+    uint16_t Minimal_Temperature; /*!< Define minimal temperature before triggering an interrupt*/
 };
 
-/**
- * @struct VoltageMonitor
- * @brief Define voltage monitor settings.
- *
- * @param VoltageMonitor::GainChannelA Gain for channel A
- * @param VoltageMonitor::GainChannelB Gain for channel B
- * @param VoltageMonitor::GainChannelC Gain for channel C
- * @param VoltageMonitor::GainChannelD Gain for channel D
- *
- * @param VoltageMonitor::ChannelANominal Standard value for channel A
- * @param VoltageMonitor::ChannelBNominal Standard value for channel B
- * @param VoltageMonitor::ChannelCNominal Standard value for channel C
- * @param VoltageMonitor::ChannelDNominal Standard value for channel D
- *
- * @param VoltageMonitor::Tolerance Tolerance in % of excursion before triggering a failure.
- *
- */
+/*! Define values that are stored on the EEPROM for the voltage monitoring ADC */
 struct VoltageMonitor
 {
-    uint8_t GainChannelA;
-    uint8_t GainChannelB;
-    uint8_t GainChannelC;
-    uint8_t GainChannelD;
+    uint8_t GainChannelA; /*!< Define the gain applied to the channel 1*/
+    uint8_t GainChannelB; /*!< Define the gain applied to the channel 2*/
+    uint8_t GainChannelC; /*!< Define the gain applied to the channel 3*/
+    uint8_t GainChannelD; /*!< Define the gain applied to the channel 4*/
 
-    uint16_t ChannelANominal;
-    uint16_t ChannelBNominal;
-    uint16_t ChannelCNominal;
-    uint16_t ChannelDNominal;
+    uint16_t ChannelANominal; /*!< Define the nominal value for the channel 1*/
+    uint16_t ChannelBNominal; /*!< Define the nominal value for the channel 2*/
+    uint16_t ChannelCNominal; /*!< Define the nominal value for the channel 3*/
+    uint16_t ChannelDNominal; /*!< Define the nominal value for the channel 4*/
 
-    uint8_t Tolerance;
+    uint8_t Tolerance; /*!< Define the % of tolerance for each value before creating an exception*/
 };

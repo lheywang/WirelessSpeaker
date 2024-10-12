@@ -16,171 +16,94 @@
 #include <iostream>
 #include <cstdint>
 
-/**
- * @struct Trebbles
- * @brief Define trebbles analog settings.
- *
- * @param Trebbles::HP_Value Value of the potentiometer that is used to set the high pass point for the trebbles speaker.
- * @param Trebbles::Gain Value of the potentiometer that is used to set the gain on the trebbles specically.
- */
+/*! Define values that are stored on the EEPROM for the trebbles analog part */
 struct Trebbles
 {
-    uint8_t HP_Value;
-    uint8_t Gain;
+    uint8_t HP_Value; /*!< The value of the potentiometer that configure the cut point of the high pass filter*/
+    uint8_t Gain;     /*!< The value of the potentiometer that configure the gain for the trebbles*/
 };
 
-/**
- * @struct Medium
- * @brief Define mediums analog settings.
- *
- * @param Medium::LP_Value Value of the potentiometer that is used to set the low pass point for the mediums speaker.
- * @param Medium::HP_Value Value of the potentiometer that is used to set the high pass point for the mediums speaker.
- * @param Medium::Gain Value of the potentiometer that is used to set the gain on the mediums specically.
- *
- */
+/*! Define values that are stored on the EEPROM for the medium analog part */
 struct Medium
 {
-    uint8_t LP_Value;
-    uint8_t HP_Value;
-    uint8_t Gain;
+    uint8_t LP_Value; /*!< The value of the potentiometer that configure the cut point of the low pass filter*/
+    uint8_t HP_Value; /*!< The value of the potentiometer that configure the cut point of the high pass filter*/
+    uint8_t Gain;     /*!< The value of the potentiometer that configure the gain for the mediums*/
 };
 
-/**
- * @struct Bass
- * @brief Define BASS Related settings
- *
- * @param Bass::LP_Value Value of the potentiometer that is used to set the low pass point for the bass speaker.
- * @param Bass::Gain Value of the potentiometer that is used to set the gain on the bass specically
- */
+/*! Define values that are stored on the EEPROM for the Amplifiers */
 struct Bass
 {
-    uint8_t LP_Value;
-    uint8_t Gain;
+    uint8_t LP_Value; /*!< The value of the potentiometer that configure the cut point of the low pass filter*/
+    uint8_t Gain;     /*!< The value of the potentiometer that configure the gain for the bass*/
 };
 
-/**
- * @struct Global
- * @brief Define Global Audio settings
- *
- * @param Global::Volume Analog gain for the volume. Used as master volume.
- * @param Global::RL_eq Difference of gain between channels. Used to compensate mismatchs on the analog chain.
- */
+/*! Define values that are stored on the EEPROM for the overall analog configuration */
 struct Global
 {
-    uint8_t Volume;
-    uint8_t RL_eq;
+    uint8_t Volume; /*!< Global analog volume*/
+    uint8_t RL_eq;  /*!< Right /-/ Left analog equalization*/
 };
 
-#define MAX_COEFF 256
-#define MAX_INSTR 1024
+constexpr int MAX_COEFF = 256;       /*!< Maximal number of coefficients for the DSP*/
+constexpr int MAX_INSTR = 1024;      /*!< Maximal number of instructions for the DSP*/
+constexpr int MAX_PROFILE_CHAR = 50; /*!< Maximal number of characters in the name of a DSP profile*/
 
-/**
- * @struct DAC
- * @brief Define DAC Settings
- *
- * @warning Buffers values remains stored on the system files since they'r e too big to a 256k EEPROM.
- *
- * @param DAC_Config::Audio_44k Boolean that is set to True of the settings for the PLL need to be set to 44.1kHz playback. Will be overhiden by the 48k setting.
- * @param DAC_Config::Audio_48k Boolean that is set to True of the settings for the PLL need to be set to 48kHz playback. Will overhide by the 48k setting.
- *
- * @param DAC_Config::Automute_delay Delay of 0 to be shown at the I2S data input before triggering the Automute system, and thus reducing power draw.
- * @param DAC_Config::Global_Volume Global Digital Volume. Shall always be near the maximum to exploit the biggest dynamic range.
- * @param DAC_Config::Left_Volume Analog volume settings for the left channel. Used to balance both channels.
- * @param DAC_Config::Right_Volume Analog volume settings for the rigth channel. Used to balance both channels.
- *
- * @param DAC_Config::LeftDataPath Select the data that is used by the left DAC
- * @param DAC_Config::RightDataPath Select the data that is used by the right DAC
- *
- * @param DAC_Config::RampDownSpeed Select the speed when going in Digital Mute
- * @param DAC_Config::RampUpSpeed Select the speed when going in Playback
- * @param DAC_Config::EmergencyRampSpeed Select the speed when going in Mute in case of Power Loss
- * @param DAC_Config::RampDownStep Select the step size (influe on speed) when going in Digital Mute
- * @param DAC_Config::RampUpStep Select the step size (influe on speed) when going in Playback
- * @param DAC_Config::EmergencyRampStep Select the step size (influe on speed) when going in Mute in case of Power Loss
- *
- * @param DAC_Config::LeftAnalogAtten Enable a -6dB attenuation on the left side
- * @param DAC_Config::RightAnalogAtten Enable a -6dB attenuation on the right side
- * @param DAC_Config::LeftAnalogBoost Enable an analog boost on the left side
- * @param DAC_Config::RightAnalogBoost Enable an analog boost on the right side.
- *
- * @param DAC_Config::DSP_BufferA_values1 DSP Coefficients Buffer A values for program 1
- * @param DAC_Config::DSP_BufferA_values2 DSP Coefficients Buffer A values for program 2
- * @param DAC_Config::DSP_BufferA_values3 DSP Coefficients Buffer A values for program 3
- * @param DAC_Config::DSP_BufferA_values4 DSP Coefficients Buffer A values for program 4
- * @param DAC_Config::DSP_BufferA_values5 DSP Coefficients Buffer A values for program 5
- * @param DAC_Config::DSP_BufferA_values6 DSP Coefficients Buffer A values for program 6
- *
- * @param DAC_Config::DSP_BufferB_values1 DSP Coefficients Buffer B values for program 1
- * @param DAC_Config::DSP_BufferB_values2 DSP Coefficients Buffer B values for program 2
- * @param DAC_Config::DSP_BufferB_values3 DSP Coefficients Buffer B values for program 3
- * @param DAC_Config::DSP_BufferB_values4 DSP Coefficients Buffer B values for program 4
- * @param DAC_Config::DSP_BufferB_values5 DSP Coefficients Buffer B values for program 5
- * @param DAC_Config::DSP_BufferB_values6 DSP Coefficients Buffer B values for program 6
- *
- * @param DAC_Config::DSP_Intr_values1 DSP Instruction Buffer for program 1
- * @param DAC_Config::DSP_Intr_values2 DSP Instruction Buffer for program 2
- * @param DAC_Config::DSP_Intr_values3 DSP Instruction Buffer for program 3
- * @param DAC_Config::DSP_Intr_values4 DSP Instruction Buffer for program 4
- * @param DAC_Config::DSP_Intr_values5 DSP Instruction Buffer for program 5
- * @param DAC_Config::DSP_Intr_values6 DSP Instruction Buffer for program 6
- */
+/*! Define values that are stored on the EEPROM for the Amplifiers */
 struct DAC_Config
 {
-    bool Audio_44k;
-    bool Audio_48k;
+    bool Audio_44k; /*!< Take true if playback was a multiple of 44.1 kHz*/
+    bool Audio_48k; /*!< Take true if playback was a multiple of 48 kHz*/
 
-    uint8_t Automute_delay;
-    uint8_t Global_Volume;
-    uint8_t Left_Volume;
-    uint8_t Right_Volume;
+    uint8_t Automute_delay; /*!< Value for the automute setting*/
+    uint8_t Global_Volume;  /*!< Value for the global digital volume*/
+    uint8_t Left_Volume;    /*!< Left specific volume*/
+    uint8_t Right_Volume;   /*!< Right specific volume*/
 
-    uint8_t LeftDataPath;
-    uint8_t RightDataPath;
+    uint8_t LeftDataPath;  /*!< Left data input selection*/
+    uint8_t RightDataPath; /*!< Right data input selection*/
 
-    uint8_t RampDownSpeed;
-    uint8_t RampUpSpeed;
-    uint8_t EmergencyRampSpeed;
-    uint8_t RampDownStep;
-    uint8_t RampUpStep;
-    uint8_t EmergencyRampStep;
+    uint8_t RampDownSpeed;      /*!< Speed to go on mute on automute*/
+    uint8_t RampUpSpeed;        /*!< Speed to leaving mute after automute*/
+    uint8_t EmergencyRampSpeed; /*!< Speed to go on mute on mute in case of emergency*/
+    uint8_t RampDownStep;       /*!< Step size to go on mute on automute*/
+    uint8_t RampUpStep;         /*!< Step size to leave mute after automute*/
+    uint8_t EmergencyRampStep;  /*!< Step size to go on mute in case of emergency*/
 
-    bool LeftAnalogAtten;
-    bool RightAnalogAtten;
-    bool LeftAnalogBoost;
-    bool RightAnalogBoost;
+    bool LeftAnalogAtten;  /*!< Enable -6dB of analog attenuation on the left*/
+    bool RightAnalogAtten; /*!< Enable -6dB of analog attenuation on the right*/
 
-    uint32_t DSP_BufferA_values1[MAX_COEFF];
-    uint32_t DSP_BufferB_values1[MAX_COEFF];
-    uint32_t DSP_Intr_values1[MAX_INSTR];
+    bool LeftAnalogBoost;  /*!< Enable an analog +0.5dB of boost on the left*/
+    bool RightAnalogBoost; /*!< Enable an analog +0.5dB of boost on the right*/
 
-    uint32_t DSP_BufferA_values2[MAX_COEFF];
-    uint32_t DSP_BufferB_values2[MAX_COEFF];
-    uint32_t DSP_Intr_values2[MAX_INSTR];
+    char DSP_Profile1[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 1*/
+    uint32_t DSP_BufferA_values1[MAX_COEFF]; /*!< Buffer A values for the DSP Profile 1*/
+    uint32_t DSP_BufferB_values1[MAX_COEFF]; /*!< Buffer B values for the DSP Profile 1*/
+    uint32_t DSP_Intr_values1[MAX_INSTR];    /*!< Instruction buffer for the DSP Profile 1*/
 
-    uint32_t DSP_BufferA_values3[MAX_COEFF];
-    uint32_t DSP_BufferB_values3[MAX_COEFF];
-    uint32_t DSP_Intr_values3[MAX_INSTR];
+    char DSP_Profile2[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 2*/
+    uint32_t DSP_BufferA_values2[MAX_COEFF]; /*!< Buffer A values for the DSP Profile 2*/
+    uint32_t DSP_BufferB_values2[MAX_COEFF]; /*!< Buffer B values for the DSP Profile 2*/
+    uint32_t DSP_Intr_values2[MAX_INSTR];    /*!< Instruction buffer for the DSP Profile 2*/
 
-    uint32_t DSP_BufferA_values4[MAX_COEFF];
-    uint32_t DSP_BufferB_values4[MAX_COEFF];
-    uint32_t DSP_Intr_values4[MAX_INSTR];
+    char DSP_Profile3[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 3*/
+    uint32_t DSP_BufferA_values3[MAX_COEFF]; /*!< Buffer A values for the DSP Profile 3*/
+    uint32_t DSP_BufferB_values3[MAX_COEFF]; /*!< Buffer B values for the DSP Profile 3*/
+    uint32_t DSP_Intr_values3[MAX_INSTR];    /*!< Instruction buffer for the DSP Profile 3*/
 
-    uint32_t DSP_BufferA_values5[MAX_COEFF];
-    uint32_t DSP_BufferB_values5[MAX_COEFF];
-    uint32_t DSP_Intr_values5[MAX_INSTR];
+    char DSP_Profile4[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 4*/
+    uint32_t DSP_BufferA_values4[MAX_COEFF]; /*!< Buffer A values for the DSP Profile 4*/
+    uint32_t DSP_BufferB_values4[MAX_COEFF]; /*!< Buffer B values for the DSP Profile 4*/
+    uint32_t DSP_Intr_values4[MAX_INSTR];    /*!< Instruction buffer for the DSP Profile 4*/
 
-    uint32_t DSP_BufferA_values6[MAX_COEFF];
-    uint32_t DSP_BufferB_values6[MAX_COEFF];
-    uint32_t DSP_Intr_values6[MAX_INSTR];
+    char DSP_Profile5[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 5*/
+    uint32_t DSP_BufferA_values5[MAX_COEFF]; /*!< Buffer A values for the DSP Profile 5*/
+    uint32_t DSP_BufferB_values5[MAX_COEFF]; /*!< Buffer B values for the DSP Profile 5*/
+    uint32_t DSP_Intr_values5[MAX_INSTR];    /*!< Instruction buffer for the DSP Profile 5*/
 };
 
-/**
- * @struct AMP
- * @brief Define amplifiers settings
- *
- * @param AMP::PowerLimit Define the power limit for this AMP. Used to reduce current needs.
- */
+/*! Define values that are stored on the EEPROM for the Amplifiers */
 struct AMP
 {
-    uint8_t PowerLimit;
+    uint8_t PowerLimit; /*!< Potentiometer value that configure the amplifier power limit*/
 };

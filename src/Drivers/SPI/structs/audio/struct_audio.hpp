@@ -18,34 +18,16 @@
 
 #include "struct_audio_elements.hpp"
 
-/**
- * @struct Audio
- * @brief Structure that contain all of the Audio settings.
- *
- * @param Audio::Trebbles Analog configuration for the trebbles
- * @param Audio::Medium Analog configuration for the mediums
- * @param Audio::Bass Analog cofnfiguration for the bass
- *
- * @param Audio::DAC Digital to analog conversion settings.
- *
- * @param Audio::Global Global volume en RL equalization settings
- *
- * @param Audio::BassAmp Settings for the bass amp
- * @param Audio::LeftAmp Settings for the left amp
- * @param Audio::RightAmp Settings for the right amp
- *
- */
+/*! Create the abstraction layer that handle all of the audio configuration */
 struct Audio
 {
-    struct Trebbles Trebbles;
-    struct Medium Mediums;
-    struct Bass Bass;
+    struct Trebbles Trebbles; /*!< Trebbles configuration*/
+    struct Medium Mediums;    /*!< Mediums configuration*/
+    struct Bass Bass;         /*!< Bass configuration*/
+    struct Global Global;     /*!< Global analog config (volume...)*/
+    struct DAC_Config DAC;    /*!< DAC Config*/
 
-    struct Global Global;
-
-    struct DAC_Config DAC;
-
-    struct AMP BassAmp;
-    struct AMP LeftAmp;
-    struct AMP RightAmp;
+    struct AMP BassAmp;  /*!< Bass amplifier settings*/
+    struct AMP LeftAmp;  /*!< Left amplifier settings*/
+    struct AMP RightAmp; /*!< Right amplifier settings*/
 };

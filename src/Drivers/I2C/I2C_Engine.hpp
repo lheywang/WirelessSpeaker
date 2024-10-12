@@ -16,28 +16,24 @@
 // ==============================================================================
 // MACROS
 // ==============================================================================
+/**
+ * @brief Swap the 8 first bits and the 8 next bits (on 16bit value). Required due to an inversion inside of the hardware.
+ *
+ * @param x The value to invert
+ * @return The inverted value.
+ */
 constexpr int SWAP_BYTES(int x) { return (((x & 0x00FF) << 8) | (x & 0xFF00) >> 8); }
 
 // ==============================================================================
 // DATA STRUCTURES
 // ==============================================================================
 
-/**
- * @brief
- *
- * @param I2C_Bus::I2C_file
- *      The file descriptor that is used to perform IO operations on the I2C Bus
- * @param I2C_Bus::I2C_filename
- *      The human name of the file used to perform IO operations on the I2C Bus
- * @param I2C_Bus::I2C_bus
- *      The number of the bus used for IO operations. Defiined in the header due to hardware limitations of the RPi Zero 2W.
- *
- */
+/*! Define the struct used internally by the I2C driver */
 struct I2C_Bus
 {
-    int I2C_file;
-    char I2C_filename[30];
-    long I2C_bus;
+    int I2C_file;          /*!< I2C file descriptor*/
+    char I2C_filename[30]; /*!< I2C file name*/
+    long I2C_bus;          /*!< I2C bus number*/
 };
 
 // ==============================================================================

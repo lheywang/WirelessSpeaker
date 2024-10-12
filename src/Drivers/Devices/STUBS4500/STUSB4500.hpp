@@ -50,68 +50,34 @@ enum class USB_PSU_MODE
 };
 
 // =====================
-// CUSTOM PDO OBJECTS
+// CUSTOM PDO AND RDO OBJECTS
 // =====================
-/**
- * @struct PDO
- * @brief Structure that store the elements that constitute a PDO object.
- *
- * @param PDO::Voltage The exact voltage requested.
- * @param PDO::Current The minimal current requestet.
- *
- * @param PDO::FixedSupply Select the working mode of the IC.
- * @param PDO::DualRole Can the IC source current ?
- * @param PDO::HighCapability Enable 5A profile.
- * @param PDO::UnconstrainedPower Remove any constraints for the POWER
- * @param PDO::USBCommCapable Enable USB Communication
- * @param PDO::DualRoleData Enable DFP or UFP Data mode.
- * @param PDO::FastSwap Enable fast swap on defined profile.
- *
- */
+/*! Define values that are member of a PDO object */
 struct PDO
 {
-    int FixedSupply = (int)USB_PSU_MODE::FIXED;
-    bool DualRole = false;
-    bool HighCapability = false;
-    bool UnconstrainedPower = false;
-    bool USBCommCapable = true;
-    bool DualRoleData = false;
-
-    int FastSwap = (int)USB_SWAP::FAST_SWAP_DISABLED;
-
-    float Voltage;
-    float Current;
+    int FixedSupply = (int)USB_PSU_MODE::FIXED;       /*!< Select the working mode of the IC.*/
+    bool DualRole = false;                            /*!< Can the IC source current ?*/
+    bool HighCapability = false;                      /*!< Enable 5A profile.*/
+    bool UnconstrainedPower = false;                  /*!< Remove any constraints for the POWER*/
+    bool USBCommCapable = true;                       /*!< Enable USB Communication*/
+    bool DualRoleData = false;                        /*!< Enable DFP or UFP Data mode.*/
+    int FastSwap = (int)USB_SWAP::FAST_SWAP_DISABLED; /*!< Enable fast swap on defined profile.*/
+    float Voltage;                                    /*!< Requested voltage, in float*/
+    float Current;                                    /*!< Requested current, in float*/
 };
 
-/**
- * @struct RDO
- * @brief Structure that store the elements that constitute a PDO object.
- *
- * @param PDO::MinimalCurrent The exact voltage requested.
- * @param PDO::NominalCurrent The minimal current requestet.
- *
- * @param PDO::RequestedPDOID Select the working mode of the IC.
- * @param PDO::RequestedPDO PDO Object that has been requested.
- *
- * @param PDO::GiveBackFlag Can the IC source current ?
- * @param PDO::CapabilityMismatch Enable 5A profile.
- * @param PDO::USBSuspend Enable fast swap on defined profile.
- * @param PDO::UnchunkedMessages Enable fast swap on defined profile.
- *
- */
+/*! Define values that are member of a RDO object */
 struct RDO
 {
-    int RequestedPDOID;
-    PDO RequestedPDO;
-
-    bool GiveBackFlag;
-    bool CapabilityMismatch;
-    bool USBCommCapable;
-    bool USBSuspend;
-    bool UnchunkedMessages;
-
-    float MinimalCurrent;
-    float NominalCurrent;
+    int RequestedPDOID;      /*!< The number of the currently requested PDO.*/
+    PDO RequestedPDO;        /*!< A struct of the currently requested PDO.*/
+    bool GiveBackFlag;       /*!< Set to 1 in case of a mismatch and fallback on the 5V profile*/
+    bool CapabilityMismatch; /*!< Set to 1 in case of a mismatch for this request*/
+    bool USBCommCapable;     /*!< Set to 1 if both devices are able to handle USB communication*/
+    bool USBSuspend;         /*!< Set to 1 is both devices are able to suspend USB comm*/
+    bool UnchunkedMessages;  /*!< Set to 1 if both devices support unchunked messages*/
+    float MinimalCurrent;    /*!< Contain the value of the minimal current that shall be used*/
+    float NominalCurrent;    /*!< Contain the value of the nominal current to be used.*/
 };
 
 // ==============================================================================

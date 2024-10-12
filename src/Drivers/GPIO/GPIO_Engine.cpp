@@ -30,13 +30,13 @@
 // ==============================================================================
 // FUNCTIONS
 // ==============================================================================
-GPIO GPIO_GetInfos(const PINS Pin, const GPMODES Mode)
+GPIO *GPIO_GetInfos(const PINS Pin, const GPMODES Mode)
 {
-    struct GPIO info;
+    GPIO *info = new GPIO;
     struct gpioline_info line;
 
     line.line_offset = (__u32)Pin;
-    info.Mode = (__u8)Mode;
+    info->Mode = Mode;
 
     int fd = open(DEV_NAME, O_RDONLY);
     if (fd < 0)
@@ -52,7 +52,7 @@ GPIO GPIO_GetInfos(const PINS Pin, const GPMODES Mode)
     if (ret < 0)
     {
         std::cerr << "[ GPIO ][ GetGPIOInfo ] : Failed to read infos for GPIO at offset "
-                  << info.PinNumber
+                  << info->PinNumber
                   << " : "
                   << strerror(errno)
                   << std::endl;
@@ -61,23 +61,37 @@ GPIO GPIO_GetInfos(const PINS Pin, const GPMODES Mode)
     }
 
     // Copying the data
-    memcpy(info.Name, line.name, GPIO_MAX_NAME_SIZE);
+    memcpy(info->Name, line.name, GPIO_MAX_NAME_SIZE);
 
-    info.InOut = (line.flags & GPIOLINE_FLAG_IS_OUT) ? true : false;
-    info.Polarity = (line.flags & GPIOLINE_FLAG_ACTIVE_LOW) ? true : false;
+    info->InOut = (line.flags & GPIOLINE_FLAG_IS_OUT) ? true : false;
+    info->Polarity = (line.flags & GPIOLINE_FLAG_ACTIVE_LOW) ? true : false;
 
-    info.Type = 0;
-    info.Type = (line.flags & GPIOLINE_FLAG_OPEN_DRAIN) ? 1 : ((line.flags & GPIOLINE_FLAG_OPEN_SOURCE) ? 2 : 0);
+    info->Type = 0;
+    info->Type = (line.flags & GPIOLINE_FLAG_OPEN_DRAIN) ? 1 : ((line.flags & GPIOLINE_FLAG_OPEN_SOURCE) ? 2 : 0);
 
-    info.Kernel = (line.flags & GPIOLINE_FLAG_KERNEL) ? 1 : 0;
+    info->Kernel = (line.flags & GPIOLINE_FLAG_KERNEL) ? 1 : 0;
 
     // Close and exit
     close(fd);
     return info;
 }
 
+int GPIO_Close(GPIO *info)
+{
+    delete info;
+    return 0;
+}
+
 int ReadGPIO(GPIO *info, int *const status)
 {
+    if (info->Mode == GPMODES::OUTPUT)
+    {
+        std::cerr << "[ GPIO ][ ReadGPIO ] : Cannot read a GPIO declared as Output : "
+                  << DEV_NAME
+                  << std::endl;
+        return -1;
+    }
+
     struct gpiohandle_request rq;
     struct gpiohandle_data data;
 
@@ -89,7 +103,7 @@ int ReadGPIO(GPIO *info, int *const status)
                   << " : "
                   << strerror(errno)
                   << std::endl;
-        return -1;
+        return -2;
     }
 
     rq.lineoffsets[0] = info->PinNumber;
@@ -104,7 +118,7 @@ int ReadGPIO(GPIO *info, int *const status)
                   << " : "
                   << strerror(errno)
                   << std::endl;
-        return -2;
+        return -3;
     }
 
     ret = ioctl(rq.fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
@@ -116,7 +130,7 @@ int ReadGPIO(GPIO *info, int *const status)
                   << " : "
                   << strerror(errno)
                   << std::endl;
-        return -3;
+        return -4;
     }
     *status = data.values[0];
     info->InOut = false;
@@ -125,6 +139,14 @@ int ReadGPIO(GPIO *info, int *const status)
 
 int WriteGPIO(GPIO *info, const int Status)
 {
+    if (info->Mode == GPMODES::INPUT)
+    {
+        std::cerr << "[ GPIO ][ WriteGPIO ] : Cannot write a GPIO declared as Input : "
+                  << DEV_NAME
+                  << std::endl;
+        return -1;
+    }
+
     struct gpiohandle_request rq;
     struct gpiohandle_data data;
 
@@ -136,7 +158,7 @@ int WriteGPIO(GPIO *info, const int Status)
                   << " : "
                   << strerror(errno)
                   << std::endl;
-        return -1;
+        return -2;
     }
 
     rq.lineoffsets[0] = info->PinNumber;
@@ -151,7 +173,7 @@ int WriteGPIO(GPIO *info, const int Status)
                   << " : "
                   << strerror(errno)
                   << std::endl;
-        return -2;
+        return -3;
     }
 
     data.values[0] = (uint8_t)Status;
@@ -165,7 +187,7 @@ int WriteGPIO(GPIO *info, const int Status)
                   << " : "
                   << strerror(errno)
                   << std::endl;
-        return -3;
+        return -4;
     }
     info->InOut = true;
     return 0;

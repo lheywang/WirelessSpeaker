@@ -20,21 +20,22 @@
 // ==============================================================================
 // PUBLIC ENUMS
 // ==============================================================================
-
+/*! Define values for the Temperature sensor resolution */
 enum class TEMP_RESOLUTION
 {
-    C0_5 = 0x00,
-    C0_25 = 0x01,
-    C0_125 = 0x02,
-    C0_0625 = 0x03,
+    C0_5 = 0x00,    /*!< 0.5°C    resolution*/
+    C0_25 = 0x01,   /*!< 0.25°C   resolution*/
+    C0_125 = 0x02,  /*!< 0.125°C  resolution*/
+    C0_0625 = 0x03, /*!< 0.0625°C resolution*/
 };
 
+/*! Define values for the Temperature sensor hysteresis (comparator mode) */
 enum class TEMP_HYSTERESIS
 {
-    HYST_0 = 0x00,
-    HYST_1 = 0x01,
-    HYST_3 = 0x02,
-    HYST_6 = 0x03,
+    HYST_0 = 0x00, /*!< No hysteresis*/
+    HYST_1 = 0x01, /*!< 1 degree hysteresis*/
+    HYST_3 = 0x02, /*!< 3 degrees hysteresis*/
+    HYST_6 = 0x03, /*!< 6 degrees hysteresis*/
 };
 
 // ==============================================================================

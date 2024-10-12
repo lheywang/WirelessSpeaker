@@ -16,52 +16,26 @@
 #include <iostream>
 #include <cstdint>
 
-/**
- * @struct LEDS
- * @brief Structure that contain all of the LEDS setings.
- *        Store the brightness values.
- *        Store the group configuration values.
- *
- * @param LEDS::Brightness The maximal brightness of the leds. Some inferior levels will be indexed from it.
- * @param LEDS::MaximalBrightness THe maximal brighness settings for the leds.
- *
- * @param LEDS::Address1 The I2C sub address 1
- * @param LEDS::Address2 The I2C sub address 2
- * @param LEDS::Address3 The I2C sub address 3
- * @param LEDS::Global The I2C global sub address
- *
- * @param LEDS::Address1Response The I2C sub address 1 enable boolean
- * @param LEDS::Address2Response The I2C sub address 2 enable boolean
- * @param LEDS::Address3Response The I2C sub address 3 enable boolean
- * @param LEDS::GlobalResponse The I2C global sub address enable boolean
- *
- */
+/*! Define values that are stored on the EEPROM for the leds drivers */
 struct LEDS
 {
-    uint8_t Brightness;
-    uint8_t MaximalBrightness;
+    uint8_t Brightness;        /*!< Define brightness value*/
+    uint8_t MaximalBrightness; /*!< Define the maximal brightness value*/
 
-    uint8_t Address1;
-    uint8_t Address2;
-    uint8_t Address3;
-    uint8_t Global;
+    uint8_t Address1; /*!< Configure it's subaddress 1*/
+    uint8_t Address2; /*!< Configure it's subaddress 2*/
+    uint8_t Address3; /*!< Configure it's subaddress 3*/
+    uint8_t Global;   /*!< Configure it's subaddress 4 (global)*/
 
-    bool Address1Response;
-    bool Address2Response;
-    bool Address3Response;
-    bool GlobalResponse;
+    bool Address1Response; /*!< Enable the sub-address 1 response*/
+    bool Address2Response; /*!< Enable the sub-address 2 response*/
+    bool Address3Response; /*!< Enable the sub-address 3 response*/
+    bool GlobalResponse;   /*!< Enable the sub-address 4 (global) response*/
 };
 
-/**
- * @struct Capacitive
- * @brief Structure that contain all of the Capacitive Sensor Settings such as the sensivity or the threshold values.
- *
- * @param Capacitive::Threshold Contain the value of the peak that need to be measured to be considered as a touch.
- * @param Capacitive::Sensivity Contain the value of the number of consecutive touch to be measured before considering the touch valid.
- *
- */
+/*! Define values that are stored on the EEPROM for the capacitive touch sensor*/
 struct Capacitive
 {
-    uint8_t Threshold;
-    uint8_t Sensivity;
+    uint8_t Threshold; /*!< Define the threshold value to trigger a touch*/
+    uint8_t Sensivity; /*!< Define the sensivity of the sensor*/
 };

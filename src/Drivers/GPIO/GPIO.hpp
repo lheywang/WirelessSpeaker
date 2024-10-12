@@ -1,5 +1,5 @@
 /**
- * @file GPIO_Engine.hpp
+ * @file GPIO.hpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Header for custom GPIO functions, that rely on the linux kernel functions.
  * @version 1.0
@@ -23,81 +23,39 @@
 // ==============================================================================
 static constexpr const char *DEV_NAME = "/dev/gpiochip0";
 
-/**
- * @brief Define GPIO values that are used on the PCB design, thus preventing usage of unwanted GPIOS.
- *
- * @enumvalue PINS::AMP1_FAULT Amplifier 1 fault signal
- * @enumvalue PINS::AMP2_FAULT Amplifier 2 fault signal
- * @enumvalue PINS::AMP3_FAULT Amplifier 3 fault signal
- *
- * @enumvalue PINS::POWER_INT Active low interrupt signal from the power subsystem.
- *
- * @enumvalue PINS::aRGB_TOP ARGB Output for WS2812 leds on top
- * @enumvalue PINS::aRGB_FRONT ARGB Output for SW2812 leds on front
- *
- * @enumvalue PINS::EXT_INT Active low interrupt signal from the ext ??
- *
- * @enumvalue PINS::TOUCH_INT Active low interrupt signal from the touch sensor.
- *
- */
+/*! Define user accessibles pins on the speaker. */
 enum class PINS
 {
-    AMP1_FAULT = 17,
-    AMP2_FAULT = 27,
-    AMP3_FAULT = 22,
-
-    POWER_INT = 16,
-
-    aRGB_TOP = 6,
-    aRGB_FRONT = 13,
-
-    EXT_INT = 5,
-
-    TOUCH_INT = 26,
+    AMP1_FAULT = 17, /*!< Amplifier 1 active low fault signal*/
+    AMP2_FAULT = 27, /*!< Amplifier 2 active low fault signal*/
+    AMP3_FAULT = 22, /*!< Amplifier 3 active low fault signal*/
+    POWER_INT = 16,  /*!< Power subsystem fault active low signal */
+    aRGB_TOP = 6,    /*!< Addressable RGB for WS2812 leds (top)*/
+    aRGB_FRONT = 13, /*!< Addressable RGB for WS2812 leds (front)*/
+    EXT_INT = 5,     /*!< Active low interrupt signal from the exterior ??*/
+    TOUCH_INT = 26,  /*!< Active low interrupt signal from the capacitive touch sensor*/
 };
 
-/**
- * @brief Define operating modes of the GPIO
- *
- * @enumvalue GPMODES::INPUT Input mode
- * @enumvalue GPMODES::Output Output mode
- */
+/*! Define values for the operating modes of the GPIO */
 enum class GPMODES
 {
-    INPUT = 0x00,
-    OUTPUT = 0x01,
+    INPUT = 0x00,  /*!< Input*/
+    OUTPUT = 0x01, /*!< Output*/
 };
 
-/**
- * @struct GPIO
- * @brief GPIO struct, used as base handle for GPIO manipulations.
- *        This is custom struct for our needs.
- *
- * @param GPIO::PinNumber The number of the GPIO that is used. WARNING : This is BCM Convention and not RPi one.
- *
- * @param GPIO::Mode A mode indicator, used to block incorrects requests.
- * @param GPIO::FuncName A custom string to describe to which function this GPIO is used.
- * @param GPIO::InOut Boolean that store the direction of this GPIO. Take True if set as Output.
- * @param GPIO::Polarity Boolean to store the polarity of the GPIO. Take True if active low.
- * @param GPIO::Type Integer that take different values depending on the type of the electrical type. (1 if Open-Drain, 2 if Open-Source, 0 if neither)
- * @param GPIO::Kernel Integer set to 1 if the Linux kernel is using it.
- * @param GPIO::Used A boolean to identify which GPIO are used by another code. Is filled by any definition functions.
- * @param GPIO::FuncName A string that store the function identifier that is currently linked to.
- */
+/*! Define GPIO structure used within our project */
 struct GPIO
 {
-    unsigned int PinNumber;
+    unsigned int PinNumber; /*!< The number of the GPIO that is used. WARNING : This is BCM Convention and not RPi one.*/
 
-    int Mode;
-    bool InOut;
-    bool Polarity;
-    int Type;
-    int Kernel;
+    GPMODES Mode;  /*!< A mode indicator, used to block incorrects requests.*/
+    bool InOut;    /*!< Boolean that store the direction of this GPIO. Take True if set as Output. Given by the kernel / hardware*/
+    bool Polarity; /*!< Boolean to store the polarity of the GPIO. Take True if active low.*/
+    int Type;      /*!< Integer that take different values depending on the type of the electrical type. (1 if Open-Drain, 2 if Open-Source, 0 if neither)*/
+    int Kernel;    /*!< Integer set to 1 if the Linux kernel is using it.*/
 
-    char Name[GPIO_MAX_NAME_SIZE];
-    char FuncName[GPIO_MAX_NAME_SIZE];
-
-    bool Used;
+    char Name[GPIO_MAX_NAME_SIZE];     /*!< A custom string to describe to which function this GPIO is used.*/
+    char FuncName[GPIO_MAX_NAME_SIZE]; /*!< A string that store the function identifier that is currently linked to.*/
 };
 
 // ==============================================================================
@@ -107,12 +65,21 @@ struct GPIO
 /**
  * @brief Return the informations of a specific GPIO Pin.
  *
- * @param[in] info A GPIOs enum member to designate a pin
+ * @param[in] Pin A PINS enum member to designate a pin
  * @param[in] Mode A GPMODES enum member to designate the mode
  *
  * @return GPIO struct for further operations.
  */
-GPIO GPIO_GetInfos(const PINS Pin, const GPMODES Mode);
+GPIO *GPIO_GetInfos(const PINS Pin, const GPMODES Mode);
+
+/**
+ * @brief Close a GPIO Handle.
+ *
+ * @param[in] info A GPIO struct to be closed.
+ *
+ * @return  0 : OK
+ */
+int GPIO_Close(GPIO *info);
 
 /**
  * @brief Read the status of a GPIO.
@@ -123,6 +90,7 @@ GPIO GPIO_GetInfos(const PINS Pin, const GPMODES Mode);
  * @param[out] status Pointer to an int that store the GPIO read value.
  *
  * @return  0 : OK
+ * @return -1 : Incorrect pin mode.
  * @return -1 : Failed to open the dev file
  * @return -2 : Failed to read the dev file
  * @return -3 : Failed to read the state of the GPIO
@@ -138,8 +106,9 @@ int ReadGPIO(GPIO *info, int *const status);
  * @param[in] Status An integer to set the value. 0 = OFF_STATE, anything other will be ON_STATE.
  *
  * @return  0 : OK
- * @return -1 : Failed to open the dev file
- * @return -2 : Failed to read the dev file
- * @return -3 : Failed to write the state of the GPIO
+ * @return -1 : Incorrect pin mode.
+ * @return -2 : Failed to open the dev file
+ * @return -3 : Failed to read the dev file
+ * @return -4 : Failed to write the state of the GPIO
  */
 int WriteGPIO(GPIO *info, const int Status);

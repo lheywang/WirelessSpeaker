@@ -36,9 +36,14 @@ all:
 
 # If Doxygen is installed, it will generate the doc and build the PDF from the TeX source for the whole project.
 doc:
+	@echo "--------------------------------------------------------------------"
+	@echo "Creating documentation... "
+	@echo "It may take a while !"
 	@doxygen Doxyfile
 	@cd ./doc/latex && make pdf > log-file 2>&1
 	@echo "--------------------------------------------------------------------"
 	@echo "Generated PDF doc on $(shell pwd)/doc/latex/refman.pdf"
 	@echo "Generated PDF doc on file://///wsl.localhost/Debian$(shell pwd)/doc/latex/refman.pdf"
+	@echo "Generated HTML doc on $(shell pwd)/doc/html/index.html"
+	@echo "Generated HTML doc on file://///wsl.localhost/Debian$(shell pwd)/doc/html/index.html"
 	@echo "--------------------------------------------------------------------"

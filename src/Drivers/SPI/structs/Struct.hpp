@@ -20,62 +20,32 @@
 #include "interfaces/struct_internal.hpp"
 #include "interfaces/struct_automated_interfaces.hpp"
 
-/**
- * @struct Config
- * @brief Store all of the configuration settings into a user accessible struct, stored on a local EEPROM.
- *
- * @param Config::Speaker_Name Store the speaker friendly name
- *
- * @param Config::LedsBack Store the leds at the back configuration.
- * @param Config::LedsTop1 Store the leds at the top configuration for first bank.
- * @param Config::LedsTop2 Store the leds at the top configuration for second bank.
- * @param Config::LedsTop3 Store the leds at the top configuration for third bank.
- *
- * @param Config::Capacitive Store the touch sensor parameters
- *
- * @param Config::TemperatureAmpBass Store the settings for the bass amplifier temperature sensor.
- * @param Config::TemperatureAmpRight Store the settings for the right amplifier temperature sensor.
- * @param Config::TemperatureAmpLeft Store the settings for the left amplifier temperature sensor.
- * @param Config::TemperatureDac Store the settings for the DAC temperature sensor.
- * @param Config::TemperatureAnalog Store the settings for the Analog filters temperature sensor.
- * @param Config::TemperaturePowerInput Store the settings for the power input area temperature sensor.
- * @param Config::TemperatureMainBuck Store the settings for the main supply temperature sensor.
- * @param Config::TemperatureAuxBuck Store the settings for the auxialliary supply temperature sensor.
- *
- * @param Config::MainMonitor Store the settings for the main supply voltage monitor
- * @param Config::AnalogSupplyMonitor Store the settings for the aux. supply voltage monitor
- *
- * @param Config::PDProfile1 Store the settings for the first power delivery profile
- * @param Config::PDProfile2 Store the settings for the second power delivery profile
- * @param Config::PDProfile3 Store the settings for the third power delivery profile
- *
- */
+/*! Define values that are stored on the EEPROM for the overall speaker configuration */
 struct Config
 {
-    std::string Speaker_Name;
+    std::string Speaker_Name; /*!< Configure the speaker friendly name*/
 
-    struct Audio Audio;
+    struct Audio Audio; /*!< Configure all of the audio related settings*/
 
-    struct LEDS LedsBack;
-    struct LEDS LedsTop1;
-    struct LEDS LedsTop2;
-    struct LEDS LedsTop3;
+    struct LEDS LedsBack; /*!< Configure the leds placed at the back of the speaker*/
+    struct LEDS LedsTop1; /*!< Configure the leds placed at the top 1*/
+    struct LEDS LedsTop2; /*!< Configure the leds placed at the top 2*/
+    struct LEDS LedsTop3; /*!< Configure the leds placed at the top 3*/
 
-    struct Capacitive Capacitive;
+    struct Capacitive Capacitive; /*!< Configure the capacitive touch sensor*/
 
-    struct Temperature TemperatureAmpBass;
-    struct Temperature TemperatureAmpRight;
-    struct Temperature TemperatureAmpLeft;
-    struct Temperature TemperatureDac;
-    struct Temperature TemperatureAnalog;
-    struct Temperature TemperaturePowerInput;
-    struct Temperature TemperatureMainBuck;
-    struct Temperature TemperatureAuxBuck;
+    struct Temperature TemperatureAmpBass;    /*!< Configure the response for the bass amplifier temperature sensor*/
+    struct Temperature TemperatureAmpRight;   /*!< Configure the response for the right amplifier temperature sensor*/
+    struct Temperature TemperatureAmpLeft;    /*!< Configure the response for the left amplifier temperature sensor*/
+    struct Temperature TemperatureDac;        /*!< Configure the response for the DAC temperature sensor*/
+    struct Temperature TemperatureAnalog;     /*!< Configure the response for the Analog filters amplifier temperature sensor*/
+    struct Temperature TemperaturePowerInput; /*!< Configure the response for the Power input stage amplifier temperature sensor*/
+    struct Temperature TemperatureMainBuck;   /*!< Configure the response for the Main SMPS amplifier temperature sensor*/
+    struct Temperature TemperatureAuxBuck;    /*!< Configure the response for the Secondary SMPS amplifier temperature sensor*/
 
-    struct VoltageMonitor MainMonitor;
-    struct VoltageMonitor AnalogSupplyMonitor;
+    struct VoltageMonitor MainMonitor;         /*!< Configure the main ADC to monitor voltages*/
+    struct VoltageMonitor AnalogSupplyMonitor; /*!< Configure the second ADC to monitor analog voltages*/
 
-    struct BasicPDO PDProfile1;
-    struct BasicPDO PDProfile2;
-    struct BasicPDO PDProfile3;
+    struct BasicPDO PDProfile1; /*!< Store the usb-c user defined profile 1*/
+    struct BasicPDO PDProfile2; /*!< Store the usb-c user defined profile 2*/
 };

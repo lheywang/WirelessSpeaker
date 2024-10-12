@@ -9,18 +9,10 @@
  *
  */
 
-/**
- * @struct BasicPDO
- * @brief Define the basic elements of a PDO
- *
- * @param BasicPDO::EnablePPS Do we need to support PPS ?
- * @param BasicPDO::Voltage Defined output voltage. Must be correct for all of the subcircuits.
- * @param BasicPDO::Current Defined current output. Less current means less power.
- */
+/*! Define values that are stored on the EEPROM for the USB-C PD3 Interface*/
 struct BasicPDO
 {
-    bool EnablePPS;
-
-    float Voltage;
-    float Current;
+    bool EnablePPS; /*!< Enable PPS (Programmable Power Supply)*/
+    float Voltage;  /*!< Voltage requested for this PDO*/
+    float Current;  /*!< Current requested for this PDO*/
 };

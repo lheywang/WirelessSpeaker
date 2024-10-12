@@ -19,54 +19,32 @@
 // PUBLIC ENUMS
 // ==============================================================================
 
-/**
- * @brief Define modes for the PCA 9633
- *
- * @enumvalue LED_MODES::OFF Leds are ON (inverted logic !)
- * @enumvalue LED_MODES::ON Leds are OFF (Inverted logic !)
- * @enumvalue LED_MODES::IN Leds are High Z
- * @enumvalue LED_MODES::PWM Leds are managed by their PWM
- * @enumvalue LED_MODES::PWM_GLOB Leds are managed by their PWM AND the global dimming.
- */
+/*! Define LED operating modes */
 enum class LED_MODES
 {
-    OFF = 0x00,
-    ON = 0x01,
-    IN = 0x02,
-    PWM = 0x02,
-    PWM_GLOB = 0x03,
+    OFF = 0x00,      /*!< Drivers at low state (thus LED ON !) */
+    ON = 0x01,       /*!< Drivers at high state (thus LED OFF !) */
+    IN = 0x02,       /*!< Drivers at high-Z */
+    PWM = 0x02,      /*!< Driver managed by PWM */
+    PWM_GLOB = 0x03, /*!< Driver managed by PWM + global Dimming */
 };
 
-/**
- * @brief Define channels values
- *
- * @enumvalue LED_CHANNELS::CHANNEL0 First led
- * @enumvalue LED_CHANNELS::CHANNEL1 Second led
- * @enumvalue LED_CHANNELS::CHANNEL2 Third led
- * @enumvalue LED_CHANNELS::CHANNEL3 Fourth led
- */
+/*! Define LED Channels values */
 enum class LED_CHANNELS
 {
-    CHANNEL0 = 0x00,
-    CHANNEL1 = 0x01,
-    CHANNEL2 = 0x02,
-    CHANNEL3 = 0x03,
+    CHANNEL0 = 0x00, /*!< First led */
+    CHANNEL1 = 0x01, /*!< Second led */
+    CHANNEL2 = 0x02, /*!< Third led */
+    CHANNEL3 = 0x03, /*!< Fourth led */
 };
 
-/**
- * @brief Define subaddress values
- *
- * @enumvalue LEDS_ADDRESS::ADDRESS1 First subaddress
- * @enumvalue LEDS_ADDRESS::ADDRESS2 Second subadress
- * @enumvalue LEDS_ADDRESS::ADDRESS3 Third subaddress
- * @enumvalue LEDS_ADDRESS::ALL_ADDRESS Global address
- */
+/*! Define PCA9633 I2C Subaddresses*/
 enum class LED_ADDRESS
 {
-    ADDRESS1 = 0x09,
-    ADDRESS2 = 0x0A,
-    ADDRESS3 = 0x0B,
-    ALL_ADDRESS = 0x0C,
+    ADDRESS1 = 0x09,    /*!< First Address */
+    ADDRESS2 = 0x0A,    /*!< Second Address */
+    ADDRESS3 = 0x0B,    /*!< Third Address */
+    ALL_ADDRESS = 0x0C, /*!< Adress for all response*/
 };
 
 // ==============================================================================

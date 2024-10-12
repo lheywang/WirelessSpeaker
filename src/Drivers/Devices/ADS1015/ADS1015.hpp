@@ -20,33 +20,36 @@
 // IC VARIOUS DEFINE
 // ==============================================================================
 
+/*! Define values for the ADC channels */
 enum class ADC_CHANNELS
 {
-    CHANNEL_0 = 0x04,
-    CHANNEL_1 = 0x05,
-    CHANNEL_2 = 0x06,
-    CHANNEL_3 = 0x07,
+    CHANNEL_0 = 0x04, /*!< First single ended channel*/
+    CHANNEL_1 = 0x05, /*!< Second single ended channel */
+    CHANNEL_2 = 0x06, /*!< Third single ended channel */
+    CHANNEL_3 = 0x07, /*!< Fourth single ended channel */
 };
 
+/*! Define values for the ADC Ranges */
 enum class ADC_RANGE
 {
-    FS6V00 = 0x00,
-    FS4V00 = 0x01,
-    FS2V00 = 0x02,
-    FS1V00 = 0x03,
-    FS0V50 = 0x04,
-    FS0V25 = 0x07,
+    FS6V00 = 0x00, /*!< +-6.144 V range*/
+    FS4V00 = 0x01, /*!< +-4.096 V range*/
+    FS2V00 = 0x02, /*!< +-2.048 V range*/
+    FS1V00 = 0x03, /*!< +-1.024 V range*/
+    FS0V50 = 0x04, /*!< +-0.512 V range*/
+    FS0V25 = 0x07, /*!< +-0.256 V range*/
 };
 
+/*! Define values for the ADC sampling frequency*/
 enum class ADC_SAMPLES
 {
-    SPS_128 = 0x00,
-    SPS_250 = 0x01,
-    SPS_490 = 0x02,
-    SPS_920 = 0x03,
-    SPS_1600 = 0x04,
-    SPS_2400 = 0x05,
-    SPS_3300 = 0x06,
+    SPS_128 = 0x00,  /*!< 128  samples per second*/
+    SPS_250 = 0x01,  /*!< 250  samples per second*/
+    SPS_490 = 0x02,  /*!< 490  samples per second*/
+    SPS_920 = 0x03,  /*!< 920  samples per second*/
+    SPS_1600 = 0x04, /*!< 1600 samples per second*/
+    SPS_2400 = 0x05, /*!< 2400 samples per second*/
+    SPS_3300 = 0x06, /*!< 3300 samples per second*/
 };
 
 // ==============================================================================

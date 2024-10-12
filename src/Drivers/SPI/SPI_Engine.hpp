@@ -14,35 +14,20 @@
 // ==============================================================================
 // DATA STRUCTURES
 // ==============================================================================
-/**
- * @struct SPI_Bus
- * @brief Store SPI Bus configuration.
- *
- * @param SPI_Bus::SPI_file Store the file descriptor.
- * @param SPI_Bus::SPI_Filename The name of the openned file
- * @param SPI_Bus::SPI_Bus The number of the SPI Bus
- * @param SPI_Bus::CS_Number The number of CS availables.
- *
- * @param SPI_Bus::speed The speed of the bus. Defined automatically.
- * @param SPI_Bus::delau The delay between CS and first clock
- * @param SPI_Bus::bits The number of bits per transfer
- * @param SPI_Bus::change The delay between the last clock and CS
- * @param SPI_Bus::tx_nbits The number of bits per transfer on the TX line
- * @param SPI_Bus::rx_nbits The number of bits per transfer on the RX line
- */
+/*! Define a struct that is used internally for the SPI driver */
 struct SPI_Bus
 {
-    int SPI_file;
-    char SPI_Filename[30];
-    int SPI_Bus;
-    int CS_number;
+    int SPI_file;          /*!< SPI file descriptor*/
+    char SPI_Filename[30]; /*!< SPI file name*/
+    int SPI_Bus;           /*!< SPI bus number (always 0)*/
+    int CS_number;         /*!< SPI CS number (always 0)*/
 
-    unsigned int speed;
-    unsigned char delay;
-    unsigned char bits;
-    unsigned char change;
-    unsigned char tx_nbits;
-    unsigned char rx_nbits;
+    unsigned int speed;     /*!< Defined automatically. Store the SPI Bus speed.*/
+    unsigned char delay;    /*!< Defined automatically. Store the SPI Bus delay between CS and first cycle.*/
+    unsigned char bits;     /*!< Defined automatically. Store the SPI Bus number of bits per cycle.*/
+    unsigned char change;   /*!< Defined automatically. Store the SPI Bus change speed after last cycle.*/
+    unsigned char tx_nbits; /*!< Defined automatically. Store the SPI Bus tx bits per cycles.*/
+    unsigned char rx_nbits; /*!< Defined automatically. Store the SPI Bus rx bits per cycle.*/
 };
 
 // ==============================================================================
@@ -89,7 +74,7 @@ int SPI_Configure(SPI_Bus *SPI, int Mode, int WordSize, int Speed);
  * @param[inout] SPI A SPI_Bus struct that serve as base
  * @param[in] InputBuffer The payload to be written.
  * @param[out] OutputBufer The payload to be read.
- * @param[in] WriteLen The lengh of data to be written.
+ * @param[in] Len The lengh of data to be written.
  *
  * @return  0 : OK
  * @return -1 : Error while allocating Input buffer

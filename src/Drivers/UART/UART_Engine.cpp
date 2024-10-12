@@ -63,7 +63,7 @@ int UART_Configure(UART_Bus *UART,
                    const int ParityBit,
                    const int StopBit,
                    const int BitNumber,
-                   const int FLowControl,
+                   const UART_CTRL FLowControl,
                    const int BaudRate)
 {
     // =======================
@@ -106,7 +106,7 @@ int UART_Configure(UART_Bus *UART,
     UART->TTY.c_cflag &= ~CSIZE; // Clear old value
     UART->TTY.c_cflag |= CSFlag;
 
-    if ((FLowControl & HW_FLOW) > 0)
+    if (((int)FLowControl & (int)UART_CTRL::HW_FLOW) > 0)
         UART->TTY.c_cflag |= CRTSCTS; // Enable hardware flow control
     else
         UART->TTY.c_cflag &= ~CRTSCTS; // Disable hardware flow control
@@ -125,7 +125,7 @@ int UART_Configure(UART_Bus *UART,
     // =======================
     // I FLAG
     // =======================
-    if ((FLowControl & SW_FLOW) > 0)
+    if (((int)FLowControl & (int)UART_CTRL::SW_FLOW) > 0)
         UART->TTY.c_iflag |= (IXON | IXOFF | IXANY); // Enable software flow control
     else
         UART->TTY.c_iflag &= ~(IXON | IXOFF | IXANY); // Disable software flow control
