@@ -22,6 +22,22 @@
 // entry point
 int main()
 {
+
+    /*
+
+    Ideas :
+    --> Initialization with async task since IO bounds.
+        - One first task to start all software only initializations.
+        - in // a task that run to configure statically defined components
+        - In // an EEPROM read task and parse
+        - Then we write to the IC the user defined values
+        - Wait for write
+        - Wait for software initialize
+        - Lanch the threads that execute :
+            - Device management
+            - Audio playback
+            - ...
+     */
     std::cout << "Hello World !" << std::endl;
 
     // I2C_Bus *I2C = I2C_GetInfos();
