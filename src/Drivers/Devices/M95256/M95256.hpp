@@ -16,12 +16,14 @@
 // ==============================================================================
 // PUBLIC DEFINES
 // ==============================================================================
-#define MAX_ADDRESS 0x7FFF
 
-#define SOFT_WP_DISABLED ((0 << 1) | 0)
-#define SOFT_WP_UPPER_QUARTER ((0 << 1) | 1)
-#define SOFT_WP_UPPER_HALF ((1 << 1) | 0)
-#define SOFT_WP_FULL ((1 << 1) | 1)
+enum class EEPROM_WP
+{
+    SOFT_WP_DISABLED = 0x00,
+    SOFT_WP_UPPER_QUARTER = 0x01,
+    SOFT_WP_UPPER_HALF = 0x02,
+    SOFT_WP_FULL = 0x03,
+};
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -74,7 +76,7 @@ public:
      * @return -1 : IOCT error.
      */
     int ReadStatus(int *const WriteProtectStatus,
-                   int *const ProtectedBlock,
+                   EEPROM_WP *const ProtectedBlock,
                    int *const WriteEnable,
                    int *const WriteInProgress);
 
@@ -85,11 +87,10 @@ public:
      * @param ProtectedBlock Write the protected block values
      *
      * @return 0 : OK
-     * @return -1 : Invalid Protected block value
-     * @return -2 : IOCTL error.
+     * @return -1 : IOCTL error.
      */
     int WriteStatus(const int WriteProtectStatus,
-                    const int ProtectedBlock);
+                    const EEPROM_WP ProtectedBlock);
 
     /**
      * @brief Read data of the EEPROM

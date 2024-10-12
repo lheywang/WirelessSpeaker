@@ -22,10 +22,34 @@
 // IC REGISTER ADDRESSES
 // ==============================================================================
 
-#define CONVERSION_REGISTER 0x00
-#define CONFIG_REGISTER 0x01
-#define LOW_TRESHOLD_REGISTER 0x02
-#define HIGH_THRESHOLD_REGISTER 0x03
+constexpr int CONVERSION_REGISTER = 0x00;
+constexpr int CONFIG_REGISTER = 0x01;
+constexpr int LOW_TRESHOLD_REGISTER = 0x02;
+constexpr int HIGH_THRESHOLD_REGISTER = 0x03;
+
+// =====================
+// PRIVATES FUNCTIONS
+// =====================
+
+static constexpr float GetMutliplier(ADC_RANGE Input)
+{
+    switch (Input)
+    {
+    case ADC_RANGE::FS0V25:
+        return 0.256000;
+    case ADC_RANGE::FS0V50:
+        return 0.512000;
+    case ADC_RANGE::FS1V00:
+        return 1.024000;
+    case ADC_RANGE::FS2V00:
+        return 2.048000;
+    case ADC_RANGE::FS4V00:
+        return 4.096000;
+    case ADC_RANGE::FS6V00:
+        return 6.144000;
+    }
+    return 0.0;
+}
 
 // =====================
 // CONSTRUCTORS
@@ -37,10 +61,10 @@ ADS1015::ADS1015(const I2C_Bus *I2C, const int address)
     this->I2C = *I2C;
 
     this->LowThreshold = 0.0;
-    this->ActualGain = 0x02;
+    this->ActualGain = ADC_RANGE::FS2V00;
     this->ActualMode = 0x01;
-    this->ActualChannel = 0x04;
-    this->ActualSampling = 0x04;
+    this->ActualChannel = ADC_CHANNELS::CHANNEL_0;
+    this->ActualSampling = ADC_SAMPLES::SPS_1600;
     this->ActualComparator_mode = 0x00;
     this->ActualComparator_queue = 0x03;
     this->ActualComparator_polarity = 0x00;
@@ -61,11 +85,8 @@ ADS1015::~ADS1015()
 // FUNCTIONS
 // =====================
 
-int ADS1015::Read_Voltage(const int channel, float *const value)
+int ADS1015::Read_Voltage(const ADC_CHANNELS channel, float *const value)
 {
-    if ((channel > ADC_CHANNEL_3) | (channel < ADC_CHANNEL_0))
-        return -1;
-
     int buf = 0;
     int res = 0;
 
@@ -85,14 +106,14 @@ int ADS1015::Read_Voltage(const int channel, float *const value)
     This block of code compute the delay to wait until the the delta-sigma has finished it's job.
     I'm using an empiric method to compute them since the original version didn't want (why ? We'll never know...)
 
-    The idea is to divide with a defined factor at each iteration to compute the right value.
+    The idea is to divide with aconstexpr intd factor at each iteration to compute the right value.
     This factor is 1.7. It may be smaller, this does'nt affect the behavior. If greater, the faster settings won't match the data availability.
 
     The validity of this settings has been done on Microsoft Excel.
     The base setting assume of at least 2* margin from the minimal time reported to the waited time.
     */
     int microseconds = 15625;
-    for (int i = 0; i < this->ActualSampling; i++)
+    for (int i = 0; i < (int)this->ActualSampling; i++)
     {
         microseconds = round(microseconds / 1.7);
     }
@@ -102,33 +123,9 @@ int ADS1015::Read_Voltage(const int channel, float *const value)
     buf = SWAP_BYTES(buf);
 
     if (res != 0)
-        return -2;
+        return -1;
 
-    float multiplier = 0;
-    switch (this->ActualGain)
-    {
-    case ADC_GAIN_0V25:
-        multiplier = 0.256000;
-        break;
-    case ADC_GAIN_0V50:
-        multiplier = 0.512000;
-        break;
-    case ADC_GAIN_1V00:
-        multiplier = 1.024000;
-        break;
-    case ADC_GAIN_2V00:
-        multiplier = 2.048000;
-        break;
-    case ADC_GAIN_4V00:
-        multiplier = 4.096000;
-        break;
-    case ADC_GAIN_6V00:
-        multiplier = 6.144000;
-        break;
-    default:
-        multiplier = 0.0;
-        break;
-    }
+    float multiplier = GetMutliplier(this->ActualGain);
 
     // 2047 is the code for full range !
     *value = (float)(buf >> 4) / 2047.0 * multiplier;
@@ -137,23 +134,17 @@ int ADS1015::Read_Voltage(const int channel, float *const value)
 }
 
 int ADS1015::Configure_ADC(const int OS,
-                           const int channel,
-                           const int gain,
+                           const ADC_CHANNELS channel,
+                           const ADC_RANGE gain,
                            const int mode,
-                           const int sampling_frequency,
+                           const ADC_SAMPLES sampling_frequency,
                            const int comparator_mode,
                            const int comparator_polarity,
                            const int comparator_latching,
                            const int comparator_queue)
 {
-    if ((channel > ADC_CHANNEL_3) | (channel < ADC_CHANNEL_0))
-        return -1;
-    if ((gain > ADC_GAIN_0V25) | (gain < ADC_GAIN_6V00))
-        return -2;
-    if ((sampling_frequency > ADC_SPS_3300) | (sampling_frequency < ADC_SPS_128))
-        return -3;
     if ((comparator_queue < 0x00) | (comparator_queue > 0x03))
-        return -4;
+        return -1;
 
     // Copying the value for futures internals calls.
     this->ActualGain = gain;
@@ -170,12 +161,12 @@ int ADS1015::Configure_ADC(const int OS,
 
     // MSB
     buf = (bool)OS;
-    buf = (buf << 3) | channel;
-    buf = (buf << 3) | gain;
+    buf = (buf << 3) | (int)channel;
+    buf = (buf << 3) | (int)gain;
     buf = (buf << 1) | (bool)mode;
 
     // LSB
-    buf = (buf << 3) | sampling_frequency;
+    buf = (buf << 3) | (int)sampling_frequency;
     buf = (buf << 1) | (bool)comparator_mode;
     buf = (buf << 1) | (bool)comparator_polarity;
     buf = (buf << 1) | (bool)comparator_latching;
@@ -185,7 +176,7 @@ int ADS1015::Configure_ADC(const int OS,
     res = I2C_Write(&this->I2C, this->address, CONFIG_REGISTER, &buf, 1, 2);
 
     if (res != 0)
-        return -5;
+        return -2;
     return 0;
 }
 
@@ -201,31 +192,7 @@ int ADS1015::ConfigureLowThreshold(const float Value)
     int buf = 0;
     int res = 0;
 
-    float multiplier = 0;
-    switch (this->ActualGain)
-    {
-    case ADC_GAIN_0V25:
-        multiplier = 0.256000;
-        break;
-    case ADC_GAIN_0V50:
-        multiplier = 0.512000;
-        break;
-    case ADC_GAIN_1V00:
-        multiplier = 1.024000;
-        break;
-    case ADC_GAIN_2V00:
-        multiplier = 2.048000;
-        break;
-    case ADC_GAIN_4V00:
-        multiplier = 4.096000;
-        break;
-    case ADC_GAIN_6V00:
-        multiplier = 6.144000;
-        break;
-    default:
-        multiplier = 0.0;
-        break;
-    }
+    float multiplier = GetMutliplier(this->ActualGain);
 
     int temp = ((int)round((Value / multiplier) * 2047)) >> 4;
     buf = temp & 0xFFFF;
@@ -249,31 +216,7 @@ int ADS1015::ConfigureHighThreshold(const float Value)
     int buf = 0;
     int res = 0;
 
-    float multiplier = 0;
-    switch (this->ActualGain)
-    {
-    case ADC_GAIN_0V25:
-        multiplier = 0.256000;
-        break;
-    case ADC_GAIN_0V50:
-        multiplier = 0.512000;
-        break;
-    case ADC_GAIN_1V00:
-        multiplier = 1.024000;
-        break;
-    case ADC_GAIN_2V00:
-        multiplier = 2.048000;
-        break;
-    case ADC_GAIN_4V00:
-        multiplier = 4.096000;
-        break;
-    case ADC_GAIN_6V00:
-        multiplier = 6.144000;
-        break;
-    default:
-        multiplier = 0.0;
-        break;
-    }
+    float multiplier = GetMutliplier(this->ActualGain);
 
     int temp = ((int)round((Value / multiplier) * 2047)) >> 4;
     buf = temp & 0xFFFF;

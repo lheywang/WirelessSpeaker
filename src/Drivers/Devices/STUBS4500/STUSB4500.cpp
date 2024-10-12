@@ -21,91 +21,91 @@
 // ==============================================================================
 // IC REGISTER ADDRESSES
 // ==============================================================================
-#define BASE_ADDRESS 0x00
+constexpr int BASE_ADDRESS = 0x00;
 
 // All addresses are expressed an an offset from the base !
-#define TYPEC_REV_LSB BASE_ADDRESS + 0x06
-#define TYPEC_REV_MSB BASE_ADDRESS + 0x07
-#define PD_REV_LSB BASE_ADDRESS + 0x08
-#define PD_REV_MSB BASE_ADDRESS + 0x09
+constexpr int TYPEC_REV_LSB = BASE_ADDRESS + 0x06;
+constexpr int TYPEC_REV_MSB = BASE_ADDRESS + 0x07;
+constexpr int PD_REV_LSB = BASE_ADDRESS + 0x08;
+constexpr int PD_REV_MSB = BASE_ADDRESS + 0x09;
 
-#define ALERT_STATUS_1 BASE_ADDRESS + 0x0B
-#define ALERT_STATUS_1_MASK BASE_ADDRESS + 0x0C
-#define PORT_STATUS_0 BASE_ADDRESS + 0x0D
-#define PORT_STATUS_1 BASE_ADDRESS + 0x0E
-#define TYPEC_STATUS_0 BASE_ADDRESS + 0x0F
-#define TYPEC_STATUS_1 BASE_ADDRESS + 0x10
-#define CCSTATUS BASE_ADDRESS + 0x011
-#define HW_FAULT_0 BASE_ADDRESS + 0x12
-#define HW_FAULT_1 BASE_ADDRESS + 0x13
-#define PD_STATUS BASE_ADDRESS + 0x14
-#define USB_STATUS BASE_ADDRESS + 0x15
-#define PRT_STATUS BASE_ADDRESS + 0x16
+constexpr int ALERT_STATUS_1 = BASE_ADDRESS + 0x0B;
+constexpr int ALERT_STATUS_1_MASK = BASE_ADDRESS + 0x0C;
+constexpr int PORT_STATUS_0 = BASE_ADDRESS + 0x0D;
+constexpr int PORT_STATUS_1 = BASE_ADDRESS + 0x0E;
+constexpr int TYPEC_STATUS_0 = BASE_ADDRESS + 0x0F;
+constexpr int TYPEC_STATUS_1 = BASE_ADDRESS + 0x10;
+constexpr int CCSTATUS = BASE_ADDRESS + 0x011;
+constexpr int HW_FAULT_0 = BASE_ADDRESS + 0x12;
+constexpr int HW_FAULT_1 = BASE_ADDRESS + 0x13;
+constexpr int PD_STATUS = BASE_ADDRESS + 0x14;
+constexpr int USB_STATUS = BASE_ADDRESS + 0x15;
+constexpr int PRT_STATUS = BASE_ADDRESS + 0x16;
 
-#define MONITORING_CTRL_0 BASE_ADDRESS + 0x20
+constexpr int MONITORING_CTRL_0 = BASE_ADDRESS + 0x20;
 
-#define MONITORING_CTRL_2 BASE_ADDRESS + 0x22
-#define MONITORING_RESET BASE_ADDRESS + 0x23
+constexpr int MONITORING_CTRL_2 = BASE_ADDRESS + 0x22;
+constexpr int MONITORING_RESET = BASE_ADDRESS + 0x23;
 
-#define VBUS_DISCHARGE_TIME BASE_ADDRESS + 0x25
-#define VBUS_DISCHARGE_CTRL BASE_ADDRESS + 0x26
-#define VBUS_CTRL BASE_ADDRESS + 0x27
+constexpr int VBUS_DISCHARGE_TIME = BASE_ADDRESS + 0x25;
+constexpr int VBUS_DISCHARGE_CTRL = BASE_ADDRESS + 0x26;
+constexpr int VBUS_CTRL = BASE_ADDRESS + 0x27;
 
-#define GPIO3_SW BASE_ADDRESS + 0x2D
+constexpr int GPIO3_SW = BASE_ADDRESS + 0x2D;
 
-#define RX_HEADER_LSB BASE_ADDRESS + 0x31
-#define RX_HEADER_MSB BASE_ADDRESS + 0x32
-#define RX_DATA_OBJ1_0 BASE_ADDRESS + 0x33 // OBJ1
-#define RX_DATA_OBJ1_1 BASE_ADDRESS + 0x34
-#define RX_DATA_OBJ1_2 BASE_ADDRESS + 0x35
-#define RX_DATA_OBJ1_3 BASE_ADDRESS + 0x36
-#define RX_DATA_OBJ2_0 BASE_ADDRESS + 0x37 // OBJ2
-#define RX_DATA_OBJ2_1 BASE_ADDRESS + 0x38
-#define RX_DATA_OBJ2_2 BASE_ADDRESS + 0x39
-#define RX_DATA_OBJ2_3 BASE_ADDRESS + 0x3A
-#define RX_DATA_OBJ3_0 BASE_ADDRESS + 0x3B // OBJ3
-#define RX_DATA_OBJ3_1 BASE_ADDRESS + 0x3C
-#define RX_DATA_OBJ3_2 BASE_ADDRESS + 0x3D
-#define RX_DATA_OBJ3_3 BASE_ADDRESS + 0x3E
-#define RX_DATA_OBJ4_0 BASE_ADDRESS + 0x3F // OBJ4
-#define RX_DATA_OBJ4_1 BASE_ADDRESS + 0x40
-#define RX_DATA_OBJ4_2 BASE_ADDRESS + 0x41
-#define RX_DATA_OBJ4_3 BASE_ADDRESS + 0x42
-#define RX_DATA_OBJ5_0 BASE_ADDRESS + 0x43 // OBJ5
-#define RX_DATA_OBJ5_1 BASE_ADDRESS + 0x44
-#define RX_DATA_OBJ5_2 BASE_ADDRESS + 0x45
-#define RX_DATA_OBJ5_3 BASE_ADDRESS + 0x46
-#define RX_DATA_OBJ6_0 BASE_ADDRESS + 0x47 // OBJ6
-#define RX_DATA_OBJ6_1 BASE_ADDRESS + 0x48
-#define RX_DATA_OBJ6_2 BASE_ADDRESS + 0x49
-#define RX_DATA_OBJ6_3 BASE_ADDRESS + 0x4A
-#define RX_DATA_OBJ7_0 BASE_ADDRESS + 0x4B // OBJ7
-#define RX_DATA_OBJ7_1 BASE_ADDRESS + 0x4C
-#define RX_DATA_OBJ7_2 BASE_ADDRESS + 0x4D
-#define RX_DATA_OBJ7_3 BASE_ADDRESS + 0x4E
+constexpr int RX_HEADER_LSB = BASE_ADDRESS + 0x31;
+constexpr int RX_HEADER_MSB = BASE_ADDRESS + 0x32;
+constexpr int RX_DATA_OBJ1_0 = BASE_ADDRESS + 0x33; // OBJ1
+constexpr int RX_DATA_OBJ1_1 = BASE_ADDRESS + 0x34;
+constexpr int RX_DATA_OBJ1_2 = BASE_ADDRESS + 0x35;
+constexpr int RX_DATA_OBJ1_3 = BASE_ADDRESS + 0x36;
+constexpr int RX_DATA_OBJ2_0 = BASE_ADDRESS + 0x37; // OBJ2
+constexpr int RX_DATA_OBJ2_1 = BASE_ADDRESS + 0x38;
+constexpr int RX_DATA_OBJ2_2 = BASE_ADDRESS + 0x39;
+constexpr int RX_DATA_OBJ2_3 = BASE_ADDRESS + 0x3A;
+constexpr int RX_DATA_OBJ3_0 = BASE_ADDRESS + 0x3B; // OBJ3
+constexpr int RX_DATA_OBJ3_1 = BASE_ADDRESS + 0x3C;
+constexpr int RX_DATA_OBJ3_2 = BASE_ADDRESS + 0x3D;
+constexpr int RX_DATA_OBJ3_3 = BASE_ADDRESS + 0x3E;
+constexpr int RX_DATA_OBJ4_0 = BASE_ADDRESS + 0x3F; // OBJ4
+constexpr int RX_DATA_OBJ4_1 = BASE_ADDRESS + 0x40;
+constexpr int RX_DATA_OBJ4_2 = BASE_ADDRESS + 0x41;
+constexpr int RX_DATA_OBJ4_3 = BASE_ADDRESS + 0x42;
+constexpr int RX_DATA_OBJ5_0 = BASE_ADDRESS + 0x43; // OBJ5
+constexpr int RX_DATA_OBJ5_1 = BASE_ADDRESS + 0x44;
+constexpr int RX_DATA_OBJ5_2 = BASE_ADDRESS + 0x45;
+constexpr int RX_DATA_OBJ5_3 = BASE_ADDRESS + 0x46;
+constexpr int RX_DATA_OBJ6_0 = BASE_ADDRESS + 0x47; // OBJ6
+constexpr int RX_DATA_OBJ6_1 = BASE_ADDRESS + 0x48;
+constexpr int RX_DATA_OBJ6_2 = BASE_ADDRESS + 0x49;
+constexpr int RX_DATA_OBJ6_3 = BASE_ADDRESS + 0x4A;
+constexpr int RX_DATA_OBJ7_0 = BASE_ADDRESS + 0x4B; // OBJ7
+constexpr int RX_DATA_OBJ7_1 = BASE_ADDRESS + 0x4C;
+constexpr int RX_DATA_OBJ7_2 = BASE_ADDRESS + 0x4D;
+constexpr int RX_DATA_OBJ7_3 = BASE_ADDRESS + 0x4E;
 
-#define DPM_PDO_NUMB BASE_ADDRESS + 0x70
+constexpr int DPM_PDO_NUMB = BASE_ADDRESS + 0x70;
 
-#define DPM_SNK_PDO1_0 BASE_ADDRESS + 0x85 // PD01
-#define DPM_SNK_PDO1_1 BASE_ADDRESS + 0x86
-#define DPM_SNK_PDO1_2 BASE_ADDRESS + 0x87
-#define DPM_SNK_PDO1_3 BASE_ADDRESS + 0x88
-#define DPM_SNK_PDO2_0 BASE_ADDRESS + 0x89 // PDO2
-#define DPM_SNK_PDO2_1 BASE_ADDRESS + 0x8A
-#define DPM_SNK_PDO2_2 BASE_ADDRESS + 0x8B
-#define DPM_SNK_PDO2_3 BASE_ADDRESS + 0x8C
-#define DPM_SNK_PDO3_0 BASE_ADDRESS + 0x8D // PDO3
-#define DPM_SNK_PDO3_1 BASE_ADDRESS + 0x8E
-#define DPM_SNK_PDO3_2 BASE_ADDRESS + 0x8F
-#define DPM_SNK_PDO3_3 BASE_ADDRESS + 0x90
+constexpr int DPM_SNK_PDO1_0 = BASE_ADDRESS + 0x85; // PD01
+constexpr int DPM_SNK_PDO1_1 = BASE_ADDRESS + 0x86;
+constexpr int DPM_SNK_PDO1_2 = BASE_ADDRESS + 0x87;
+constexpr int DPM_SNK_PDO1_3 = BASE_ADDRESS + 0x88;
+constexpr int DPM_SNK_PDO2_0 = BASE_ADDRESS + 0x89; // PDO2
+constexpr int DPM_SNK_PDO2_1 = BASE_ADDRESS + 0x8A;
+constexpr int DPM_SNK_PDO2_2 = BASE_ADDRESS + 0x8B;
+constexpr int DPM_SNK_PDO2_3 = BASE_ADDRESS + 0x8C;
+constexpr int DPM_SNK_PDO3_0 = BASE_ADDRESS + 0x8D; // PDO3
+constexpr int DPM_SNK_PDO3_1 = BASE_ADDRESS + 0x8E;
+constexpr int DPM_SNK_PDO3_2 = BASE_ADDRESS + 0x8F;
+constexpr int DPM_SNK_PDO3_3 = BASE_ADDRESS + 0x90;
 
-#define DPM_SNK_RDO3_0 BASE_ADDRESS + 0x91 // RDO3
-#define DPM_SNK_RDO3_1 BASE_ADDRESS + 0x92
-#define DPM_SNK_RDO3_2 BASE_ADDRESS + 0x93
-#define DPM_SNK_RDO3_3 BASE_ADDRESS + 0x94
+constexpr int DPM_SNK_RDO3_0 = BASE_ADDRESS + 0x91; // RDO3
+constexpr int DPM_SNK_RDO3_1 = BASE_ADDRESS + 0x92;
+constexpr int DPM_SNK_RDO3_2 = BASE_ADDRESS + 0x93;
+constexpr int DPM_SNK_RDO3_3 = BASE_ADDRESS + 0x94;
 
-#define VOLTAGE_MINIMAL_STEP 0.050
-#define CURRENT_MINIMAL_STEP 0.010
+constexpr float VOLTAGE_MINIMAL_STEP = 0.050;
+constexpr float CURRENT_MINIMAL_STEP = 0.010;
 
 // =====================
 // CONSTRUCTORS
@@ -370,9 +370,9 @@ int STUSB4500::GetPDO(const int PDONumber, PDO *const PDO)
 
 int STUSB4500::SetPDO(const int PDONumber, const PDO PDO)
 {
-    if ((USB_FIXED_PD2 > PDO.FixedSupply) | (PDO.FixedSupply > USB_ENABLE_PPS))
+    if (((int)USB_PSU_MODE::FIXED > PDO.FixedSupply) | (PDO.FixedSupply > (int)USB_PSU_MODE::PPS))
         return -1;
-    if ((USB_FAST_SWAP_DISABLED > PDO.FastSwap) | (PDO.FastSwap > USB_V5_A3))
+    if (((int)USB_SWAP::FAST_SWAP_DISABLED > PDO.FastSwap) | (PDO.FastSwap > (int)USB_SWAP::V5_A3))
         return -2;
     if (!PDO.HighCapability) // Check if we go higher than 3A without enabling High Capability bool
     {

@@ -20,7 +20,7 @@
 // ==============================================================================
 // IC REGISTER ADDRESSES
 // ==============================================================================
-#define CONFIG 0x80
+constexpr int CONFIG = 0x80;
 
 // =====================
 // CONSTRUCTORS
@@ -46,18 +46,15 @@ DS1882::~DS1882()
 // =====================
 // FUNCTIONS
 // =====================
-int DS1882::WriteWiper(const int wiper, const int value)
+int DS1882::WriteWiper(const LOG_WIPER wiper, const int value)
 {
-    if ((wiper != LOG_WIPER_0) && (wiper != LOG_WIPER_1))
-        return -1;
-
     if (value > (this->b_PotiConfig ? 0x3F : 0x1F))
         return -2;
 
     // Cast and AND the last to bits to write the wiper settings.
     uint8_t Register = (uint8_t)value;
     Register &= 0x3F;
-    Register |= wiper;
+    Register |= (int)wiper;
 
     int buf = 0;
     int res = I2C_Write(&this->I2C, this->address, Register, &buf, 0);
@@ -68,18 +65,17 @@ int DS1882::WriteWiper(const int wiper, const int value)
     return 0;
 }
 
-int DS1882::ReadWipers(int *const wiper0, int *const wiper1)
+int DS1882::ReadWipers(LOG_WIPER *const wiper0, LOG_WIPER *const wiper1)
 {
     // init a memory buffer
     int buf[3] = {0};
 
     // perform the read operation.
-    // This need to be tested, since a command byte (0x00) is sent, I don't know of the DS1882 will accept it !
     int res = I2C_Read(&this->I2C, this->address, 0x00, buf, 0x03);
 
     // copy the data and output it correctly.
-    *wiper0 = buf[0];
-    *wiper1 = buf[1];
+    *wiper0 = LOG_WIPER{buf[0]};
+    *wiper1 = LOG_WIPER{buf[1]};
 
     if (res < 0)
         return -1;

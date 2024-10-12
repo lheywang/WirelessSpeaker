@@ -20,17 +20,17 @@
 // ==============================================================================
 
 // Registers
-#define TCON0 0x04
-#define WIPER_0 0x00
+constexpr int TCON0 = 0x04;
+constexpr int WIPER_0 = 0x00;
 
 // ==============================================================================
 // MACROS
 // ==============================================================================
-// Define the way of passing commands to this IC
-#define REGISTER_WRITE(x) (((x & 0xF0) << 4) | 0x00)
-#define REGISTER_INCREMENT(x) (((x & 0xF0) << 4) | 0x40)
-#define REGISTER_DECREMENT(x) (((x & 0xF0) << 4) | 0x80)
-#define REGISTER_READ(x) (((x & 0xF0) << 4) | 0xC0)
+// constexpr int the way of passing commands to this IC
+constexpr int REGISTER_WRITE(int x) { return (((x & 0xF0) << 4) | 0x00); }
+constexpr int REGISTER_INCREMENT(int x) { return (((x & 0xF0) << 4) | 0x40); }
+constexpr int REGISTER_DECREMENT(int x) { return (((x & 0xF0) << 4) | 0x80); }
+constexpr int REGISTER_READ(int x) { return (((x & 0xF0) << 4) | 0xC0); }
 
 // =====================
 // CONSTRUCTORS

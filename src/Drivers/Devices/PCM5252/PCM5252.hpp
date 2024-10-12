@@ -16,10 +16,21 @@
 #include "../../I2C/I2C.hpp"
 
 // =====================
-// PUBLIC DEFINES
+// PUBLIC ENUMS
 // =====================
-#define DAC_BUFFER_A 0x2C /**DSP Buffer A Name */
-#define DAC_BUFFER_B 0x3E /**DSP Buffer B Name */
+/**
+ * @enum DAC_BUFFER
+ * @brief Define DSP Buffer values
+ *
+ * @param DAC_BUFFER::A First buffer
+ * @param DAC_BUFFER::B Second buffer
+ *
+ */
+enum class DAC_BUFFER
+{
+    A = 0x2C,
+    B = 0x3E,
+};
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -565,7 +576,7 @@ public:
      *
      * @test Function to test !
      */
-    int ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values, const size_t CoeffNumber);
+    int ConfigureDSPCoefficientBuffer(const DAC_BUFFER Buffer, int *const Values, const size_t CoeffNumber);
 
     /**
      * @brief Write to a CRAM buffer a list of instructions for the DSP.

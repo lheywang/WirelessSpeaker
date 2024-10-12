@@ -23,8 +23,8 @@
 // IC REGISTER ADDRESSES
 // ==============================================================================
 
-// Theses are global defines
-#define PAGE_SELECT 0x00
+// Theses are globalconstexpr ints
+constexpr int PAGE_SELECT = 0x00;
 
 // WARNING :
 // This device use multiple pages registers.
@@ -34,128 +34,128 @@
 // =====================
 // PAGE 0
 // =====================
-#define PAGE_0 0x00
+constexpr int PAGE_0 = 0x00;
 // PLL Config
-#define PLL_P_FACTOR 0x14
-#define PLL_J_FACTOR 0x15
-#define PLL_D_FACTOR_MSB 0x16
-#define PLL_D_FACTOR_LSB 0x17
-#define PLL_R_FACTOR 0x18
-#define PLL_CONTROL 0x04
-#define PLL_INPUT_SOURCE 0x0D
-#define PLL_INPUT_GPIO 0x12
+constexpr int PLL_P_FACTOR = 0x14;
+constexpr int PLL_J_FACTOR = 0x15;
+constexpr int PLL_D_FACTOR_MSB = 0x16;
+constexpr int PLL_D_FACTOR_LSB = 0x17;
+constexpr int PLL_R_FACTOR = 0x18;
+constexpr int PLL_CONTROL = 0x04;
+constexpr int PLL_INPUT_SOURCE = 0x0D;
+constexpr int PLL_INPUT_GPIO = 0x12;
 
 // GPIO Config
-#define GPIO1_OUTPUT_FUNCTION 0x50
-#define GPIO2_OUTPUT_FUNCTION 0x51
-#define GPIO3_OUTPUT_FUNCTION 0x52
-#define GPIO4_OUTPUT_FUNCTION 0x53
-#define GPIO5_OUTPUT_FUNCTION 0x54
-#define GPIO6_OUTPUT_FUNCTION 0x55
-#define GPIO_OUTPUT_STATUS 0x56
-#define GPIO_POLARITY 0x57
-#define EXTERNAL_DIGITAL_FILTER 0x7A
-#define GPIO12_EXTERNAL_FILTER 0x7B
-#define GPIO34_EXTERNAL_FILTER 0x7C
-#define GPIO56_EXTERNAL_FILTER 0x7D
-#define GPIO_INPUT_VALUES 0x77
-#define GPIO_CONTROL 0x08
+constexpr int GPIO1_OUTPUT_FUNCTION = 0x50;
+constexpr int GPIO2_OUTPUT_FUNCTION = 0x51;
+constexpr int GPIO3_OUTPUT_FUNCTION = 0x52;
+constexpr int GPIO4_OUTPUT_FUNCTION = 0x53;
+constexpr int GPIO5_OUTPUT_FUNCTION = 0x54;
+constexpr int GPIO6_OUTPUT_FUNCTION = 0x55;
+constexpr int GPIO_OUTPUT_STATUS = 0x56;
+constexpr int GPIO_POLARITY = 0x57;
+constexpr int EXTERNAL_DIGITAL_FILTER = 0x7A;
+constexpr int GPIO12_EXTERNAL_FILTER = 0x7B;
+constexpr int GPIO34_EXTERNAL_FILTER = 0x7C;
+constexpr int GPIO56_EXTERNAL_FILTER = 0x7D;
+constexpr int GPIO_INPUT_VALUES = 0x77;
+constexpr int GPIO_CONTROL = 0x08;
 
 // SPI Config
-#define SPI_MISO_MODE 0x06
+constexpr int SPI_MISO_MODE = 0x06;
 
 // DSP Config
-#define DSP_CLOCK_DIVIDER 0x1B
-#define DSP_INPUT 0x0A
-#define DSP_OVERFLOW 0x5A
-#define DSP_PROGRAM_SELECT 0x2B
-#define AUDIO_DATA_PATH 0x2A
-#define SDOUT_EMPHASIS 0x07
-#define IDAC_MSB 0x23
-#define IDAC_LSB 0x24
+constexpr int DSP_CLOCK_DIVIDER = 0x1B;
+constexpr int DSP_INPUT = 0x0A;
+constexpr int DSP_OVERFLOW = 0x5A;
+constexpr int DSP_PROGRAM_SELECT = 0x2B;
+constexpr int AUDIO_DATA_PATH = 0x2A;
+constexpr int SDOUT_EMPHASIS = 0x07;
+constexpr int IDAC_MSB = 0x23;
+constexpr int IDAC_LSB = 0x24;
 
 // I2S Config
-#define I2S_CLOCK_CONFIG 0x09
-#define I2S_CONFIG 0x28
-#define I2S_OFFSET 0x29
-#define FS_SPEED 0x22
-#define MASTER_MODE_CONTROL 0x0C
+constexpr int I2S_CLOCK_CONFIG = 0x09;
+constexpr int I2S_CONFIG = 0x28;
+constexpr int I2S_OFFSET = 0x29;
+constexpr int FS_SPEED = 0x22;
+constexpr int MASTER_MODE_CONTROL = 0x0C;
 
 // Clocks
-#define DAC_CLOCK_DIVIDER 0x1C
-#define IGNORE_DETECTION 0x25
-#define CLOCK_MISSING_DETECT 0x2C
-#define CLOCK_SYSTEM_STATUS 0x5E
-#define CLOCK_SYSTEM_ERRORS 0x5F
-#define DAC_CLOCK_SOURCE 0x0E
-#define DAC_RESYNC 0x13
-#define NCP_CLOCK_DIVIDER 0x1D
-#define OSR_CLOCK_DIVIDER 0x1E
-#define MASTER_BCK_DIVIDER 0x20
-#define LRCK_DIVIDER 0x21
-#define DETECTED_AUDIO_SPECS 0x5B
-#define DETECTED_BCK_RATIO_MSB 0x5C
-#define DETECTED_BCK_RATIO_LSB 0x5D
+constexpr int DAC_CLOCK_DIVIDER = 0x1C;
+constexpr int IGNORE_DETECTION = 0x25;
+constexpr int CLOCK_MISSING_DETECT = 0x2C;
+constexpr int CLOCK_SYSTEM_STATUS = 0x5E;
+constexpr int CLOCK_SYSTEM_ERRORS = 0x5F;
+constexpr int DAC_CLOCK_SOURCE = 0x0E;
+constexpr int DAC_RESYNC = 0x13;
+constexpr int NCP_CLOCK_DIVIDER = 0x1D;
+constexpr int OSR_CLOCK_DIVIDER = 0x1E;
+constexpr int MASTER_BCK_DIVIDER = 0x20;
+constexpr int LRCK_DIVIDER = 0x21;
+constexpr int DETECTED_AUDIO_SPECS = 0x5B;
+constexpr int DETECTED_BCK_RATIO_MSB = 0x5C;
+constexpr int DETECTED_BCK_RATIO_LSB = 0x5D;
 
 // Misc. DAC Controls
-#define DAC_RESET 0x01
-#define POWER_CONTROL 0x02
-#define MUTE_CONTROL 0x03
-#define DAC_ARCHITECTURE 0x79
+constexpr int DAC_RESET = 0x01;
+constexpr int POWER_CONTROL = 0x02;
+constexpr int MUTE_CONTROL = 0x03;
+constexpr int DAC_ARCHITECTURE = 0x79;
 
 // DAC Status (for most read-only)
-#define MUTE_STATUS 0x6C
-#define OUTPUT_SHORT_STATUS 0x6D
-#define XSMUTE_STATUS 0x72
-#define FS_SPEED_MONITOR 0x73
-#define DSP_STATUS 0x76
-#define AUTO_MUTE_STATUS 0x78
+constexpr int MUTE_STATUS = 0x6C;
+constexpr int OUTPUT_SHORT_STATUS = 0x6D;
+constexpr int XSMUTE_STATUS = 0x72;
+constexpr int FS_SPEED_MONITOR = 0x73;
+constexpr int DSP_STATUS = 0x76;
+constexpr int AUTO_MUTE_STATUS = 0x78;
 
 // Analog Output Config
-#define AUTOMUTE_DELAY 0x3B
-#define GLOBAL_DIGITAL_VOLUME 0x3C
-#define LEFT_DIGITAl_VOLUME 0x3D
-#define RIGHT_DIGITAl_VOLUME 0x3E
-#define NORMAL_VOLUME_RAMPS 0x3F
-#define ERROR_VOLUME_RAMPS 0x40
-#define AUTO_MUTE 0x41
+constexpr int AUTOMUTE_DELAY = 0x3B;
+constexpr int GLOBAL_DIGITAL_VOLUME = 0x3C;
+constexpr int LEFT_DIGITAl_VOLUME = 0x3D;
+constexpr int RIGHT_DIGITAl_VOLUME = 0x3E;
+constexpr int NORMAL_VOLUME_RAMPS = 0x3F;
+constexpr int ERROR_VOLUME_RAMPS = 0x40;
+constexpr int AUTO_MUTE = 0x41;
 
 // =====================
 // PAGE 1
 // =====================
-#define PAGE_1 0x01
+constexpr int PAGE_1 = 0x01;
 // Analog Config
-#define OUTPUT_AMPLITUDE_REF 0x01
-#define ANALOG_GAIN 0x02
-#define EXTERNAL_UVP 0x05
-#define ANALOG_MUTE 0x06
-#define ANALOG_GAIN_BOOST 0x07
-#define VCOM_RAMP 0x08
-#define VCOM_POWER 0x09
+constexpr int OUTPUT_AMPLITUDE_REF = 0x01;
+constexpr int ANALOG_GAIN = 0x02;
+constexpr int EXTERNAL_UVP = 0x05;
+constexpr int ANALOG_MUTE = 0x06;
+constexpr int ANALOG_GAIN_BOOST = 0x07;
+constexpr int VCOM_RAMP = 0x08;
+constexpr int VCOM_POWER = 0x09;
 
 // =====================
 // PAGE 44
 // =====================
-#define PAGE_44 0x2C
-#define DSP_ADAPTATIVE 0x01
+constexpr int PAGE_44 = 0x2C;
+constexpr int DSP_ADAPTATIVE = 0x01;
 
 // =====================
 // PAGE 253
 // =====================
-#define PAGE_253 0xFD
-#define CLOCK_FLEX_1 0x3F
-#define CLOCK_FLEX_2 0x40
+constexpr int PAGE_253 = 0xFD;
+constexpr int CLOCK_FLEX_1 = 0x3F;
+constexpr int CLOCK_FLEX_2 = 0x40;
 
 // =====================
 // DSP
 // =====================
-#define INSTR 0x98
+constexpr int INSTR = 0x98;
 
 // =====================
 // MACROS
 // =====================
-#define REGISTER_AUTOINCREMENT(x) ((x & 0x7F) | 0x80)
-#define REGISTER_NONINCREMENT(x) ((x & 0x7F) | 0x00)
+constexpr int REGISTER_AUTOINCREMENT(int x) { return ((x & 0x7F) | 0x80); }
+constexpr int REGISTER_NONINCREMENT(int x) { return ((x & 0x7F) | 0x00); }
 
 // =====================
 // PRIVATE FUNCTIONS
@@ -817,10 +817,8 @@ int PCM5252::ConfigureClockDividers(const int OSR,
     return 0;
 }
 
-int PCM5252::ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values, const size_t CoeffNumber)
+int PCM5252::ConfigureDSPCoefficientBuffer(const DAC_BUFFER Buffer, int *const Values, const size_t CoeffNumber)
 {
-    if ((Buffer != DAC_BUFFER_A) & (Buffer != DAC_BUFFER_B))
-        return -1;
     if (CoeffNumber > 255)
         return -2;
 
@@ -830,7 +828,7 @@ int PCM5252::ConfigureDSPCoefficientBuffer(const int Buffer, int *const Values, 
     int coeff = 1;
 
     // First, we iterate over the pages.
-    for (int page = Buffer; page < Buffer + 9; page++)
+    for (int page = (int)Buffer; page < (int)Buffer + 9; page++)
     {
         res += this->SelectPage(page);
         // Then, we iterate over each coefficients.

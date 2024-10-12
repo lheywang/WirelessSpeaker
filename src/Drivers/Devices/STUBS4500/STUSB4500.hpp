@@ -17,15 +17,21 @@
 #include "../../I2C/I2C.hpp"
 
 // =====================
-// PUBLIC DEFINES
+// PUBLIC
 // =====================
-#define USB_FAST_SWAP_DISABLED 0x00
-#define USB_DEFAULT_USB_POWER 0x01
-#define USB_V5_A1_5 0x02
-#define USB_V5_A3 0x03
+enum class USB_SWAP
+{
+    FAST_SWAP_DISABLED = 0x00,
+    DEFAULT_USB_POWER = 0x01,
+    V5_A1_5 = 0x02,
+    V5_A3 = 0x03,
+};
 
-#define USB_ENABLE_PPS 0x01
-#define USB_FIXED_PD2 0x00
+enum class USB_PSU_MODE
+{
+    PPS = 0x01,
+    FIXED = 0x00,
+};
 
 // =====================
 // CUSTOM PDO OBJECTS
@@ -48,14 +54,14 @@
  */
 struct PDO
 {
-    int FixedSupply = USB_FIXED_PD2;
+    int FixedSupply = (int)USB_PSU_MODE::FIXED;
     bool DualRole = false;
     bool HighCapability = false;
     bool UnconstrainedPower = false;
     bool USBCommCapable = true;
     bool DualRoleData = false;
 
-    int FastSwap = USB_FAST_SWAP_DISABLED;
+    int FastSwap = (int)USB_SWAP::FAST_SWAP_DISABLED;
 
     float Voltage;
     float Current;

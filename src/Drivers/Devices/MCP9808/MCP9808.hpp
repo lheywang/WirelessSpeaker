@@ -18,20 +18,24 @@
 #include "../../I2C/I2C.hpp"
 
 // ==============================================================================
-// PUBLIC DEFINES
+// PUBLIC ENUMS
 // ==============================================================================
 
-// Resolution
-#define TEMP_C0_5 0x00
-#define TEMP_C0_25 0x01
-#define TEMP_C0_125 0x02
-#define TEMP_C0_0625 0x03
+enum class TEMP_RESOLUTION
+{
+    C0_5 = 0x00,
+    C0_25 = 0x01,
+    C0_125 = 0x02,
+    C0_0625 = 0x03,
+};
 
-// Hysteresis Settings
-#define TEMP_HYST_0 0x00
-#define TEMP_HYST_1 0x01
-#define TEMP_HYST_3 0x02
-#define TEMP_HYST_6 0x03
+enum class TEMP_HYSTERESIS
+{
+    HYST_0 = 0x00,
+    HYST_1 = 0x01,
+    HYST_3 = 0x02,
+    HYST_6 = 0x03,
+};
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -68,11 +72,10 @@ public:
      * @param[in] Resolution
      *
      * @return  0 : OK
-     * @return -1 : Wrong resolution value
-     * @return -2 : IOCTL error
+     * @return -1 : IOCTL error
      *
      */
-    int ConfigureResolution(const int Resolution);
+    int ConfigureResolution(const TEMP_RESOLUTION Resolution);
 
     /**
      * @brief Configure the temperature sensor with various parameters.
@@ -88,11 +91,10 @@ public:
      * @param[in] AlertMode Select the Alter Mode (0 = Comparator Output, 1 = Interrupt Output).
      *
      * @return  0 : OK
-     * @return -1 : Wrong Hysteresis value.
      * @return -2 : IOCTL error.
      *
      */
-    int Configure(const int Hysteresis,
+    int Configure(const TEMP_HYSTERESIS Hysteresis,
                   const int Mode,
                   const int Lock,
                   const int ClearInterrupt,

@@ -20,8 +20,11 @@
 // IC REGISTER ADDRESSES
 // ==============================================================================
 
-#define LOG_WIPER_0 0x00
-#define LOG_WIPER_1 0x40
+enum class LOG_WIPER
+{
+    WIPER_0 = 0x00,
+    WIPER_1 = 0x40,
+};
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -61,13 +64,12 @@ public:
      * @param[in] value int : Wiper value.
      *
      * @return  0 : OK
-     * @return -1 : Incorrect wiper
-     * @return -2 : Incorrect wiper value
-     * @return -3 : IOCTL error.
+     * @return -1 : Incorrect wiper value
+     * @return -2 : IOCTL error.
      *
      * @test This function need to be tested !
      */
-    int WriteWiper(const int wiper, const int value);
+    int WriteWiper(const LOG_WIPER wiper, const int value);
 
     /**
      * @brief
@@ -78,10 +80,10 @@ public:
      * @return  0 : OK
      * @return -1 : IOCTL error.
      *
-     * @test This function need to be tested !
+     * @test This function need to be tested ! since a command byte (0x00) is sent, I don't know of the DS1882 will accept it !
      *
      */
-    int ReadWipers(int *const wiper0, int *const wiper1);
+    int ReadWipers(LOG_WIPER *const wiper0, LOG_WIPER *const wiper1);
 
     /**
      * @brief Configure the potentiometer.

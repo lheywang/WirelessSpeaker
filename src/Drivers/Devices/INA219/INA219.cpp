@@ -21,12 +21,12 @@
 // =====================
 // REGISTERS
 // =====================
-#define CONFIG 0x00
-#define SHUNTVOLTAGE 0x01
-#define BUSVOLTAGE 0x02
-#define POWER 0x03
-#define BUSCURRENT 0x04
-#define CALIBRATION 0x05
+constexpr int CONFIG = 0x00;
+constexpr int SHUNTVOLTAGE = 0x01;
+constexpr int BUSVOLTAGE = 0x02;
+constexpr int POWER = 0x03;
+constexpr int BUSCURRENT = 0x04;
+constexpr int CALIBRATION = 0x05;
 
 // =====================
 // CONSTRUCTORS
@@ -79,7 +79,7 @@ float INA219::ConvertIntToFloat(const int Value)
     }
 
     if (Sign == 1)
-        ToFloat = !ToFloat + 1; // Auto cast isn't properly defined here, thus we apply it by hand.
+        ToFloat = !ToFloat + 1; // Auto cast isn't properlyconstexpr intd here, thus we apply it by hand.
 
     return Value / 100;
 }

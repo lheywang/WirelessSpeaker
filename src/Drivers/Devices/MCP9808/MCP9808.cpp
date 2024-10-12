@@ -24,20 +24,20 @@
 // ==============================================================================
 
 // Register
-#define MCP9808_CONFIG 0x01
-#define UPPER_TEMP 0x02
-#define LOWER_TEMP 0x03
-#define CRIT_TEMP 0x04
-#define READ_TEMP 0x05
-#define MANUFACTURER 0x06
-#define DEVICEID 0x07
-#define TEMP_RESOLUTION 0x08
+constexpr int MCP9808_CONFIG = 0x01;
+constexpr int UPPER_TEMP = 0x02;
+constexpr int LOWER_TEMP = 0x03;
+constexpr int CRIT_TEMP = 0x04;
+constexpr int READ_TEMP = 0x05;
+constexpr int MANUFACTURER = 0x06;
+constexpr int DEVICEID = 0x07;
+constexpr int TEMP_RESOLUTION_REG = 0x08;
 
 // ==============================================================================
 // MACROS
 // ==============================================================================
 // Define the way of passing commands to this IC
-#define REGISTER(x) (x & 0x0F)
+constexpr int REGISTER(int x) { return (x & 0x0F); }
 
 // =====================
 // CONSTRUCTORS
@@ -84,20 +84,17 @@ static void FloatToInts(const float Input, int *const OutputBuf)
 // FUNCTIONS
 // =====================
 
-int MCP9808::ConfigureResolution(const int Resolution)
+int MCP9808::ConfigureResolution(const TEMP_RESOLUTION Resolution)
 {
-    if ((Resolution > TEMP_C0_0625) & (Resolution < TEMP_C0_5))
-        return -1;
-
-    int TResolution = SWAP_BYTES(Resolution);
-    int res = I2C_Write(&this->I2C, this->address, REGISTER(TEMP_RESOLUTION), &TResolution, 1, 1);
+    int TResolution = SWAP_BYTES((int)Resolution);
+    int res = I2C_Write(&this->I2C, this->address, REGISTER(TEMP_RESOLUTION_REG), &TResolution, 1, 1);
 
     if (res != 0)
-        return -2;
+        return -1;
     return 0;
 }
 
-int MCP9808::Configure(const int Hysteresis,
+int MCP9808::Configure(const TEMP_HYSTERESIS Hysteresis,
                        const int Mode,
                        const int Lock,
                        const int ClearInterrupt,
@@ -107,13 +104,10 @@ int MCP9808::Configure(const int Hysteresis,
                        const int AlertPolarity,
                        const int AlertMode)
 {
-    if ((Hysteresis > TEMP_HYST_6) & (Hysteresis < TEMP_HYST_0))
-        return -1;
-
     int buf = 0;
 
     // MSB
-    buf = Hysteresis;
+    buf = (int)Hysteresis;
     buf = (buf << 1) | (bool)Mode;
 
     // LSB
@@ -131,7 +125,7 @@ int MCP9808::Configure(const int Hysteresis,
     res = I2C_Write(&this->I2C, this->address, REGISTER(MCP9808_CONFIG), &buf, 1, 2);
 
     if (res != 0)
-        return -2;
+        return -1;
     return 0;
 }
 

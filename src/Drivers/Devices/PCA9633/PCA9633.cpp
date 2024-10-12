@@ -23,29 +23,29 @@
 // IC REGISTER ADDRESSES
 // ==============================================================================
 
-#define MODE1 0x00
-#define MODE2 0x01
-#define PWM0 0x02
-#define PWM1 0x03
-#define PWM2 0x04
-#define PWM3 0x05
-#define GRPPPWM 0x06
-#define GRPFREQ 0x07
-#define LEDOUT 0x08
-#define SUBADDR1 0x09
-#define SUBADDR2 0x0A
-#define SUBADDR3 0x0B
-#define ALLCALLADR 0x0C
+constexpr int MODE1 = 0x00;
+constexpr int MODE2 = 0x01;
+constexpr int PWM0 = 0x02;
+constexpr int PWM1 = 0x03;
+constexpr int PWM2 = 0x04;
+constexpr int PWM3 = 0x05;
+constexpr int GRPPPWM = 0x06;
+constexpr int GRPFREQ = 0x07;
+constexpr int LEDOUT = 0x08;
+constexpr int SUBADDR1 = 0x09;
+constexpr int SUBADDR2 = 0x0A;
+constexpr int SUBADDR3 = 0x0B;
+constexpr int ALLCALLADR = 0x0C;
 
 // ==============================================================================
 // MACROS
 // ==============================================================================
-// Define the way to pass commands to this IC
-#define REGISTER_WITHOUT_INCREMENT(x) ((x & 0x0F) | 0x00)
-#define REGISTER_WITH_INCREMENT_ALL(x) ((x & 0x0F) | 0x80)
-#define REGISTER_WITH_INCREMENT_LEDS(x) ((x & 0x0F) | 0xA0)
-#define REGISTER_WITH_INCREMENT_CTRL(x) ((x & 0x0F) | 0xC0)
-#define REGISTER_WITH_INCREMENT_LEDS_CTRL(x) ((x & 0x0F) | 0xE0)
+// constexpr int the way to pass commands to this IC
+constexpr int REGISTER_WITHOUT_INCREMENT(int x) { return ((x & 0x0F) | 0x00); }
+constexpr int REGISTER_WITH_INCREMENT_ALL(int x) { return ((x & 0x0F) | 0x80); }
+constexpr int REGISTER_WITH_INCREMENT_LEDS(int x) { return ((x & 0x0F) | 0xA0); }
+constexpr int REGISTER_WITH_INCREMENT_CTRL(int x) { return ((x & 0x0F) | 0xC0); }
+constexpr int REGISTER_WITH_INCREMENT_LEDS_CTRL(int x) { return ((x & 0x0F) | 0xE0); }
 
 // =====================
 // CONSTRUCTORS
@@ -80,10 +80,8 @@ int PCA9633::Configure(const int Mode,
                        const int Inverter,
                        const int Change,
                        const int OutputDriver,
-                       const int OEStatus)
+                       const LED_MODES OEStatus)
 {
-    if ((OEStatus > LED_IN) | (OEStatus < LED_OFF))
-        return -1;
 
     int buf[2] = {0};
 
@@ -99,23 +97,21 @@ int PCA9633::Configure(const int Mode,
     buf[1] = buf[1] << 1 | (bool)Inverter;
     buf[1] = buf[1] << 1 | (bool)Change;
     buf[1] = buf[1] << 1 | (bool)OutputDriver;
-    buf[1] = buf[1] << 2 | OEStatus;
+    buf[1] = buf[1] << 2 | (int)OEStatus;
 
     int res = I2C_Write(&this->I2C, this->address, REGISTER_WITH_INCREMENT_ALL(MODE1), buf, 2);
     if (res != 0)
-        return -2;
+        return -1;
 
     return 0;
 }
 
-int PCA9633::ConfigureDutyCycle(const int FirstChannel, int *const Value, const int AutoIncrement)
+int PCA9633::ConfigureDutyCycle(const LED_CHANNELS FirstChannel, int *const Value, const int AutoIncrement)
 {
-    if ((FirstChannel > LED_CHANNEL3) | (FirstChannel < LED_CHANNEL0))
+    if (((int)FirstChannel + AutoIncrement) > ((int)LED_CHANNELS::CHANNEL3 + 1))
         return -1;
-    if ((FirstChannel + AutoIncrement) > (LED_CHANNEL3 + 1))
-        return -2;
     if (AutoIncrement == 0)
-        return -2;
+        return -1;
 
     // Let's create a copy to prevent from running out of memory if too short array is provided.
     int buf[4] = {0};
@@ -125,16 +121,16 @@ int PCA9633::ConfigureDutyCycle(const int FirstChannel, int *const Value, const 
     int Tregister = 0;
     switch (FirstChannel)
     {
-    case LED_CHANNEL0:
+    case LED_CHANNELS::CHANNEL0:
         Tregister = PWM0;
         break;
-    case LED_CHANNEL1:
+    case LED_CHANNELS::CHANNEL1:
         Tregister = PWM1;
         break;
-    case LED_CHANNEL2:
+    case LED_CHANNELS::CHANNEL2:
         Tregister = PWM2;
         break;
-    case LED_CHANNEL3:
+    case LED_CHANNELS::CHANNEL3:
         Tregister = PWM3;
         break;
     }
@@ -147,7 +143,7 @@ int PCA9633::ConfigureDutyCycle(const int FirstChannel, int *const Value, const 
     // Write the number of channels we want.
     int res = I2C_Write(&this->I2C, this->address, Tregister, buf, AutoIncrement);
     if (res != 0)
-        return -3;
+        return -2;
 
     return 0;
 }
@@ -171,35 +167,24 @@ int PCA9633::ConfigureGlobalDimming(const int DutyCycle, const int Period)
 
     return 0;
 }
-int PCA9633::SetLedStatus(const int LED1, const int LED2, const int LED3, const int LED4)
+int PCA9633::SetLedStatus(const LED_CHANNELS LED1, const LED_CHANNELS LED2, const LED_CHANNELS LED3, const LED_CHANNELS LED4)
 {
-    if ((LED1 > LED_PWM_GLOB) | (LED1 < LED_OFF))
-        return -1;
-    if ((LED2 > LED_PWM_GLOB) | (LED2 < LED_OFF))
-        return -1;
-    if ((LED3 > LED_PWM_GLOB) | (LED3 < LED_OFF))
-        return -1;
-    if ((LED4 > LED_PWM_GLOB) | (LED4 < LED_OFF))
-        return -1;
-
-    int buf = (LED4 << 6) | (LED3 << 4) | (LED2 << 2) | LED1;
+    int buf = ((int)LED4 << 6) | ((int)LED3 << 4) | ((int)LED2 << 2) | (int)LED1;
     int res = I2C_Write(&this->I2C, this->address, REGISTER_WITHOUT_INCREMENT(LEDOUT), &buf);
     if (res != 0)
-        return -2;
+        return -1;
 
     return 0;
 }
-int PCA9633::ConfigureSubAddress(const int SUBADDR, const int address)
+int PCA9633::ConfigureSubAddress(const LED_ADDRESS SUBADDR, const int address)
 {
-    if ((SUBADDR > ALLCALLADR) | (SUBADDR < SUBADDR1))
-        return -1;
     if ((address < 0x00) | (address > 0xFF))
-        return -2;
+        return -1;
 
     int buf = address << 1;
-    int res = I2C_Write(&this->I2C, this->address, REGISTER_WITHOUT_INCREMENT(SUBADDR), &buf);
+    int res = I2C_Write(&this->I2C, this->address, REGISTER_WITHOUT_INCREMENT((int)SUBADDR), &buf);
     if (res != 0)
-        return -3;
+        return -2;
 
     return 0;
 }

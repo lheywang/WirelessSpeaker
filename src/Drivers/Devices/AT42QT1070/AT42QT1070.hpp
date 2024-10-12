@@ -22,17 +22,19 @@
 // PUBLIC DEFINES
 // ==============================================================================
 
-#define AT42QT1070_ADDRESS 0x1B
+inline constexpr int AT42QT1070_ADDRESS = 0x1B;
 
-// Keys
-#define TOUCH_KEY0 0x00
-#define TOUCH_KEY1 0x01
-#define TOUCH_KEY2 0x02
-#define TOUCH_KEY3 0x03
-#define TOUCH_KEY4 0x04
-#define TOUCH_KEY5 0x05
-#define TOUCH_KEY6 0x06
-#define TOUCH_KEY7 0x07
+enum class TOUCH_KEYS
+{
+    KEY0 = 0x00,
+    KEY1 = 0x01,
+    KEY2 = 0x02,
+    KEY3 = 0x03,
+    KEY4 = 0x04,
+    KEY5 = 0x05,
+    KEY6 = 0x06,
+    KEY7 = 0x07,
+};
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -96,11 +98,10 @@ public:
      * @param[out] Value Pointer to an integer to store the read value.
      *
      * @return  0 : OK
-     * @return -1 : Invalid Key Value.
-     * @return -2 : IOCTL error.
+     * @return -1 : IOCTL error.
      *
      */
-    int GetKeySignals(const int Key, int *const Value);
+    int GetKeySignals(const TOUCH_KEYS Key, int *const Value);
 
     /**
      * @brief Get the Key Reference Signal for a channel.
@@ -109,11 +110,10 @@ public:
      * @param[out] Value Pointer to an integer to store the read value.
      *
      * @return  0 : OK
-     * @return -1 : Invalid Key Value.
-     * @return -2 : IOCTL error.
+     * @return -1 : IOCTL error.
      *
      */
-    int GetKeyReferenceSignal(const int Key, int *const Value);
+    int GetKeyReferenceSignal(const TOUCH_KEYS Key, int *const Value);
 
     /**
      * @brief Configure the reference threshold value for a channel.
@@ -122,12 +122,12 @@ public:
      * @param[in] Value Value to be written in the register.
      *
      * @return  0 : OK
-     * @return -1 : Invalid Key Value.
-     * @return -2 : Invalid Value.
-     * @return -3 : IOCTL error.
+     * @return -1 : Invalid Value.
+     * @return -2 : IOCTL error.
      *
      */
-    int SetReferenceThreshold(const int Key, const int Value);
+    int SetReferenceThreshold(const TOUCH_KEYS Key, const int Value);
+
     /**
      * @brief Get the Reference threshold value for a channel.
      *
@@ -135,11 +135,10 @@ public:
      * @param[out] Value Pointer to an integer to store the read value.
      *
      * @return  0 : OK
-     * @return -1 : Invalid Key Value.
-     * @return -2 : IOCTL error.
+     * @return -1 : IOCTL error.
      *
      */
-    int GetReferenceThreshold(const int Key, int *const Value);
+    int GetReferenceThreshold(const TOUCH_KEYS Key, int *const Value);
 
     /**
      * @brief Set the Adjacent Key Suppresion object for a channel.
@@ -147,12 +146,12 @@ public:
      * @param[in] Key Key ID Identifier value.
      * @param[in] Value Value to be written in the register.
      *
-     * @return -1 : Invalid Key Value.
-     * @return -2 : Invalid Value.
-     * @return -3 : IOCTL error.
+     * @return  0 : OK
+     * @return -1 : Invalid Value.
+     * @return -2 : IOCTL error.
      *
      */
-    int SetAdjacentKeySuppresion(const int Key, const int Value);
+    int SetAdjacentKeySuppresion(const TOUCH_KEYS Key, const int Value);
     /**
      * @brief Get the Adjacent Key Suppresion configured value for a channel.
      *
@@ -160,11 +159,10 @@ public:
      * @param[out] Value Pointer to an integer to store the read value.
      *
      * @return  0 : OK
-     * @return -1 : Invalid Key Value.
-     * @return -2 : IOCTL error.
+     * @return -1 : IOCTL error.
      *
      */
-    int GetAdjacentKeySuppresion(const int Key, int *const Value);
+    int GetAdjacentKeySuppresion(const TOUCH_KEYS Key, int *const Value);
 
     /**
      * @brief Set the Detection Integrator value for a channel.
@@ -172,12 +170,12 @@ public:
      * @param[in] Key Key ID Identifier value.
      * @param[in] Value Value to be written in the register.
      *
-     * @return -1 : Invalid Key Value.
-     * @return -2 : Invalid Value.
-     * @return -3 : IOCTL error.
+     * @return  0 : OK
+     * @return -1 : Invalid Value.
+     * @return -2 : IOCTL error.
      *
      */
-    int SetDetectionIntegrator(const int Key, const int Value);
+    int SetDetectionIntegrator(const TOUCH_KEYS Key, const int Value);
     /**
      * @brief Get the Detection Integrator value for a channel.
      *
@@ -185,11 +183,10 @@ public:
      * @param[out] Value Pointer to an integer to store the read value.
      *
      * @return  0 : OK
-     * @return -1 : Invalid Key Value.
-     * @return -2 : IOCTL error.
+     * @return -1 : IOCTL error.
      *
      */
-    int GetDetectionIntegrator(const int Key, int *const Value);
+    int GetDetectionIntegrator(const TOUCH_KEYS Key, int *const Value);
 
     /**
      * @brief Configure the behavior of the IC

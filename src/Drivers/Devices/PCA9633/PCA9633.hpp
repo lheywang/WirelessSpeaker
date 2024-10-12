@@ -1,7 +1,7 @@
 /**
  * @file PCA9633.hpp
  * @author l.heywang (leonard.heywang@gmail.com)
- * @brief Define a class and basic function for the PCA9633 leds drivers.
+ * @briefint a class and basic function for the PCA9633 leds drivers.
  * @version 0.1
  * @date 2024-09-25
  *
@@ -16,27 +16,64 @@
 #include "../../I2C/I2C.hpp"
 
 // ==============================================================================
-// PUBLIC DEFINES
+// PUBLIC ENUMS
 // ==============================================================================
 
-// OE Status
-#define LED_OFF 0x00
-#define LED_ON 0x01
-#define LED_IN 0x02
-#define LED_PWM 0x02
-#define LED_PWM_GLOB 0x03
+/**
+ * @enum LEDS_MODES
+ * @brief Define modes for the PCA 9633
+ *
+ * @param LED_MODES::OFF Leds are ON (inverted logic !)
+ * @param LED_MODES::ON Leds are OFF (Inverted logic !)
+ * @param LED_MODES::IN Leds are High Z
+ * @param LED_MODES::PWM Leds are managed by their PWM
+ * @param LED_MODES::PWM_GLOB Leds are managed by their PWM AND the global dimming.
+ *
+ */
+enum class LED_MODES
+{
+    OFF = 0x00,
+    ON = 0x01,
+    IN = 0x02,
+    PWM = 0x02,
+    PWM_GLOB = 0x03,
+};
 
-// Channels numbers
-#define LED_CHANNEL0 0x00
-#define LED_CHANNEL1 0x01
-#define LED_CHANNEL2 0x02
-#define LED_CHANNEL3 0x03
+/**
+ * @enum LEDS_CHANNELS
+ * @brief Define channels values
+ *
+ * @param LEDS_CHANNELS::CHANNEL0 First led
+ * @param LEDS_CHANNELS::CHANNEL1 Second led
+ * @param LEDS_CHANNELS::CHANNEL2 Third led
+ * @param LEDS_CHANNELS::CHANNEL3 Fourth led
+ *
+ */
+enum class LED_CHANNELS
+{
+    CHANNEL0 = 0x00,
+    CHANNEL1 = 0x01,
+    CHANNEL2 = 0x02,
+    CHANNEL3 = 0x03,
+};
 
-// Sub address numbers
-#define LED_ADDRESS1 0x09
-#define LED_ADDRESS2 0x0A
-#define LED_ADDRESS3 0x0B
-#define LED_ALL_ADDRESS 0x0C
+/**
+ * @enum LED_ADDRESS
+ * @brief Define subaddress values
+ *
+ * @param LEDS_ADDRESS::ADDRESS1 First subaddress
+ * @param LEDS_ADDRESS::ADDRESS2 Second subadress
+ * @param LEDS_ADDRESS::ADDRESS3 Third subaddress
+ * @param LEDS_ADDRESS::ALL_ADDRESS Global address
+ *
+ */
+enum class LED_ADDRESS
+{
+    ADDRESS1 = 0x09,
+    ADDRESS2 = 0x0A,
+    ADDRESS3 = 0x0B,
+    ALL_ADDRESS = 0x0C,
+};
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -79,11 +116,10 @@ public:
      * @param[in] Inverter Select LED polarity. (1 to invert logic, 0 to let by default)
      * @param[in] Change Select if device apply the commands at the ACK or the STOP on I2C bus (0 on STOP, 1 on ACK)
      * @param[in] OutputDriver Configure the output scheme. (0 for open drain, 1 for totem-pole)
-     * @param[in] OEStatus Select the nOE behaviour. Accepted values within the range of the defined.
+     * @param[in] OEStatus Select the nOE behaviour. Accepted values are member of the LED_MODES enum.
      *
      * @return  0 : OK
-     * @return -1 : Incorrect OEStatus value
-     * @return -2 : IOCTL error.
+     * @return -1 : IOCTL error.
      *
      */
     int Configure(const int Mode,
@@ -95,24 +131,23 @@ public:
                   const int Inverter,
                   const int Change,
                   const int OutputDriver,
-                  const int OEStatus);
+                  const LED_MODES OEStatus);
 
     /**
      * @brief Configure the duty cycle.
      *        Support the configuration of multiple channels in one function call.
      *        The same value will be copied.
      *
-     * @param[in] FirstChannel The first channel to be configured.
-     * @param[in] Value Pointer to the value to be defined. May be an array of multiple elements.
+     * @param[in] FirstChannel The first channel to be configured. Accepted values are member of the LED_CHANNELS values.
+     * @param[in] Value Pointer to the value to beintd. May be an array of multiple elements.
      * @param[in] AutoIncrement Set to the number of channel to set. By default 1, for 1 channel.
      *                      Up to four channel may be configured, depending on the first channel.
      *
      * @return  0 : OK
-     * @return -1 : First channel incorrect value
-     * @return -2 : Invalid AutoIncrement value (Too big or 0).
-     * @return -3 : IOCTL error.
+     * @return -1 : Invalid AutoIncrement value (Too big or 0).
+     * @return -2 : IOCTL error.
      */
-    int ConfigureDutyCycle(const int FirstChannel, int *const Value, const int AutoIncrement = 1);
+    int ConfigureDutyCycle(const LED_CHANNELS FirstChannel, int *const Value, const int AutoIncrement = 1);
 
     /**
      * @brief Configure the global dimming circuitry on the chip.
@@ -147,16 +182,15 @@ public:
      *  LED_PWM      | Channel PWM
      *  LED_PWM_GLOB | Channel PWM + Dimming
      *
-     * @param[in] LED1 Setting for the LED1.
-     * @param[in] LED2 Setting for the LED2.
-     * @param[in] LED3 Setting for the LED3.
-     * @param[in] LED4 Setting for the LED4.
+     * @param[in] LED1 Setting for the LED1. Values accepted are within LED_CHANNELS enum.
+     * @param[in] LED2 Setting for the LED2. Values accepted are within LED_CHANNELS enum.
+     * @param[in] LED3 Setting for the LED3. Values accepted are within LED_CHANNELS enum.
+     * @param[in] LED4 Setting for the LED4. Values accepted are within LED_CHANNELS enum.
      *
      * @return  0 : OK
-     * @return -1 : Invalid value for a LED setting.
-     * @return -2 : IOCTL error.
+     * @return -1 : IOCTL error.
      */
-    int SetLedStatus(const int LED1, const int LED2, const int LED3, const int LED4);
+    int SetLedStatus(const LED_CHANNELS LED1, const LED_CHANNELS LED2, const LED_CHANNELS LED3, const LED_CHANNELS LED4);
 
     /**
      * @brief Configure a Subaddress of the IC.
@@ -165,9 +199,8 @@ public:
      * @param[in] address The value of this address.
      *
      * @return  0 : OK
-     * @return -1 : Invalid SUBADDR
-     * @return -2 : Invalid address
-     * @return -3 : IOCTL error.
+     * @return -1 : Invalid address
+     * @return -2 : IOCTL error.
      */
-    int ConfigureSubAddress(const int SUBADDR, const int address);
+    int ConfigureSubAddress(const LED_ADDRESS SUBADDR, const int address);
 };

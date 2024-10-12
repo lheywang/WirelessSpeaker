@@ -19,26 +19,35 @@
 // ==============================================================================
 // IC VARIOUS DEFINE
 // ==============================================================================
-// Single ended channels, as we're using them
-#define ADC_CHANNEL_0 0x04
-#define ADC_CHANNEL_1 0x05
-#define ADC_CHANNEL_2 0x06
-#define ADC_CHANNEL_3 0x07
 
-#define ADC_GAIN_6V00 0x00
-#define ADC_GAIN_4V00 0x01
-#define ADC_GAIN_2V00 0x02
-#define ADC_GAIN_1V00 0x03
-#define ADC_GAIN_0V50 0x04
-#define ADC_GAIN_0V25 0x07
+enum class ADC_CHANNELS
+{
+    CHANNEL_0 = 0x04,
+    CHANNEL_1 = 0x05,
+    CHANNEL_2 = 0x06,
+    CHANNEL_3 = 0x07,
+};
 
-#define ADC_SPS_128 0x00
-#define ADC_SPS_250 0x01
-#define ADC_SPS_490 0x02
-#define ADC_SPS_920 0x03
-#define ADC_SPS_1600 0x04
-#define ADC_SPS_2400 0x05
-#define ADC_SPS_3300 0x06
+enum class ADC_RANGE
+{
+    FS6V00 = 0x00,
+    FS4V00 = 0x01,
+    FS2V00 = 0x02,
+    FS1V00 = 0x03,
+    FS0V50 = 0x04,
+    FS0V25 = 0x07,
+};
+
+enum class ADC_SAMPLES
+{
+    SPS_128 = 0x00,
+    SPS_250 = 0x01,
+    SPS_490 = 0x02,
+    SPS_920 = 0x03,
+    SPS_1600 = 0x04,
+    SPS_2400 = 0x05,
+    SPS_3300 = 0x06,
+};
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -54,9 +63,9 @@ private:
     uint8_t address;
     I2C_Bus I2C;
 
-    int ActualSampling;
-    int ActualChannel;
-    int ActualGain;
+    ADC_SAMPLES ActualSampling;
+    ADC_CHANNELS ActualChannel;
+    ADC_RANGE ActualGain;
     int ActualMode;
     int ActualComparator_mode;
     int ActualComparator_polarity;
@@ -90,10 +99,9 @@ public:
      * @param[out] value The value converted in volts.
      *
      * @return  0 : OK
-     * @return -1 : Invalid Channel
-     * @return -2 : IOCTL error.
+     * @return -1 : IOCTL error.
      */
-    int Read_Voltage(const int channel, float *const value);
+    int Read_Voltage(const ADC_CHANNELS channel, float *const value);
 
     /**
      * @brief Configure the operation mode of the ADC.
@@ -106,21 +114,18 @@ public:
      * @param[in] comparator_mode Mode of the comparator (0 : Classic, 1 : windowed)
      * @param[in] comparator_polarity Polarity of the alert pin. (1 : Active high, 0 : active low)
      * @param[in] comparator_latching Does an alert need to be cleared by software ?(1 to enable)
-     * @param[in] comparator_queue Number of assersions before triggering a flag.
+     * @param[in] comparator_queue Number of assersions before triggering a flag. (0 - 3)
      *
      * @return  0 : OK
-     * @return -1 : Invalid Channel
-     * @return -2 : Invalid Gain
-     * @return -3 : Invalid sampling frequency
-     * @return -4 : Invalid Comparator Queue
-     * @return -5 : IOCTL error.
+     * @return -1 : Invalid Comparator Queue
+     * @return -2 : IOCTL error.
      *
      */
     int Configure_ADC(const int OS,
-                      const int channel,
-                      const int gain,
+                      const ADC_CHANNELS channel,
+                      const ADC_RANGE gain,
                       const int mode,
-                      const int sampling_frequency,
+                      const ADC_SAMPLES sampling_frequency,
                       const int comparator_mode,
                       const int comparator_polarity,
                       const int comparator_latching,
@@ -136,7 +141,6 @@ public:
      * @return  0 : OK
      * @return -1 : Invalid Value.
      * @return -2 : IOCTL error.
-     *
      */
     int ConfigureLowThreshold(const float Value);
 

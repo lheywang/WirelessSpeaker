@@ -22,60 +22,60 @@
 // IC REGISTER ADDRESSES
 // ==============================================================================
 
-#define CHIP_ID 0x00
-#define FIRMWARE_VERSION 0x01
-#define DETECTION_STATUS 0x02
-#define KEY_STATUS 0x03
-#define FASTOUT_MAXCAL_GUARD 0x35
-#define LOW_POWER_MODE 0x36
-#define MAX_ON_DURATION 0x37
-#define CALIBRATE 0x38
-#define TOUCH_RESET 0x39
+constexpr int CHIP_ID = 0x00;
+constexpr int FIRMWARE_VERSION = 0x01;
+constexpr int DETECTION_STATUS = 0x02;
+constexpr int KEY_STATUS = 0x03;
+constexpr int FASTOUT_MAXCAL_GUARD = 0x35;
+constexpr int LOW_POWER_MODE = 0x36;
+constexpr int MAX_ON_DURATION = 0x37;
+constexpr int CALIBRATE = 0x38;
+constexpr int TOUCH_RESET = 0x39;
 
 // KEY SIGNALS
-#define KEY_SIGNAL_0 0x04
-#define KEY_SIGNAL_1 0x06
-#define KEY_SIGNAL_2 0x08
-#define KEY_SIGNAL_3 0x0A
-#define KEY_SIGNAL_4 0x0C
-#define KEY_SIGNAL_5 0x0E
-#define KEY_SIGNAL_6 0x10
+constexpr int KEY_SIGNAL_0 = 0x04;
+constexpr int KEY_SIGNAL_1 = 0x06;
+constexpr int KEY_SIGNAL_2 = 0x08;
+constexpr int KEY_SIGNAL_3 = 0x0A;
+constexpr int KEY_SIGNAL_4 = 0x0C;
+constexpr int KEY_SIGNAL_5 = 0x0E;
+constexpr int KEY_SIGNAL_6 = 0x10;
 
 // REFERENCE DATA
-#define REFERENCE_DATA_0 0x12
-#define REFERENCE_DATA_1 0x14
-#define REFERENCE_DATA_2 0x16
-#define REFERENCE_DATA_3 0x18
-#define REFERENCE_DATA_4 0x1A
-#define REFERENCE_DATA_5 0x1C
-#define REFERENCE_DATA_6 0x1E
+constexpr int REFERENCE_DATA_0 = 0x12;
+constexpr int REFERENCE_DATA_1 = 0x14;
+constexpr int REFERENCE_DATA_2 = 0x16;
+constexpr int REFERENCE_DATA_3 = 0x18;
+constexpr int REFERENCE_DATA_4 = 0x1A;
+constexpr int REFERENCE_DATA_5 = 0x1C;
+constexpr int REFERENCE_DATA_6 = 0x1E;
 
 // NEGATIVE THRESHOLD
-#define NEGATIVE_THRESHOLD_KEY_0 0x20
-#define NEGATIVE_THRESHOLD_KEY_1 0x21
-#define NEGATIVE_THRESHOLD_KEY_2 0x22
-#define NEGATIVE_THRESHOLD_KEY_3 0x23
-#define NEGATIVE_THRESHOLD_KEY_4 0x24
-#define NEGATIVE_THRESHOLD_KEY_5 0x25
-#define NEGATIVE_THRESHOLD_KEY_6 0x26
+constexpr int NEGATIVE_THRESHOLD_KEY_0 = 0x20;
+constexpr int NEGATIVE_THRESHOLD_KEY_1 = 0x21;
+constexpr int NEGATIVE_THRESHOLD_KEY_2 = 0x22;
+constexpr int NEGATIVE_THRESHOLD_KEY_3 = 0x23;
+constexpr int NEGATIVE_THRESHOLD_KEY_4 = 0x24;
+constexpr int NEGATIVE_THRESHOLD_KEY_5 = 0x25;
+constexpr int NEGATIVE_THRESHOLD_KEY_6 = 0x26;
 
 // ADJACENT KEY SUPPRESION LEVEL
-#define ADJACENT_SUPPRESSION_LEVEL_KEY_0 0x27
-#define ADJACENT_SUPPRESSION_LEVEL_KEY_1 0x28
-#define ADJACENT_SUPPRESSION_LEVEL_KEY_2 0x29
-#define ADJACENT_SUPPRESSION_LEVEL_KEY_3 0x2A
-#define ADJACENT_SUPPRESSION_LEVEL_KEY_4 0x2B
-#define ADJACENT_SUPPRESSION_LEVEL_KEY_5 0x2C
-#define ADJACENT_SUPPRESSION_LEVEL_KEY_6 0x2D
+constexpr int ADJACENT_SUPPRESSION_LEVEL_KEY_0 = 0x27;
+constexpr int ADJACENT_SUPPRESSION_LEVEL_KEY_1 = 0x28;
+constexpr int ADJACENT_SUPPRESSION_LEVEL_KEY_2 = 0x29;
+constexpr int ADJACENT_SUPPRESSION_LEVEL_KEY_3 = 0x2A;
+constexpr int ADJACENT_SUPPRESSION_LEVEL_KEY_4 = 0x2B;
+constexpr int ADJACENT_SUPPRESSION_LEVEL_KEY_5 = 0x2C;
+constexpr int ADJACENT_SUPPRESSION_LEVEL_KEY_6 = 0x2D;
 
 // DETECTION INTEGRATOR COUNTER
-#define DETECTION_INTEGRATOR_COUNTER_KEY_0 0x2E
-#define DETECTION_INTEGRATOR_COUNTER_KEY_1 0x2F
-#define DETECTION_INTEGRATOR_COUNTER_KEY_2 0x30
-#define DETECTION_INTEGRATOR_COUNTER_KEY_3 0x31
-#define DETECTION_INTEGRATOR_COUNTER_KEY_4 0x32
-#define DETECTION_INTEGRATOR_COUNTER_KEY_5 0x33
-#define DETECTION_INTEGRATOR_COUNTER_KEY_6 0x34
+constexpr int DETECTION_INTEGRATOR_COUNTER_KEY_0 = 0x2E;
+constexpr int DETECTION_INTEGRATOR_COUNTER_KEY_1 = 0x2F;
+constexpr int DETECTION_INTEGRATOR_COUNTER_KEY_2 = 0x30;
+constexpr int DETECTION_INTEGRATOR_COUNTER_KEY_3 = 0x31;
+constexpr int DETECTION_INTEGRATOR_COUNTER_KEY_4 = 0x32;
+constexpr int DETECTION_INTEGRATOR_COUNTER_KEY_5 = 0x33;
+constexpr int DETECTION_INTEGRATOR_COUNTER_KEY_6 = 0x34;
 
 // =====================
 // CONSTRUCTORS
@@ -136,147 +136,119 @@ int AT42QT1070::GetKeysStatus(int *const Calibration, int *const Overflow, int *
     return 0;
 }
 
-int AT42QT1070::GetKeySignals(const int Key, int *const Value)
+int AT42QT1070::GetKeySignals(const TOUCH_KEYS Key, int *const Value)
 {
-    if (!(Key & 0x01)) // prevent from accessing to LSByte directly.
-        return -1;
-    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
-        return -1;
-
     int buf[2] = {0};
     int res = 0;
 
     // register are 16b, thus the *2 + offset.
-    res += I2C_Read(&this->I2C, this->address, (2 * Key + KEY_SIGNAL_0), &buf[0]);
-    res += I2C_Read(&this->I2C, this->address, ((2 * Key + KEY_SIGNAL_0) + 1), &buf[1]);
+    res += I2C_Read(&this->I2C, this->address, (2 * (int)Key + KEY_SIGNAL_0), &buf[0]);
+    res += I2C_Read(&this->I2C, this->address, ((2 * (int)Key + KEY_SIGNAL_0) + 1), &buf[1]);
 
     *Value = (buf[0] << 8) | buf[1];
 
     if (res != 0)
-        return -2;
+        return -1;
     return 0;
 }
 
-int AT42QT1070::GetKeyReferenceSignal(const int Key, int *const Value)
+int AT42QT1070::GetKeyReferenceSignal(const TOUCH_KEYS Key, int *const Value)
 {
-    if (!(Key & 0x01)) // prevent from accessing to LSByte directly.
-        return -1;
-    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
-        return -1;
-
     int buf[2] = {0};
     int res = 0;
 
     // register are 16b, thus the *2 + offset.
-    res += I2C_Read(&this->I2C, this->address, (2 * Key + REFERENCE_DATA_0), &buf[0]);
-    res += I2C_Read(&this->I2C, this->address, ((2 * Key + REFERENCE_DATA_0) + 1), &buf[1]);
+    res += I2C_Read(&this->I2C, this->address, (2 * (int)Key + REFERENCE_DATA_0), &buf[0]);
+    res += I2C_Read(&this->I2C, this->address, ((2 * (int)Key + REFERENCE_DATA_0) + 1), &buf[1]);
 
     *Value = (buf[0] << 8) | buf[1];
 
     if (res != 0)
-        return -2;
+        return -1;
     return 0;
 }
 
-int AT42QT1070::SetReferenceThreshold(const int Key, const int Value)
+int AT42QT1070::SetReferenceThreshold(const TOUCH_KEYS Key, const int Value)
 {
-    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
-        return -1;
-
     int buf = Value;
     int res = 0;
 
     // Offset from key to make the call easier.
-    res = I2C_Write(&this->I2C, this->address, (Key + NEGATIVE_THRESHOLD_KEY_0), &buf);
+    res = I2C_Write(&this->I2C, this->address, ((int)Key + NEGATIVE_THRESHOLD_KEY_0), &buf);
 
     if (res != 0)
-        return -2;
+        return -1;
     return 0;
 }
 
-int AT42QT1070::GetReferenceThreshold(const int Key, int *const Value)
+int AT42QT1070::GetReferenceThreshold(const TOUCH_KEYS Key, int *const Value)
 {
-    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
-        return -1;
-
     int res = 0;
     int buf = 0;
 
     // Offset from key to make the call easier.
-    res = I2C_Read(&this->I2C, this->address, (Key + NEGATIVE_THRESHOLD_KEY_0), &buf);
+    res = I2C_Read(&this->I2C, this->address, ((int)Key + NEGATIVE_THRESHOLD_KEY_0), &buf);
 
     *Value = buf;
 
     if (res != 0)
-        return -2;
+        return -1;
     return 0;
 }
 
-int AT42QT1070::SetAdjacentKeySuppresion(const int Key, const int Value)
+int AT42QT1070::SetAdjacentKeySuppresion(const TOUCH_KEYS Key, const int Value)
 {
-    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
-        return -1;
-
     int buf = Value;
     int res = 0;
 
     // Offset from key to make the call easier.
-    res = I2C_Write(&this->I2C, this->address, (Key + ADJACENT_SUPPRESSION_LEVEL_KEY_0), &buf);
+    res = I2C_Write(&this->I2C, this->address, ((int)Key + ADJACENT_SUPPRESSION_LEVEL_KEY_0), &buf);
 
     if (res != 0)
-        return -2;
+        return -1;
     return 0;
 }
 
-int AT42QT1070::GetAdjacentKeySuppresion(const int Key, int *const Value)
+int AT42QT1070::GetAdjacentKeySuppresion(const TOUCH_KEYS Key, int *const Value)
 {
-    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
-        return -1;
-
     int res = 0;
     int buf = 0;
 
     // Offset from key to make the call easier.
-    res = I2C_Read(&this->I2C, this->address, (Key + ADJACENT_SUPPRESSION_LEVEL_KEY_0), &buf);
+    res = I2C_Read(&this->I2C, this->address, ((int)Key + ADJACENT_SUPPRESSION_LEVEL_KEY_0), &buf);
 
     *Value = buf;
 
     if (res != 0)
-        return -2;
+        return -1;
     return 0;
 }
 
-int AT42QT1070::SetDetectionIntegrator(const int Key, const int Value)
+int AT42QT1070::SetDetectionIntegrator(const TOUCH_KEYS Key, const int Value)
 {
-    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
-        return -1;
-
     int buf = Value;
     int res = 0;
 
     // Offset from key to make the call easier.
-    res = I2C_Write(&this->I2C, this->address, (Key + DETECTION_INTEGRATOR_COUNTER_KEY_0), &buf);
+    res = I2C_Write(&this->I2C, this->address, ((int)Key + DETECTION_INTEGRATOR_COUNTER_KEY_0), &buf);
 
     if (res != 0)
-        return -2;
+        return -1;
     return 0;
 }
 
-int AT42QT1070::GetDetectionIntegrator(const int Key, int *const Value)
+int AT42QT1070::GetDetectionIntegrator(const TOUCH_KEYS Key, int *const Value)
 {
-    if ((Key < TOUCH_KEY0) | (Key > TOUCH_KEY7))
-        return -1;
-
     int res = 0;
     int buf = 0;
 
     // Offset from key to make the call easier.
-    res = I2C_Read(&this->I2C, this->address, (Key + DETECTION_INTEGRATOR_COUNTER_KEY_0), &buf);
+    res = I2C_Read(&this->I2C, this->address, ((int)Key + DETECTION_INTEGRATOR_COUNTER_KEY_0), &buf);
 
     *Value = buf;
 
     if (res != 0)
-        return -2;
+        return -1;
     return 0;
 }
 

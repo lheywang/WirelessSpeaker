@@ -17,14 +17,16 @@
 #include <cstring>
 
 // ==============================================================================
-// PRIVATE DEFINES
+// PRIVATE
 // ==============================================================================
-#define WREN 0x06  // No following data
-#define WRDI 0x04  // No following data
-#define RDSR 0x05  // No following data
-#define WRSR 0x01  // No following data
-#define READ 0x03  // 2 bytes address page
-#define WRITE 0x02 // 2 bytes address page
+constexpr int WREN = 0x06;  // No following data
+constexpr int WRDI = 0x04;  // No following data
+constexpr int RDSR = 0x05;  // No following data
+constexpr int WRSR = 0x01;  // No following data
+constexpr int READ = 0x03;  // 2 bytes address page
+constexpr int WRITE = 0x02; // 2 bytes address page
+
+constexpr int MAX_ADDRESS = 0x7FFF;
 
 // ==============================================================================
 // FUNCTIONS
@@ -70,7 +72,7 @@ int M95256::WriteDisable()
 }
 
 int M95256::ReadStatus(int *const WriteProtectStatus,
-                       int *const ProtectedBlock,
+                       EEPROM_WP *const ProtectedBlock,
                        int *const WriteEnable,
                        int *const WriteInProgress)
 {
@@ -85,7 +87,7 @@ int M95256::ReadStatus(int *const WriteProtectStatus,
         return -1;
 
     *WriteProtectStatus = (buf[0] & 0x80) >> 7;
-    *ProtectedBlock = (buf[0] & 0x0C) >> 2;
+    *ProtectedBlock = EEPROM_WP{(buf[0] & 0x0C) >> 2};
     *WriteEnable = (buf[0] & 0x02) >> 1;
     *WriteInProgress = buf[0] & 0x01;
 
@@ -93,22 +95,19 @@ int M95256::ReadStatus(int *const WriteProtectStatus,
 }
 
 int M95256::WriteStatus(const int WriteProtectStatus,
-                        const int ProtectedBlock)
+                        const EEPROM_WP ProtectedBlock)
 {
-    if ((0 > ProtectedBlock) | (ProtectedBlock > 0x03))
-        return -1;
-
     int buf[3] = {0};
     int res = 0;
 
     buf[0] = (bool)WriteProtectStatus;
-    buf[0] = buf[0] << 4 | ProtectedBlock;
+    buf[0] = buf[0] << 4 | (int)ProtectedBlock;
     buf[0] = buf[0] << 2;
 
     res = SPI_Transfer(&this->SPI, buf, buf, 1);
 
     if (res != 0)
-        return -2;
+        return -1;
     return 0;
 }
 
