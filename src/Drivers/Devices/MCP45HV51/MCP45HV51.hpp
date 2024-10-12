@@ -36,7 +36,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    MCP45HV51(const I2C_Bus *I2C, const int address);
+    MCP45HV51(const I2C_Bus *I2C, const LIN_POTI address);
 
     /**
      * @brief Destroy the MCP45HV51 object

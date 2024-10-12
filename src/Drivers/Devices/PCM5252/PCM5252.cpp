@@ -170,7 +170,7 @@ int PCM5252::SelectPage(int Page)
 // CONSTRUCTORS
 // =====================
 
-PCM5252::PCM5252(const I2C_Bus *I2C, const int address)
+PCM5252::PCM5252(const I2C_Bus *I2C, const DAC address)
 {
     // Global I2C variables
     this->address = (uint8_t)address;

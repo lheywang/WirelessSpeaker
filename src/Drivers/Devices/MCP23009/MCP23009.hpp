@@ -39,7 +39,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    MCP23009(const I2C_Bus *I2C, const int address);
+    MCP23009(const I2C_Bus *I2C, const GPIO_EXPANDER address);
 
     /**
      * @brief Destroy the MCP23009 object

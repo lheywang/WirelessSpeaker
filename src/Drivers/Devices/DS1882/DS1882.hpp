@@ -48,7 +48,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    DS1882(const I2C_Bus *I2C, const int address);
+    DS1882(const I2C_Bus *I2C, const LOG_POTI address);
 
     /**
      * @brief Destroy the DS1882 object

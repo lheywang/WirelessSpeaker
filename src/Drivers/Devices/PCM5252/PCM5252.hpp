@@ -57,7 +57,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    PCM5252(const I2C_Bus *I2C, const int address);
+    PCM5252(const I2C_Bus *I2C, const DAC address);
 
     /**
      * @brief Destroy the PCM5252 object

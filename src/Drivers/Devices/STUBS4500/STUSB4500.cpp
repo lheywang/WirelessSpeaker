@@ -111,7 +111,7 @@ constexpr float CURRENT_MINIMAL_STEP = 0.010;
 // CONSTRUCTORS
 // =====================
 
-STUSB4500::STUSB4500(const I2C_Bus *I2C, const int address)
+STUSB4500::STUSB4500(const I2C_Bus *I2C, const USB_PD address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;

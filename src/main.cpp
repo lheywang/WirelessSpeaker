@@ -45,12 +45,12 @@ int main()
     // std::cout << I2C->I2C_file << std::endl;
     // I2C_Close(I2C);
 
-    SPI_Bus *SPI = SPI_GetInfos(EEPROM, BUS_NUMBER);
+    SPI_Bus *SPI = SPI_GetInfos();
 
     int TX[] = {0x03, 0xAA, 0xAA, 0x88, 0x45};
     int RX[5] = {0};
 
-    SPI_Configure(SPI, SPI_MODE_1, BUS_WORD_SIZE, 500'000);
+    SPI_Configure(SPI, SPI_MODE_1, (int)SPI_SETTINGS::BUS_WORD_SIZE, 500'000);
     SPI_Transfer(SPI, TX, RX, 5);
 
     for (int i = 0; i < 5; i++)

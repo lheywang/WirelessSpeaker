@@ -32,7 +32,7 @@ constexpr int CALIBRATION = 0x05;
 // CONSTRUCTORS
 // =====================
 
-INA219::INA219(const I2C_Bus *I2C, const int address)
+INA219::INA219(const I2C_Bus *I2C, const CURRENT_MONITOR address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;

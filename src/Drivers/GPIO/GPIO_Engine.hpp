@@ -15,6 +15,7 @@
 // INCLUDES
 // ==============================================================================
 #include <linux/gpio.h>
+#include "GPIO.hpp"
 
 /**
  * @struct GPIO

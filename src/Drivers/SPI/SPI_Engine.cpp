@@ -28,28 +28,13 @@
 // FUNCTIONS
 // ==============================================================================
 
-SPI_Bus *SPI_GetInfos(int CS, int Bus)
+SPI_Bus *SPI_GetInfos()
 {
     SPI_Bus *SPI = new SPI_Bus;
 
-    if ((0 > CS) | (CS > BUS_MAX_CS))
-    {
-        std::cerr << "[ SPI ][ GetInfos ] : Invalid Slave ID"
-                  << std::endl;
-        SPI->SPI_file = -1;
-        return SPI;
-    }
-    if ((0 > Bus) | (Bus > 0x01))
-    {
-        std::cerr << "[ SPI ][ GetInfos ] : Invalid Bus Number"
-                  << std::endl;
-        SPI->SPI_file = -1;
-        return SPI;
-    }
-
     // Set up variables
-    SPI->CS_number = CS;
-    SPI->SPI_Bus = Bus;
+    SPI->CS_number = (int)SPI_SETTINGS::BUS_MAX_CS - 1;
+    SPI->SPI_Bus = (int)SPI_SETTINGS::BUS_NUMBER;
 
     snprintf(SPI->SPI_Filename, sizeof(SPI->SPI_Filename), "/dev/spidev%d.%d", SPI->SPI_Bus, SPI->CS_number);
     SPI->SPI_Filename[sizeof(SPI->SPI_Filename) - 1] = '\0';

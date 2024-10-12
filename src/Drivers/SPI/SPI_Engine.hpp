@@ -57,7 +57,7 @@ struct SPI_Bus
  *
  * @return A SPI struct
  */
-SPI_Bus *SPI_GetInfos(int CS, int Bus);
+SPI_Bus *SPI_GetInfos();
 
 /**
  * @brief Close and delete an SPI Object

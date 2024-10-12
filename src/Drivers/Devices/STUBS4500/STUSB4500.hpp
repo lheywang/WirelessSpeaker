@@ -19,6 +19,15 @@
 // =====================
 // PUBLIC
 // =====================
+/**
+ * @enum USB_SWAP
+ * @brief Define some settings about the USB_SWAP values for the PDO Object.
+ *
+ * @param USB_SWAP::FAST_SWAP_DISABLE Fast swap is disabled.
+ * @param USB_SWAP::DEFAULT_USB_POWER The device is managed as a default USB one.
+ * @param USB_SWAP::V5_A1_5 The device is configured as a 5V 1.5A device
+ * @param USB_SWAP::V5_A3 The device is configured as a 5V 3A device
+ */
 enum class USB_SWAP
 {
     FAST_SWAP_DISABLED = 0x00,
@@ -27,6 +36,13 @@ enum class USB_SWAP
     V5_A3 = 0x03,
 };
 
+/**
+ * @enum USB_PSU_MODE
+ * @brief Define the operation mode of the device.
+ *
+ * @param USB_PSU_MODE::PPS The device use a PPS profile
+ * @param USB_PSU_MODE::FIXED The device remain on the standard PD values.
+ */
 enum class USB_PSU_MODE
 {
     PPS = 0x01,
@@ -119,7 +135,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    STUSB4500(const I2C_Bus *I2C, const int address);
+    STUSB4500(const I2C_Bus *I2C, const USB_PD address);
 
     /**
      * @brief Destroy the STUSB4500 object

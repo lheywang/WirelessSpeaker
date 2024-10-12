@@ -18,16 +18,21 @@
 // ==============================================================================
 // CONSTANTS
 // ==============================================================================
-#define EEPROM_STRUCT_UL_SIZE sizeof(Config) * 4
-#define EEPROM_SIZE 256'000
-#define BUS_SPEED 20'000'000
-#define BUS_WORD_SIZE 8
-#define BUS_MODE SPI_MODE_0
-#define BUS_MAX_CS 1
-#define BUS_NUMBER 0
 
-// ==============================================================================
-// CS
-// ==============================================================================
-#define EEPROM 0
-#define NONE 1 // Unused. Using it does nothing.
+/**
+ * @brief Define SPI Bus operating parameters.
+ *
+ * @enumvalue SPI_SETTINGS::BUS_SPEED Define SCLK Frequency
+ * @enumvalue SPI_SETTINGS::BUS_WORD_SIZE Define number of bits per cycle
+ * @enumvalue SPI_SETTINGS::BUS_MODE Define SPI Mode.
+ * @enumvalue SPI_SETTINGS::BUS_MAX_CS Define the maximal number of CS. Selected by the device tree.
+ * @enumvalue SPI_SETTINGS::BUS_NUMBER Define the bus number, defined by RPi design.
+ */
+enum class SPI_SETTINGS
+{
+    BUS_SPEED = 20'000'000,
+    BUS_WORD_SIZE = 8,
+    BUS_MODE = SPI_MODE_0,
+    BUS_MAX_CS = 1,
+    BUS_NUMBER = 0,
+};

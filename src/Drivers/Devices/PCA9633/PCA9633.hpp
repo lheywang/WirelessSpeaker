@@ -1,7 +1,7 @@
 /**
  * @file PCA9633.hpp
  * @author l.heywang (leonard.heywang@gmail.com)
- * @briefint a class and basic function for the PCA9633 leds drivers.
+ * @brief int a class and basic function for the PCA9633 leds drivers.
  * @version 0.1
  * @date 2024-09-25
  *
@@ -20,15 +20,13 @@
 // ==============================================================================
 
 /**
- * @enum LEDS_MODES
  * @brief Define modes for the PCA 9633
  *
- * @param LED_MODES::OFF Leds are ON (inverted logic !)
- * @param LED_MODES::ON Leds are OFF (Inverted logic !)
- * @param LED_MODES::IN Leds are High Z
- * @param LED_MODES::PWM Leds are managed by their PWM
- * @param LED_MODES::PWM_GLOB Leds are managed by their PWM AND the global dimming.
- *
+ * @enumvalue LED_MODES::OFF Leds are ON (inverted logic !)
+ * @enumvalue LED_MODES::ON Leds are OFF (Inverted logic !)
+ * @enumvalue LED_MODES::IN Leds are High Z
+ * @enumvalue LED_MODES::PWM Leds are managed by their PWM
+ * @enumvalue LED_MODES::PWM_GLOB Leds are managed by their PWM AND the global dimming.
  */
 enum class LED_MODES
 {
@@ -40,14 +38,12 @@ enum class LED_MODES
 };
 
 /**
- * @enum LEDS_CHANNELS
  * @brief Define channels values
  *
- * @param LEDS_CHANNELS::CHANNEL0 First led
- * @param LEDS_CHANNELS::CHANNEL1 Second led
- * @param LEDS_CHANNELS::CHANNEL2 Third led
- * @param LEDS_CHANNELS::CHANNEL3 Fourth led
- *
+ * @enumvalue LED_CHANNELS::CHANNEL0 First led
+ * @enumvalue LED_CHANNELS::CHANNEL1 Second led
+ * @enumvalue LED_CHANNELS::CHANNEL2 Third led
+ * @enumvalue LED_CHANNELS::CHANNEL3 Fourth led
  */
 enum class LED_CHANNELS
 {
@@ -58,14 +54,12 @@ enum class LED_CHANNELS
 };
 
 /**
- * @enum LED_ADDRESS
  * @brief Define subaddress values
  *
- * @param LEDS_ADDRESS::ADDRESS1 First subaddress
- * @param LEDS_ADDRESS::ADDRESS2 Second subadress
- * @param LEDS_ADDRESS::ADDRESS3 Third subaddress
- * @param LEDS_ADDRESS::ALL_ADDRESS Global address
- *
+ * @enumvalue LEDS_ADDRESS::ADDRESS1 First subaddress
+ * @enumvalue LEDS_ADDRESS::ADDRESS2 Second subadress
+ * @enumvalue LEDS_ADDRESS::ADDRESS3 Third subaddress
+ * @enumvalue LEDS_ADDRESS::ALL_ADDRESS Global address
  */
 enum class LED_ADDRESS
 {
@@ -96,7 +90,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    PCA9633(const I2C_Bus *I2C, const int address);
+    PCA9633(const I2C_Bus *I2C, const LED_DRIVERS address);
 
     /**
      * @brief Destroy the PCA9633 object

@@ -58,7 +58,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    MCP9808(const I2C_Bus *I2C, const int address);
+    MCP9808(const I2C_Bus *I2C, const TEMP_SENSOR address);
 
     /**
      * @brief Destroy the MCP9808 object

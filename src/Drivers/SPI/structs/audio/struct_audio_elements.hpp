@@ -80,51 +80,51 @@ struct Global
  *
  * @warning Buffers values remains stored on the system files since they'r e too big to a 256k EEPROM.
  *
- * @param DAC::Audio_44k Boolean that is set to True of the settings for the PLL need to be set to 44.1kHz playback. Will be overhiden by the 48k setting.
- * @param DAC::Audio_48k Boolean that is set to True of the settings for the PLL need to be set to 48kHz playback. Will overhide by the 48k setting.
+ * @param DAC_Config::Audio_44k Boolean that is set to True of the settings for the PLL need to be set to 44.1kHz playback. Will be overhiden by the 48k setting.
+ * @param DAC_Config::Audio_48k Boolean that is set to True of the settings for the PLL need to be set to 48kHz playback. Will overhide by the 48k setting.
  *
- * @param DAC::Automute_delay Delay of 0 to be shown at the I2S data input before triggering the Automute system, and thus reducing power draw.
- * @param DAC::Global_Volume Global Digital Volume. Shall always be near the maximum to exploit the biggest dynamic range.
- * @param DAC::Left_Volume Analog volume settings for the left channel. Used to balance both channels.
- * @param DAC::Right_Volume Analog volume settings for the rigth channel. Used to balance both channels.
+ * @param DAC_Config::Automute_delay Delay of 0 to be shown at the I2S data input before triggering the Automute system, and thus reducing power draw.
+ * @param DAC_Config::Global_Volume Global Digital Volume. Shall always be near the maximum to exploit the biggest dynamic range.
+ * @param DAC_Config::Left_Volume Analog volume settings for the left channel. Used to balance both channels.
+ * @param DAC_Config::Right_Volume Analog volume settings for the rigth channel. Used to balance both channels.
  *
- * @param DAC::LeftDataPath Select the data that is used by the left DAC
- * @param DAC::RightDataPath Select the data that is used by the right DAC
+ * @param DAC_Config::LeftDataPath Select the data that is used by the left DAC
+ * @param DAC_Config::RightDataPath Select the data that is used by the right DAC
  *
- * @param DAC::RampDownSpeed Select the speed when going in Digital Mute
- * @param DAC::RampUpSpeed Select the speed when going in Playback
- * @param DAC::EmergencyRampSpeed Select the speed when going in Mute in case of Power Loss
- * @param DAC::RampDownStep Select the step size (influe on speed) when going in Digital Mute
- * @param DAC::RampUpStep Select the step size (influe on speed) when going in Playback
- * @param DAC::EmergencyRampStep Select the step size (influe on speed) when going in Mute in case of Power Loss
+ * @param DAC_Config::RampDownSpeed Select the speed when going in Digital Mute
+ * @param DAC_Config::RampUpSpeed Select the speed when going in Playback
+ * @param DAC_Config::EmergencyRampSpeed Select the speed when going in Mute in case of Power Loss
+ * @param DAC_Config::RampDownStep Select the step size (influe on speed) when going in Digital Mute
+ * @param DAC_Config::RampUpStep Select the step size (influe on speed) when going in Playback
+ * @param DAC_Config::EmergencyRampStep Select the step size (influe on speed) when going in Mute in case of Power Loss
  *
- * @param DAC::LeftAnalogAtten Enable a -6dB attenuation on the left side
- * @param DAC::RightAnalogAtten Enable a -6dB attenuation on the right side
- * @param DAC::LeftAnalogBoost Enable an analog boost on the left side
- * @param DAC::RightAnalogBoost Enable an analog boost on the right side.
+ * @param DAC_Config::LeftAnalogAtten Enable a -6dB attenuation on the left side
+ * @param DAC_Config::RightAnalogAtten Enable a -6dB attenuation on the right side
+ * @param DAC_Config::LeftAnalogBoost Enable an analog boost on the left side
+ * @param DAC_Config::RightAnalogBoost Enable an analog boost on the right side.
  *
- * @param DAC::DSP_BufferA_values1 DSP Coefficients Buffer A values for program 1
- * @param DAC::DSP_BufferA_values2 DSP Coefficients Buffer A values for program 2
- * @param DAC::DSP_BufferA_values3 DSP Coefficients Buffer A values for program 3
- * @param DAC::DSP_BufferA_values4 DSP Coefficients Buffer A values for program 4
- * @param DAC::DSP_BufferA_values5 DSP Coefficients Buffer A values for program 5
- * @param DAC::DSP_BufferA_values6 DSP Coefficients Buffer A values for program 6
+ * @param DAC_Config::DSP_BufferA_values1 DSP Coefficients Buffer A values for program 1
+ * @param DAC_Config::DSP_BufferA_values2 DSP Coefficients Buffer A values for program 2
+ * @param DAC_Config::DSP_BufferA_values3 DSP Coefficients Buffer A values for program 3
+ * @param DAC_Config::DSP_BufferA_values4 DSP Coefficients Buffer A values for program 4
+ * @param DAC_Config::DSP_BufferA_values5 DSP Coefficients Buffer A values for program 5
+ * @param DAC_Config::DSP_BufferA_values6 DSP Coefficients Buffer A values for program 6
  *
- * @param DAC::DSP_BufferB_values1 DSP Coefficients Buffer B values for program 1
- * @param DAC::DSP_BufferB_values2 DSP Coefficients Buffer B values for program 2
- * @param DAC::DSP_BufferB_values3 DSP Coefficients Buffer B values for program 3
- * @param DAC::DSP_BufferB_values4 DSP Coefficients Buffer B values for program 4
- * @param DAC::DSP_BufferB_values5 DSP Coefficients Buffer B values for program 5
- * @param DAC::DSP_BufferB_values6 DSP Coefficients Buffer B values for program 6
+ * @param DAC_Config::DSP_BufferB_values1 DSP Coefficients Buffer B values for program 1
+ * @param DAC_Config::DSP_BufferB_values2 DSP Coefficients Buffer B values for program 2
+ * @param DAC_Config::DSP_BufferB_values3 DSP Coefficients Buffer B values for program 3
+ * @param DAC_Config::DSP_BufferB_values4 DSP Coefficients Buffer B values for program 4
+ * @param DAC_Config::DSP_BufferB_values5 DSP Coefficients Buffer B values for program 5
+ * @param DAC_Config::DSP_BufferB_values6 DSP Coefficients Buffer B values for program 6
  *
- * @param DAC::DSP_Intr_values1 DSP Instruction Buffer for program 1
- * @param DAC::DSP_Intr_values2 DSP Instruction Buffer for program 2
- * @param DAC::DSP_Intr_values3 DSP Instruction Buffer for program 3
- * @param DAC::DSP_Intr_values4 DSP Instruction Buffer for program 4
- * @param DAC::DSP_Intr_values5 DSP Instruction Buffer for program 5
- * @param DAC::DSP_Intr_values6 DSP Instruction Buffer for program 6
+ * @param DAC_Config::DSP_Intr_values1 DSP Instruction Buffer for program 1
+ * @param DAC_Config::DSP_Intr_values2 DSP Instruction Buffer for program 2
+ * @param DAC_Config::DSP_Intr_values3 DSP Instruction Buffer for program 3
+ * @param DAC_Config::DSP_Intr_values4 DSP Instruction Buffer for program 4
+ * @param DAC_Config::DSP_Intr_values5 DSP Instruction Buffer for program 5
+ * @param DAC_Config::DSP_Intr_values6 DSP Instruction Buffer for program 6
  */
-struct DAC
+struct DAC_Config
 {
     bool Audio_44k;
     bool Audio_48k;

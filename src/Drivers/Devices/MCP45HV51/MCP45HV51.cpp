@@ -36,7 +36,7 @@ constexpr int REGISTER_READ(int x) { return (((x & 0xF0) << 4) | 0xC0); }
 // CONSTRUCTORS
 // =====================
 
-MCP45HV51::MCP45HV51(const I2C_Bus *I2C, const int address)
+MCP45HV51::MCP45HV51(const I2C_Bus *I2C, const LIN_POTI address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;

@@ -8,37 +8,49 @@
  * @copyright Copyright (c) 2024
  *
  */
+#pragma once
 // ==============================================================================
 // INCLUDES
 // ==============================================================================
 #include "GPIO_Engine.hpp"
 #include "includes/clk.hpp"
 
+#include <string>
+
 // ==============================================================================
 // PUBLIC DEFINES
 // ==============================================================================
-#define DEV_NAME "/dev/gpiochip0"
+static constexpr const char *DEV_NAME = "/dev/gpiochip0";
 
-// Amplifiers status
-#define AMP1_FAULT 17
-#define AMP2_FAULT 27
-#define AMP3_FAULT 22
+/**
+ * @brief Define GPIO values that are used on the PCB design, thus preventing usage of unwanted GPIOS.
+ *
+ * @enumvalue GPIOS::AMP1_FAULT Amplifier 1 fault signal
+ * @enumvalue GPIOS::AMP2_FAULT Amplifier 2 fault signal
+ * @enumvalue GPIOS::AMP3_FAULT Amplifier 3 fault signal
+ *
+ * @enumvalue GPIOS::POWER_INT Active low interrupt signal from the power subsystem.
+ *
+ * @enumvalue GPIOS::aRGB_TOP ARGB Output for WS2812 leds on top
+ * @enumvalue GPIOS::aRGB_FRONT ARGB Output for SW2812 leds on front
+ *
+ * @enumvalue GPIOS::EXT_INT Active low interrupt signal from the ext ??
+ *
+ * @enumvalue GPIOS::TOUCH_INT Active low interrupt signal from the touch sensor.
+ *
+ */
+enum class GPIOS
+{
+    AMP1_FAULT = 17,
+    AMP2_FAULT = 27,
+    AMP3_FAULT = 22,
 
-// Power subsystem interrupt pin.
-#define POWER_INT 16
+    POWER_INT = 16,
 
-// aRGB
-#define aRGB_TOP 6
-#define aRGB_FRONT 13
+    aRGB_TOP = 6,
+    aRGB_FRONT = 13,
 
-// GPIO Expander Interrupts
-#define EXT_INT 5
+    EXT_INT = 5,
 
-// Touch sensor Interrupt
-#define TOUCH_INT 26
-
-// Battery
-#define BATTERY_INT 25
-
-// SMPS Int
-#define POWER_INT 16
+    TOUCH_INT = 26,
+};

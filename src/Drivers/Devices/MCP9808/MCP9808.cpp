@@ -43,7 +43,7 @@ constexpr int REGISTER(int x) { return (x & 0x0F); }
 // CONSTRUCTORS
 // =====================
 
-MCP9808::MCP9808(const I2C_Bus *I2C, const int address)
+MCP9808::MCP9808(const I2C_Bus *I2C, const TEMP_SENSOR address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;

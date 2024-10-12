@@ -26,7 +26,7 @@ constexpr int CONFIG = 0x80;
 // CONSTRUCTORS
 // =====================
 
-DS1882::DS1882(const I2C_Bus *I2C, const int address)
+DS1882::DS1882(const I2C_Bus *I2C, const LOG_POTI address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;

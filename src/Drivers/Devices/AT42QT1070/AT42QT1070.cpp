@@ -83,7 +83,7 @@ constexpr int DETECTION_INTEGRATOR_COUNTER_KEY_6 = 0x34;
 
 AT42QT1070::AT42QT1070(const I2C_Bus *I2C)
 {
-    this->address = (uint8_t)AT42QT1070_ADDRESS;
+    this->address = (uint8_t)TOUCHSENSOR::TOUCH_0;
     this->I2C = *I2C;
     return;
 }

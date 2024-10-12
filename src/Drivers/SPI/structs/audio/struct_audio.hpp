@@ -43,7 +43,7 @@ struct Audio
 
     struct Global Global;
 
-    struct DAC DAC;
+    struct DAC_Config DAC;
 
     struct AMP BassAmp;
     struct AMP LeftAmp;

@@ -43,7 +43,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    INA219(const I2C_Bus *I2C, const int address);
+    INA219(const I2C_Bus *I2C, const CURRENT_MONITOR address);
 
     /**
      * @brief Destroy the INA219 object

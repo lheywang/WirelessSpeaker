@@ -51,7 +51,7 @@ constexpr int REGISTER_WITH_INCREMENT_LEDS_CTRL(int x) { return ((x & 0x0F) | 0x
 // CONSTRUCTORS
 // =====================
 
-PCA9633::PCA9633(const I2C_Bus *I2C, const int address)
+PCA9633::PCA9633(const I2C_Bus *I2C, const LED_DRIVERS address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;

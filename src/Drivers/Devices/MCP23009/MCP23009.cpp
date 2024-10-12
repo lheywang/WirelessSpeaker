@@ -37,7 +37,7 @@ constexpr int OLAT = 0x0A;
 // CONSTRUCTORS
 // =====================
 
-MCP23009::MCP23009(const I2C_Bus *I2C, const int address)
+MCP23009::MCP23009(const I2C_Bus *I2C, const GPIO_EXPANDER address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;
