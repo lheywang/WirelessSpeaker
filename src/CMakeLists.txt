@@ -20,7 +20,8 @@ set(DeviceDrivers   ${CMAKE_SOURCE_DIR}/Drivers/Devices/ADS1015/ADS1015.cpp\\
                     ${CMAKE_SOURCE_DIR}/Drivers/Devices/MCP23009/MCP23009.cpp\\
                     ${CMAKE_SOURCE_DIR}/Drivers/Devices/PCA9633/PCA9633.cpp\\
                     ${CMAKE_SOURCE_DIR}/Drivers/Devices/PCM5252/PCM5252.cpp\\
-                    ${CMAKE_SOURCE_DIR}/Drivers/Devices/STUBS4500/STUSB4500.cpp)
+                    ${CMAKE_SOURCE_DIR}/Drivers/Devices/STUBS4500/STUSB4500.cpp\\
+                    ${CMAKE_SOURCE_DIR}/Drivers/Devices/M95256/M95256.cpp)
                     
 
 set(PeripheralDrivers   ${CMAKE_SOURCE_DIR}/Drivers/I2C/includes/smbus.cpp\\
