@@ -25,6 +25,7 @@
 #include <errno.h>
 #include <cstdint>
 #include <string.h>
+#include <iostream>
 
 // Custom builded smbus.h file, from the original repo : https://github.com/Sensirion/i2c-tools/tree/master
 // Only includes path were modified.
@@ -59,7 +60,9 @@ I2C_Bus *I2C_GetInfos()
 
     if (I2C->I2C_file < 0)
     {
-        fprintf(stderr, "[ I2C ][ GetInfos ] : Could not open the requested I2C bus : %s\n", strerror(errno));
+        std::cerr << "[ I2C ][ GetInfos ] : Could not open the requested I2C bus : "
+                  << strerror(errno)
+                  << std::endl;
         I2C->I2C_file = (int)NULL;
     }
 
@@ -134,7 +137,9 @@ int I2C_ConfigureAddress(I2C_Bus *I2C, int Address)
 {
     if (ioctl(I2C->I2C_file, I2C_SLAVE, Address) < 0)
     {
-        fprintf(stderr, "[ I2C ][ ConfigureAddress ] : Could not set address : %s\n", strerror(errno));
+        std::cerr << "[ I2C ][ ConfigureAddress ] : Could not set address : "
+                  << strerror(errno)
+                  << std::endl;
         return -errno;
     }
     return 0;

@@ -37,7 +37,9 @@ int GetGPIOChipInfos(gpiochip_info *info)
     int fd = open(DEV_NAME, O_RDONLY);
     if (fd < 0)
     {
-        fprintf(stderr, "[ GPIO ][ GetGPIOChipInfos ] : Failed to open the device file for %s\n", DEV_NAME);
+        std::cerr << "[ GPIO ][ GetGPIOChipInfos ] : Failed to open the device file for "
+                  << DEV_NAME
+                  << std::endl;
         return -1;
     }
 
@@ -46,7 +48,8 @@ int GetGPIOChipInfos(gpiochip_info *info)
     close(fd);
     if (ret < 0)
     {
-        fprintf(stderr, "[ GPIO ][ GetGPIOChipsInfos ] : Failed to fetch the infos about the gpiochip.\n");
+        std::cerr << "[ GPIO ][ GetGPIOChipsInfos ] : Failed to fetch the infos about the gpiochip."
+                  << std::endl;
         return -2;
     }
 
@@ -62,13 +65,21 @@ int GetGPIOInfo(GPIO *info)
     int fd = open(DEV_NAME, O_RDONLY);
     if (fd < 0)
     {
-        fprintf(stderr, "[ GPIO ][ GetGPIOInfo ] : Failed to open the device file for %s :  %s\n", DEV_NAME, strerror(errno));
+        std::cerr << "[ GPIO ][ GetGPIOInfo ] : Failed to open the device file for "
+                  << DEV_NAME
+                  << " : "
+                  << strerror(errno)
+                  << std::endl;
         return -1;
     }
     int ret = ioctl(fd, GPIO_GET_LINEINFO_IOCTL, &line);
     if (ret < 0)
     {
-        fprintf(stderr, "[ GPIO ][ GetGPIOInfo ] : Failed to read infos for GPIO at offset %d : %s\n", info->PinNumber, strerror(errno));
+        std::cerr << "[ GPIO ][ GetGPIOInfo ] : Failed to read infos for GPIO at offset "
+                  << info->PinNumber
+                  << " : "
+                  << strerror(errno)
+                  << std::endl;
         close(fd);
         return -2;
     }
@@ -97,7 +108,11 @@ int ReadGPIO(GPIO *info, int *const status)
     int fd = open(DEV_NAME, O_RDONLY);
     if (fd < 0)
     {
-        fprintf(stderr, "[ GPIO ][ ReadGPIO ] : Failed to open the device file for %s :  %s\n", DEV_NAME, strerror(errno));
+        std::cerr << "[ GPIO ][ ReadGPIO ] : Failed to open the device file for "
+                  << DEV_NAME
+                  << " : "
+                  << strerror(errno)
+                  << std::endl;
         return -1;
     }
 
@@ -108,7 +123,11 @@ int ReadGPIO(GPIO *info, int *const status)
     close(fd);
     if (ret < 0)
     {
-        fprintf(stderr, "[ GPIO ][ ReadGPIO ] : Failed to get the line handle for GPIO at offset %d : %s\n", info->PinNumber, strerror(errno));
+        std::cerr << "[ GPIO ][ ReadGPIO ] : Failed to get the line handle for GPIO at offset "
+                  << info->PinNumber
+                  << " : "
+                  << strerror(errno)
+                  << std::endl;
         return -2;
     }
 
@@ -116,7 +135,11 @@ int ReadGPIO(GPIO *info, int *const status)
     close(rq.fd);
     if (ret < 0)
     {
-        fprintf(stderr, "[ GPIO ][ ReadGPIO ] : Unable to get line value using ioctl at offset %d : %s\n", info->PinNumber, strerror(errno));
+        std::cerr << "[ GPIO ][ ReadGPIO ] : Unable to get line value using ioctl at offset "
+                  << info->PinNumber
+                  << " : "
+                  << strerror(errno)
+                  << std::endl;
         return -3;
     }
     *status = data.values[0];
@@ -132,7 +155,11 @@ int WriteGPIO(GPIO *info, const int Status)
     int fd = open(DEV_NAME, O_RDONLY);
     if (fd < 0)
     {
-        fprintf(stderr, "[ GPIO ][ WriteGPIO ] : Failed to open the device file for %s :  %s\n", DEV_NAME, strerror(errno));
+        std::cerr << "[ GPIO ][ WriteGPIO ] : Failed to open the device file for "
+                  << DEV_NAME
+                  << " : "
+                  << strerror(errno)
+                  << std::endl;
         return -1;
     }
 
@@ -143,7 +170,11 @@ int WriteGPIO(GPIO *info, const int Status)
     close(fd);
     if (ret < 0)
     {
-        fprintf(stderr, "[ GPIO ][ WriteGPIO ] : Failed to get the line handle for GPIO at offset %d : %s\n", info->PinNumber, strerror(errno));
+        std::cerr << "[ GPIO ][ WriteGPIO ] : Failed to get the line handle for GPIO at offset"
+                  << info->PinNumber
+                  << " : "
+                  << strerror(errno)
+                  << std::endl;
         return -2;
     }
 
@@ -153,13 +184,13 @@ int WriteGPIO(GPIO *info, const int Status)
     if (ret == -1)
 
     {
-        fprintf(stderr, "[ GPIO ][ WriteGPIO ] : Unable to set line value using ioctl at offset %d : %s\n", info->PinNumber, strerror(errno));
+        std::cerr << "[ GPIO ][ WriteGPIO ] : Unable to set line value using ioctl at offset "
+                  << info->PinNumber
+                  << " : "
+                  << strerror(errno)
+                  << std::endl;
         return -3;
     }
     info->InOut = true;
     return 0;
 }
-
-// GpioInitialize ? Output ?
-// InitClock
-// TermClock

@@ -16,6 +16,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <cstdlib>
+#include <iostream>
 
 #include <termios.h>
 
@@ -29,7 +30,11 @@ UART_Bus *UART_GetInfos(const int Bus)
     UART->UART_File = open(UART->UART_Filename, O_RDWR);
     if (UART->UART_File < 0)
     {
-        fprintf(stderr, "[ UART ][ GetInfos ] : Cannot open requested device file : %s | %s\n", UART->UART_Filename, strerror(errno));
+        std::cerr << "[ UART ][ GetInfos ] : Cannot open requested device file : "
+                  << UART->UART_Filename
+                  << " - "
+                  << strerror(errno)
+                  << std::endl;
         return UART;
     }
 
@@ -38,7 +43,9 @@ UART_Bus *UART_GetInfos(const int Bus)
 
     if (res < 0)
     {
-        fprintf(stderr, "[ UART ][ GetInfos ] : Failed to get the COM port settings : %s\n", strerror(errno));
+        std::cerr << "[ UART ][ GetInfos ] : Failed to get the COM port settings : "
+                  << strerror(errno)
+                  << std::endl;
         return UART;
     }
 
@@ -146,7 +153,9 @@ int UART_Configure(UART_Bus *UART,
 
     if (res < 0)
     {
-        fprintf(stderr, "[ UART ][ Configure ] : Failed to save settings for the COM port : %s\n", strerror(errno));
+        std::cerr << "[ UART ][ Configure ] : Failed to save settings for the COM port : "
+                  << strerror(errno)
+                  << std::endl;
         return -3;
     }
     return 0;
@@ -158,7 +167,9 @@ int UART_Write(UART_Bus *UART, int *const TX, const int Len)
     char *TX_buf = (char *)malloc(sizeof(char) * Len);
     if (TX_buf == 0)
     {
-        fprintf(stderr, "[ UART ][ Write ] : Could not allocate the input buffer : %s\n", strerror(errno));
+        std::cerr << "[ UART ][ Write ] : Could not allocate the input buffer : "
+                  << strerror(errno)
+                  << std::endl;
         return -1;
     }
 
@@ -179,7 +190,9 @@ int UART_Read(UART_Bus *UART, int *const RX, const int Len)
     char *RX_buf = (char *)malloc(sizeof(char) * Len);
     if (RX == 0)
     {
-        fprintf(stderr, "[ UART ][ Read ] : Could not allocate the output buffer : %s\n", strerror(errno));
+        std::cerr << "[ UART ][ Read ] : Could not allocate the output buffer : "
+                  << strerror(errno)
+                  << std::endl;
         return -1;
     }
     memset(RX_buf, 0x00, Len * sizeof(char));
@@ -188,7 +201,9 @@ int UART_Read(UART_Bus *UART, int *const RX, const int Len)
 
     if (num_bytes < 0)
     {
-        fprintf(stderr, "[ UART ][ Read ] : Failed to read the RX line : %s\n", strerror(errno));
+        std::cerr << "[ UART ][ Read ] : Failed to read the RX line : "
+                  << strerror(errno)
+                  << std::endl;
         return -2;
     }
 
