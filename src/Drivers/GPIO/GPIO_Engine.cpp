@@ -13,7 +13,6 @@
 // INCLUDES
 // ==============================================================================
 #include "GPIO.hpp"
-#include "GPIO_Engine.hpp"
 
 #include <linux/gpio.h>
 
@@ -31,36 +30,13 @@
 // ==============================================================================
 // FUNCTIONS
 // ==============================================================================
-int GetGPIOChipInfos(gpiochip_info *info)
+GPIO GPIO_GetInfos(const PINS Pin, const GPMODES Mode)
 {
-    // device file management
-    int fd = open(DEV_NAME, O_RDONLY);
-    if (fd < 0)
-    {
-        std::cerr << "[ GPIO ][ GetGPIOChipInfos ] : Failed to open the device file for "
-                  << DEV_NAME
-                  << std::endl;
-        return -1;
-    }
-
-    // request data
-    int ret = ioctl(fd, GPIO_GET_CHIPINFO_IOCTL, info);
-    close(fd);
-    if (ret < 0)
-    {
-        std::cerr << "[ GPIO ][ GetGPIOChipsInfos ] : Failed to fetch the infos about the gpiochip."
-                  << std::endl;
-        return -2;
-    }
-
-    // Close and exit
-    return 0;
-}
-
-int GetGPIOInfo(GPIO *info)
-{
+    struct GPIO info;
     struct gpioline_info line;
-    line.line_offset = (__u32)info->PinNumber;
+
+    line.line_offset = (__u32)Pin;
+    info.Mode = (__u8)Mode;
 
     int fd = open(DEV_NAME, O_RDONLY);
     if (fd < 0)
@@ -70,34 +46,34 @@ int GetGPIOInfo(GPIO *info)
                   << " : "
                   << strerror(errno)
                   << std::endl;
-        return -1;
+        return info;
     }
     int ret = ioctl(fd, GPIO_GET_LINEINFO_IOCTL, &line);
     if (ret < 0)
     {
         std::cerr << "[ GPIO ][ GetGPIOInfo ] : Failed to read infos for GPIO at offset "
-                  << info->PinNumber
+                  << info.PinNumber
                   << " : "
                   << strerror(errno)
                   << std::endl;
         close(fd);
-        return -2;
+        return info;
     }
 
     // Copying the data
-    memcpy(info->Name, line.name, GPIO_MAX_NAME_SIZE);
+    memcpy(info.Name, line.name, GPIO_MAX_NAME_SIZE);
 
-    info->InOut = (line.flags & GPIOLINE_FLAG_IS_OUT) ? true : false;
-    info->Polarity = (line.flags & GPIOLINE_FLAG_ACTIVE_LOW) ? true : false;
+    info.InOut = (line.flags & GPIOLINE_FLAG_IS_OUT) ? true : false;
+    info.Polarity = (line.flags & GPIOLINE_FLAG_ACTIVE_LOW) ? true : false;
 
-    info->Type = 0;
-    info->Type = (line.flags & GPIOLINE_FLAG_OPEN_DRAIN) ? 1 : ((line.flags & GPIOLINE_FLAG_OPEN_SOURCE) ? 2 : 0);
+    info.Type = 0;
+    info.Type = (line.flags & GPIOLINE_FLAG_OPEN_DRAIN) ? 1 : ((line.flags & GPIOLINE_FLAG_OPEN_SOURCE) ? 2 : 0);
 
-    info->Kernel = (line.flags & GPIOLINE_FLAG_KERNEL) ? 1 : 0;
+    info.Kernel = (line.flags & GPIOLINE_FLAG_KERNEL) ? 1 : 0;
 
     // Close and exit
     close(fd);
-    return 0;
+    return info;
 }
 
 int ReadGPIO(GPIO *info, int *const status)

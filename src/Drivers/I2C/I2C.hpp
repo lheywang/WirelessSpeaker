@@ -13,14 +13,13 @@
 
 // Only included one time
 #pragma once
-
 #include "I2C_Engine.hpp"
 
 // ==============================================================================
 // IC ADDRESSES
 // ==============================================================================
 
-inline const int I2C_BUS_NUMBER = 1;
+inline constexpr int I2C_BUS_NUMBER = 1;
 
 /**
  * @brief Define MCP9808 Temperature sensor addresses
