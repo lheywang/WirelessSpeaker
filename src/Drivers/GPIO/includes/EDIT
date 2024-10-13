@@ -1,0 +1,8 @@
+List of modifications dones
+---------------------------------------
+
+
+1)  Removal of the useless stuff in our case (RPi Zero 2W)
+
+2)  Creation of higher level function to hide to the user the different sublevels.
+    Theses functions are basically a combination of lib default functions.

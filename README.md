@@ -5,6 +5,10 @@ The goal is to produce a complete software stackup, capable of streaming audio o
 - WiFi (UPNP)
 - USB (only work for slave enabled board as the RPI Zero. Does not work on the RPi classic boards)
 
+## Disclaimer 
+In this repo, I used some lib's developped by others. They're under */includes/ folder. You may find a Link to their source repo as well as their License.
+All of the edit are specified on a EDIT file near the library.
+
 ## PCB : 
 The PCB is responsible for all of the electricals interractions, such as : 
 - RPi to the DAC (PCM5252)

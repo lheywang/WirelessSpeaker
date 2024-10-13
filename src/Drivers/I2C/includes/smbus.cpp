@@ -34,6 +34,8 @@ This doesn't change anything to the behavior of the code, which was found here :
 
 This was done to make the source code cleaner and doesn't need installing libs in the PC.
 No other changes was done on the code.
+
+Changed on october 2024
 */
 
 #include "smbus.h"
