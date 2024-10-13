@@ -28,7 +28,14 @@
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
-// To make the build easier, I've included the source file here. This doesn't change anything to the behavior of the code, which was found here : https://github.com/Sensirion/i2c-tools/tree/master
+/*
+To make the build easier, I've included the source file here.
+This doesn't change anything to the behavior of the code, which was found here : https://github.com/Sensirion/i2c-tools/tree/master
+
+This was done to make the source code cleaner and doesn't need installing libs in the PC.
+No other changes was done on the code.
+*/
+
 #include "smbus.h"
 // #include <i2c/smbus.h>
 

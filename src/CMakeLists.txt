@@ -26,11 +26,11 @@ set(DeviceDrivers   ${CMAKE_SOURCE_DIR}/Drivers/Devices/ADS1015/ADS1015.cpp\\
 
 set(PeripheralDrivers   ${CMAKE_SOURCE_DIR}/Drivers/I2C/includes/smbus.cpp\\
                         ${CMAKE_SOURCE_DIR}/Drivers/I2C/I2C_Engine.cpp\\
-                        ${CMAKE_SOURCE_DIR}/Drivers/GPIO/GPIO_Engine.cpp\\
+                        ${CMAKE_SOURCE_DIR}/Drivers/GPIO/GPIO.cpp\\
                         ${CMAKE_SOURCE_DIR}/Drivers/GPIO/includes/clk.cpp\\
                         ${CMAKE_SOURCE_DIR}/Drivers/SPI/SPI_Engine.cpp\\
-                        ${CMAKE_SOURCE_DIR}/Drivers/UART/UART_Engine.cpp\\
-                        ${CMAKE_SOURCE_DIR}/Drivers/USB/USB_Engine.cpp)
+                        ${CMAKE_SOURCE_DIR}/Drivers/UART/UART.cpp\\
+                        ${CMAKE_SOURCE_DIR}/Drivers/USB/USB.cpp)
 
 set(Modules ${CMAKE_SOURCE_DIR}/Modules/Leds/Leds.cpp\\
             ${CMAKE_SOURCE_DIR}/Modules/Temperature/Temperature.cpp)
