@@ -20,6 +20,8 @@
 #include "Drivers/GPIO/GPIO.hpp"
 #include "Drivers/UART/UART.hpp"
 
+#include <libudev.h>
+
 // entry point
 int main()
 {
@@ -40,19 +42,6 @@ int main()
             - ...
      */
     std::cout << "Hello World !" << std::endl;
-
-    UART_Bus *Serial = UART_GetInfos(0);
-    UART_Configure(Serial, UART_PARITY::OFF, UART_STOP::ONE, UART_DATA_WIDTH::EIGHT, UART_CTRL::NONE, UART_BAUD::BD_115K2);
-
-    char buf[] = "Hello World !";
-    UART_Write(Serial, buf, sizeof(buf));
-
-    UART_Read(Serial, buf, 10);
-    for (int i = 0; i < 10; i++)
-        std::cout << buf[i];
-    std::cout << std::endl;
-
-    UART_Close(Serial);
 
     /* MCP 9808
      *
@@ -207,6 +196,20 @@ int main()
      * // AIN 1 : 0.110
      * // AIN 2 : 2.487 V
      * // AIN 3 : 0.816 V
+     *
+     */
+
+    /*
+     * UART_Bus *Serial = UART_GetInfos(0);
+     * UART_Configure(Serial, UART_PARITY::OFF, UART_STOP::ONE, UART_DATA_WIDTH::EIGHT, UART_CTRL::NONE, UART_BAUD::BD_115K2);
+     *
+     * char buf[] = "Hello World \n";
+     * UART_Write(Serial, buf, sizeof(buf));
+     * UART_Read(Serial, buf, 10);
+     * for (int i = 0; i < 10; i++)
+     *     std::cout << buf[i];
+     * std::cout << std::endl;
+     * UART_Close(Serial);
      *
      */
 

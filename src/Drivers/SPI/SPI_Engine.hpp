@@ -10,6 +10,16 @@
  */
 
 #include <cstdint>
+#include <sys/ioctl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <cstdint>
+#include <string.h>
+#include <iostream>
+#include "linux/spi/spidev.h"
 
 // ==============================================================================
 // DATA STRUCTURES
@@ -81,4 +91,74 @@ int SPI_Configure(SPI_Bus *SPI, int Mode, int WordSize, int Speed);
  * @return -2 : Error while allocating Output buffer
  * @return -3 : IOCTL error.
  */
-int SPI_Transfer(SPI_Bus *SPI, int *const InputBuffer, int *const OutputBufer, const int Len);
+template <typename I, typename O>
+int SPI_Transfer(SPI_Bus *SPI, I *const InputBuffer, O *const OutputBufer, const int Len)
+{
+    // Allocate a unsigned long long buffer to store the data to be written.
+    __u8 *TX = (__u8 *)malloc(sizeof(__u8) * Len);
+    if (TX == 0)
+    {
+        std::cerr << "[ SPI ][ Read ] : Could not allocate the input buffer : "
+                  << strerror(errno)
+                  << std::endl;
+        return -1;
+    }
+
+    // Let's copy all of the input data to the new one !
+    for (int i = 0; i < Len; i++)
+        TX[i] = (__u8)InputBuffer[i];
+
+    // Allocate a unsigned long long buffer to the data to be rode.
+    __u8 *RX = (__u8 *)malloc(sizeof(__u8) * Len);
+    if (RX == 0)
+    {
+        std::cerr << "[ SPI ][ Read ] : Could not allocate the output buffer : "
+                  << strerror(errno)
+                  << std::endl;
+        return -2;
+    }
+    memset(RX, 0x00, Len * sizeof(__u8));
+
+    struct spi_ioc_transfer message =
+        {
+            .tx_buf = (unsigned long)TX,
+            .rx_buf = (unsigned long)RX,
+            .len = (unsigned int)Len,
+            .speed_hz = SPI->speed,
+            .delay_usecs = SPI->delay,
+            .bits_per_word = SPI->bits,
+            .cs_change = SPI->change,
+            .tx_nbits = SPI->tx_nbits,
+            .rx_nbits = SPI->rx_nbits,
+            .word_delay_usecs = SPI->delay,
+            .pad = 0, // padding, remain at 0
+        };
+
+    // Perform IOCTL
+    int res = 0;
+    res = ioctl(SPI->SPI_file, SPI_IOC_MESSAGE(1), &message);
+    if (res < 0)
+    {
+        std::cerr << "[ SPI ][ Read ] : Could not perform transfer operation on bus on"
+                  << SPI->SPI_Bus
+                  << " : "
+                  << strerror(errno)
+                  << std::endl;
+        free(RX);
+        free(TX);
+        return -3;
+    }
+
+    // Let's copy all of the output data.
+    for (int i = 0; i < Len; i++)
+    {
+        OutputBufer[i] = (O)RX[i];
+        std::cout << std::hex << RX[i] << std::endl;
+    }
+
+    // Free de allocated buffers.
+    free(RX);
+    free(TX);
+
+    return 0;
+}
