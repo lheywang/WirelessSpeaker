@@ -2,10 +2,12 @@
  * @file UART.cpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Implement UART functions in C++
- * @version 0.1
+ * @version 1.0
  * @date 2024-10-09
  *
  * @copyright Copyright (c) 2024
+ *
+ * @remark Class was tested successfully on 13/10/2024.
  *
  */
 
@@ -26,7 +28,7 @@ UART_Bus *UART_GetInfos(const int Bus)
 {
     UART_Bus *UART = new UART_Bus;
 
-    snprintf(UART->UART_Filename, sizeof(UART->UART_Filename), "/dev/TTYS %d", Bus);
+    snprintf(UART->UART_Filename, sizeof(UART->UART_Filename), "/dev/serial%d", Bus);
     UART->UART_File = open(UART->UART_Filename, O_RDWR);
     if (UART->UART_File < 0)
     {
@@ -60,20 +62,15 @@ int UART_Close(UART_Bus *UART)
 }
 
 int UART_Configure(UART_Bus *UART,
-                   const int ParityBit,
-                   const int StopBit,
-                   const int BitNumber,
+                   const UART_PARITY ParityBit,
+                   const UART_STOP StopBit,
+                   const UART_DATA_WIDTH BitNumber,
                    const UART_CTRL FLowControl,
-                   const int BaudRate)
+                   const UART_BAUD BaudRate)
 {
     // =======================
     // C FLAG
     // =======================
-    if ((5 > BitNumber) | (BitNumber > 8))
-        return -1;
-    if ((B0 > BaudRate) | (BaudRate > B3000000))
-        return -2;
-
     // Parity bit
     if ((bool)ParityBit == true)
         UART->TTY.c_cflag |= PARENB; // Enable parity
@@ -81,13 +78,13 @@ int UART_Configure(UART_Bus *UART,
         UART->TTY.c_cflag &= ~PARENB; // Disable parity
 
     // Stop bit
-    if (StopBit > 1)
+    if ((int)StopBit > 1)
         UART->TTY.c_cflag |= CSTOPB; // 2 stop bit
     else
         UART->TTY.c_cflag &= ~CSTOPB; // 1 stop bit
 
     int CSFlag = 0;
-    switch (BitNumber)
+    switch ((int)BitNumber)
     {
     case 5:
         CSFlag = CS5;
@@ -146,8 +143,8 @@ int UART_Configure(UART_Bus *UART,
     // =======================
     // IOCTL
     // =======================
-    cfsetispeed(&UART->TTY, BaudRate);
-    cfsetospeed(&UART->TTY, BaudRate);
+    cfsetispeed(&UART->TTY, (int)BaudRate);
+    cfsetospeed(&UART->TTY, (int)BaudRate);
 
     int res = tcsetattr(UART->UART_File, TCSANOW, &UART->TTY);
 
@@ -158,59 +155,5 @@ int UART_Configure(UART_Bus *UART,
                   << std::endl;
         return -3;
     }
-    return 0;
-}
-
-int UART_Write(UART_Bus *UART, int *const TX, const int Len)
-{
-    // Allocate a unsigned long long buffer to store the data to be written.
-    char *TX_buf = (char *)malloc(sizeof(char) * Len);
-    if (TX_buf == 0)
-    {
-        std::cerr << "[ UART ][ Write ] : Could not allocate the input buffer : "
-                  << strerror(errno)
-                  << std::endl;
-        return -1;
-    }
-
-    // Let's copy all of the input data to the new one !
-    for (int i = 0; i < Len; i++)
-        TX_buf[i] = (char)TX[i];
-
-    // Write to file !
-    write(UART->UART_File, TX_buf, sizeof(TX_buf));
-
-    free(TX_buf);
-    return 0;
-}
-
-int UART_Read(UART_Bus *UART, int *const RX, const int Len)
-{
-    // Allocate a unsigned long long buffer to the data to be rode.
-    char *RX_buf = (char *)malloc(sizeof(char) * Len);
-    if (RX == 0)
-    {
-        std::cerr << "[ UART ][ Read ] : Could not allocate the output buffer : "
-                  << strerror(errno)
-                  << std::endl;
-        return -1;
-    }
-    memset(RX_buf, 0x00, Len * sizeof(char));
-
-    int num_bytes = read(UART->UART_File, RX_buf, sizeof(RX_buf));
-
-    if (num_bytes < 0)
-    {
-        std::cerr << "[ UART ][ Read ] : Failed to read the RX line : "
-                  << strerror(errno)
-                  << std::endl;
-        return -2;
-    }
-
-    // Copy the output data
-    for (int i = 0; i < Len; i++)
-        RX[i] = RX_buf[i];
-
-    free(RX_buf);
     return 0;
 }

@@ -5,11 +5,16 @@
  * @version 0.1
  * @date 2024-10-09
  *
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c)
+ *
+ * @remark Class was tested successfully on 13/10/2024.
  *
  */
 
 #include <termios.h>
+#include <string.h>
+#include <errno.h>
+#include <cstdlib>
 
 // ==============================================================================
 // DATA STRUCTURES
@@ -20,6 +25,66 @@ enum class UART_CTRL
 {
     HW_FLOW = 0x01, /*!< Hardware control (require RTS / CTS)*/
     SW_FLOW = 0x02, /*!< Software control*/
+    NONE = 0x00,    /*!< No control*/
+};
+
+/*! Define values that are used to define the way to control the UART parity comm */
+enum class UART_PARITY
+{
+    OFF = 0x00, /*!< Enable parity bit*/
+    ON = 0x021, /*!< Disable parity bit*/
+};
+
+/*! Define values that are used to define the way to control the UART stop bit comm */
+enum class UART_STOP
+{
+    ONE = 0x01, /*!< One stop bit*/
+    TWO = 0x02, /*!< Two stop bit*/
+};
+
+/*! Define values that are used to define the way to control the UART bit number comm */
+enum class UART_DATA_WIDTH
+{
+    FIVE = 0x05,  /*!< 5 data bit*/
+    SIX = 0x06,   /*!< 6 data bit*/
+    SEVEN = 0x07, /*!< 7 data bit*/
+    EIGHT = 0x08, /*!< 8 data bit*/
+};
+
+/*! Define values that are used to define the way to control the UART baud rate comm */
+enum class UART_BAUD
+{
+    BD_0 = 0000000,     /*!< PAUSE */
+    BD_50 = 0000001,    /*!< 50 bauds*/
+    BD_75 = 0000002,    /*!< 75 bauds*/
+    BD_110 = 0000003,   /*!< 110 bauds*/
+    BD_134 = 0000004,   /*!< 134 bauds*/
+    BD_150 = 0000005,   /*!< 150 bauds*/
+    BD_200 = 0000006,   /*!< 200 bauds*/
+    BD_300 = 0000007,   /*!< 300 bauds*/
+    BD_600 = 0000010,   /*!< 600 bauds*/
+    BD_1K2 = 0000011,   /*!< 1200 bauds STANDARD VALUE !*/
+    BD_1K8 = 0000012,   /*!< 1800 bauds*/
+    BD_2K4 = 0000013,   /*!< 2400 bauds*/
+    BD_4K8 = 0000014,   /*!< 4800 bauds*/
+    BD_9K6 = 0000015,   /*!< 9600 bauds STANDARD VALUE !*/
+    BD_19K2 = 0000016,  /*!< 19200 bauds STANDARD VALUE !*/
+    BD_38K4 = 0000017,  /*!< 38400 bauds STANDARD VALUE !*/
+    BD_57K6 = 0010001,  /*!< 57600 bauds STANDARD VALUE !*/
+    BD_115K2 = 0010002, /*!< 115200 bauds STANDARD VALUE !*/
+    BD_230K4 = 0010003, /*!< 230400 bauds*/
+    BD_460K8 = 0010004, /*!< 460800 bauds*/
+    BD_500K0 = 0010005, /*!< 500000 bauds*/
+    BD_576K = 0010006,  /*!< 576000 bauds*/
+    BD_921K6 = 0010007, /*!< 921600 bauds STANDARD VALUE !*/
+    BD_1M = 0010010,    /*!< 1000000 bauds*/
+    BD_1M152 = 0010011, /*!< 1152000 bauds*/
+    BD_1M5 = 0010012,   /*!< 1500000 bauds*/
+    BD_2M = 0010013,    /*!< 2000000 bauds*/
+    BD_2M5 = 0010014,   /*!< 2500000 bauds*/
+    BD_3M = 0010015,    /*!< 3000000 bauds*/
+    BD_3M5 = 0010016,   /*!< 3500000 bauds*/
+    BD_4M = 0010017,    /*!< 4000000 bauds*/
 };
 
 constexpr int MAX_WAIT_DELAY_DS = 5; /*!< Up to 500ms without receiving any bytes trigger an exception*/
@@ -77,16 +142,14 @@ int UART_Close(UART_Bus *UART);
  * @param BaudRate Set the baud rate used for the transfer.
  *
  * @return  0 : OK
- * @return -1 : Invalid bit number to be send
- * @return -2 : Invalid baud rate
- * @return -3 : IOCTL error.
+ * @return -1 : IOCTL error.
  */
 int UART_Configure(UART_Bus *UART,
-                   const int ParityBit,
-                   const int StopBit,
-                   const int BitNumber,
+                   const UART_PARITY ParityBit,
+                   const UART_STOP StopBit,
+                   const UART_DATA_WIDTH BitNumber,
                    const UART_CTRL FLowControl,
-                   const int BaudRate);
+                   const UART_BAUD BaudRate);
 
 /**
  * @brief Write a buffer to the UART port
@@ -98,7 +161,29 @@ int UART_Configure(UART_Bus *UART,
  * @return  0 : OK
  * @return -1 : Failed to allocate buffer
  */
-int UART_Write(UART_Bus *UART, int *const TX, const int Len);
+template <typename T>
+int UART_Write(UART_Bus *UART, T *const TX, const int Len)
+{
+    // Allocate a unsigned long long buffer to store the data to be written.
+    char *TX_buf = (char *)malloc(sizeof(char) * Len);
+    if (TX_buf == 0)
+    {
+        std::cerr << "[ UART ][ Write ] : Could not allocate the input buffer : "
+                  << strerror(errno)
+                  << std::endl;
+        return -1;
+    }
+
+    // Let's copy all of the input data to the new one !
+    for (int i = 0; i < Len; i++)
+        TX_buf[i] = (char)TX[i];
+
+    // Write to file !
+    write(UART->UART_File, TX_buf, Len);
+
+    free(TX_buf);
+    return 0;
+}
 
 /**
  * @brief Read a buffer from the UART port
@@ -112,4 +197,34 @@ int UART_Write(UART_Bus *UART, int *const TX, const int Len);
  * @return -1 : Failed to allocate buffer
  * @return -2 : IOCTL error.
  */
-int UART_Read(UART_Bus *UART, int *const RX, const int Len);
+template <typename T>
+int UART_Read(UART_Bus *UART, T *const RX, const int Len)
+{
+    // Allocate a unsigned long long buffer to the data to be rode.
+    char *RX_buf = (char *)malloc(sizeof(char) * Len);
+    if (RX == 0)
+    {
+        std::cerr << "[ UART ][ Read ] : Could not allocate the output buffer : "
+                  << strerror(errno)
+                  << std::endl;
+        return -1;
+    }
+    memset(RX_buf, 0x00, Len * sizeof(char));
+
+    int num_bytes = read(UART->UART_File, RX_buf, Len);
+
+    if (num_bytes < 0)
+    {
+        std::cerr << "[ UART ][ Read ] : Failed to read the RX line : "
+                  << strerror(errno)
+                  << std::endl;
+        return -2;
+    }
+
+    // Copy the output data
+    for (int i = 0; i < Len; i++)
+        RX[i] = (T)RX_buf[i];
+
+    free(RX_buf);
+    return 0;
+}
