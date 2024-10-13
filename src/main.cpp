@@ -18,6 +18,7 @@
 #include "Drivers/Devices/Devices.hpp"
 #include "Drivers/SPI/SPI.hpp"
 #include "Drivers/GPIO/GPIO.hpp"
+#include "Drivers/UART/UART.hpp"
 
 // entry point
 int main()
@@ -40,23 +41,18 @@ int main()
      */
     std::cout << "Hello World !" << std::endl;
 
-    // I2C_Bus *I2C = I2C_GetInfos();
-    // std::cout << I2C->I2C_filename << std::endl;
-    // std::cout << I2C->I2C_file << std::endl;
-    // I2C_Close(I2C);
+    UART_Bus *Serial = UART_GetInfos(0);
+    UART_Configure(Serial, UART_PARITY::OFF, UART_STOP::ONE, UART_DATA_WIDTH::EIGHT, UART_CTRL::NONE, UART_BAUD::BD_115K2);
 
-    SPI_Bus *SPI = SPI_GetInfos();
+    char buf[] = "Hello World !";
+    UART_Write(Serial, buf, sizeof(buf));
 
-    int TX[] = {0x03, 0xAA, 0xAA, 0x88, 0x45};
-    int RX[5] = {0};
+    UART_Read(Serial, buf, 10);
+    for (int i = 0; i < 10; i++)
+        std::cout << buf[i];
+    std::cout << std::endl;
 
-    SPI_Configure(SPI, SPI_MODE_1, (int)SPI_SETTINGS::BUS_WORD_SIZE, 500'000);
-    SPI_Transfer(SPI, TX, RX, 5);
-
-    for (int i = 0; i < 5; i++)
-        std::cout << RX[i] << std::endl;
-
-    SPI_Close(SPI);
+    UART_Close(Serial);
 
     /* MCP 9808
      *

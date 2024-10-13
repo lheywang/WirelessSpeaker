@@ -5,7 +5,9 @@
  * @version 1.0
  * @date 2024-09-25
  *
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c)
+ *
+ * @remark Class was tested successfully on 07/10/2024.
  *
  */
 

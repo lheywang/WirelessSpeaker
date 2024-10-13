@@ -7,6 +7,8 @@
  *
  * @copyright Copyright (c) 2024
  *
+ * @remark Class was tested successfully on 07/10/2024.
+ *
  */
 // Header file
 #include "ADS1015.hpp"

@@ -199,7 +199,10 @@ int SPI_Transfer(SPI_Bus *SPI, int *const InputBuffer, int *const OutputBufer, c
 
     // Let's copy all of the output data.
     for (int i = 0; i < Len; i++)
+    {
         OutputBufer[i] = (int)RX[i];
+        std::cout << std::hex << RX[i] << std::endl;
+    }
 
     // Free de allocated buffers.
     free(RX);

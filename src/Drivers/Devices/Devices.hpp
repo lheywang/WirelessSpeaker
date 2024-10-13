@@ -21,3 +21,4 @@
 #include "PCA9633/PCA9633.hpp"
 #include "PCM5252/PCM5252.hpp"
 #include "STUBS4500/STUSB4500.hpp"
+#include "M95256/M95256.hpp"

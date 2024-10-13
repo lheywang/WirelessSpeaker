@@ -81,7 +81,7 @@ int M95256::ReadStatus(int *const WriteProtectStatus,
 
     buf[0] = RDSR;
 
-    res = SPI_Transfer(&this->SPI, buf, buf, 1);
+    res = SPI_Transfer(&this->SPI, buf, buf, 2);
 
     if (res != 0)
         return -1;
