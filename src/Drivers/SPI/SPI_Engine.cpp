@@ -135,7 +135,7 @@ int SPI_Configure(SPI_Bus *SPI, int Mode, int WordSize, int Speed)
     SPI->rx_nbits = (unsigned char)1;
     SPI->bits = (unsigned char)WordSize;
     SPI->change = (unsigned char)0;
-    SPI->delay = (unsigned char)1;
+    SPI->delay = (unsigned char)0;
 
     return 0;
 }

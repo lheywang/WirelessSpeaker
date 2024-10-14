@@ -34,6 +34,8 @@ enum class PINS
     aRGB_FRONT = 13, /*!< Addressable RGB for WS2812 leds (front)*/
     EXT_INT = 5,     /*!< Active low interrupt signal from the exterior ??*/
     TOUCH_INT = 26,  /*!< Active low interrupt signal from the capacitive touch sensor*/
+    NWRITE = 15,     /*!< TEMP VALUES !!!!*/
+    NHOLD = 14,      /*!< TEMP VALUES !!!!*/
 };
 
 /*! Define values for the operating modes of the GPIO */
@@ -95,7 +97,7 @@ int GPIO_Close(GPIO *info);
  * @return -2 : Failed to read the dev file
  * @return -3 : Failed to read the state of the GPIO
  */
-int ReadGPIO(GPIO *info, int *const status);
+int GPIO_Read(GPIO *info, int *const status);
 
 /**
  * @brief Write the status to a GPIO.
@@ -111,4 +113,4 @@ int ReadGPIO(GPIO *info, int *const status);
  * @return -3 : Failed to read the dev file
  * @return -4 : Failed to write the state of the GPIO
  */
-int WriteGPIO(GPIO *info, const int Status);
+int GPIO_Write(GPIO *info, const int Status);

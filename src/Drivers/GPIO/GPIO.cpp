@@ -82,7 +82,7 @@ int GPIO_Close(GPIO *info)
     return 0;
 }
 
-int ReadGPIO(GPIO *info, int *const status)
+int GPIO_Read(GPIO *info, int *const status)
 {
     if (info->Mode == GPMODES::OUTPUT)
     {
@@ -137,7 +137,7 @@ int ReadGPIO(GPIO *info, int *const status)
     return 0;
 }
 
-int WriteGPIO(GPIO *info, const int Status)
+int GPIO_Write(GPIO *info, const int Status)
 {
     if (info->Mode == GPMODES::INPUT)
     {

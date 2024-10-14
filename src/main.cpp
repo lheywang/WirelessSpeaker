@@ -43,6 +43,23 @@ int main()
      */
     std::cout << "Hello World !" << std::endl;
 
+    SPI_Bus *SPI = SPI_GetInfos();
+    SPI_Configure(SPI, SPI_MODE_0, 8, 500'000);
+
+    int TX[] = {0x02, 0x44, 0x44, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; //  R 02
+    // int TX[] = {0x02, 0x22, 0x22, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA}; // 03 W
+    int RX[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+    SPI_Transfer(SPI, TX, RX, 10);
+
+    for (int i = 0; i < 10; i++)
+        std::cout << TX[i] << "-";
+    std::cout << std::endl;
+
+    for (int i = 0; i < 10; i++)
+        std::cout << RX[i] << "-";
+    std::cout << std::endl;
+
     /* MCP 9808
      *
      *  MCP9808 TEMP0 = MCP9808(I2C, 0x1a);
