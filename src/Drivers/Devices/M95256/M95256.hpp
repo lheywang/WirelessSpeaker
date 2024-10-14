@@ -7,6 +7,8 @@
  *
  * @copyright Copyright (c) 2024
  *
+ * @remark Class was tested successfully on 14/10/2024.
+ *
  */
 #pragma once
 

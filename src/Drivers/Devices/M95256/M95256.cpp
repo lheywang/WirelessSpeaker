@@ -7,6 +7,8 @@
  *
  * @copyright Copyright (c) 2024
  *
+ * @remark Class was tested successfully on 14/10/2024.
+ *
  */
 
 #include "../../SPI/SPI.hpp"
@@ -18,7 +20,7 @@
 #include <unistd.h>
 
 // ==============================================================================
-// PRIVATE
+// PRIVATE DEFINES
 // ==============================================================================
 constexpr int WREN = 0x06;  // No following data
 constexpr int WRDI = 0x04;  // No following data
