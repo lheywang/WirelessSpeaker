@@ -98,7 +98,7 @@ int SPI_Transfer(SPI_Bus *SPI, I *const InputBuffer, O *const OutputBufer, const
     __u8 *TX = (__u8 *)malloc(sizeof(__u8) * Len);
     if (TX == 0)
     {
-        std::cerr << "[ SPI ][ Read ] : Could not allocate the input buffer : "
+        std::cerr << "[ SPI ][ Transfer ] : Could not allocate the input buffer : "
                   << strerror(errno)
                   << std::endl;
         return -1;
@@ -112,7 +112,7 @@ int SPI_Transfer(SPI_Bus *SPI, I *const InputBuffer, O *const OutputBufer, const
     __u8 *RX = (__u8 *)malloc(sizeof(__u8) * Len);
     if (RX == 0)
     {
-        std::cerr << "[ SPI ][ Read ] : Could not allocate the output buffer : "
+        std::cerr << "[ SPI ][ Transfer ] : Could not allocate the output buffer : "
                   << strerror(errno)
                   << std::endl;
         return -2;
@@ -139,7 +139,7 @@ int SPI_Transfer(SPI_Bus *SPI, I *const InputBuffer, O *const OutputBufer, const
     res = ioctl(SPI->SPI_file, SPI_IOC_MESSAGE(1), &message);
     if (res < 0)
     {
-        std::cerr << "[ SPI ][ Read ] : Could not perform transfer operation on bus on"
+        std::cerr << "[ SPI ][ Transfer ] : Could not perform transfer operation on bus "
                   << SPI->SPI_Bus
                   << " : "
                   << strerror(errno)
