@@ -43,22 +43,93 @@ int main()
      */
     std::cout << "Hello World !" << std::endl;
 
+    char buf;
+
     SPI_Bus *SPI = SPI_GetInfos();
     SPI_Configure(SPI, SPI_MODE_0, 8, 500'000);
+    M95256 EEPROM = M95256(SPI);
 
-    int TX[100] = {0}; //  R 02
+    int TX[100] = {0};
     int RX[100] = {0};
 
-    TX[0] = 0x05;
-    SPI_Transfer(SPI, TX, RX, 2);
+    std::cout << EEPROM.WriteStatus(0, EEPROM_WP::SOFT_WP_DISABLED) << std::endl;
 
-    for (int i = 0; i < 2; i++)
-        std::cout << TX[i] << "-";
-    std::cout << std::endl;
+    int WriteProtec = 0,
+        WriteEnable = 0,
+        WriteStatus = 0;
+    EEPROM_WP WP;
+    EEPROM.ReadStatus(&WriteProtec, &WP, &WriteEnable, &WriteStatus);
 
-    for (int i = 0; i < 2; i++)
-        std::cout << RX[i] << "-";
-    std::cout << std::endl;
+    std::cout << WriteProtec << " - " << WriteEnable << " - " << WriteStatus << " - " << (int)WP << std::endl;
+
+    // for (int i = 0; i < 100; i++)
+    //     TX[i] = i;
+
+    // EEPROM.Write(0x0088, TX, 50);
+    // EEPROM.Read(0x0088, RX, 50);
+
+    // for (int i = 0; i < 50; i++)
+    //     std::cout << TX[i] << "-";
+    // std::cout << std::endl;
+
+    // for (int i = 0; i < 50; i++)
+    //     std::cout << RX[i] << "-";
+    // std::cout << std::endl;
+
+    SPI_Close(SPI);
+
+    // TX[0] = 0x06;
+    // SPI_Transfer(SPI, TX, RX, 1);
+
+    // std::cin >> buf;
+
+    // TX[0] = 0x02;
+    // TX[1] = 0x88;
+    // TX[2] = 0x88;
+    // TX[3] = 0x55;
+    // TX[4] = 0x55;
+    // TX[5] = 0x55;
+    // TX[6] = 0x55;
+    // SPI_Transfer(SPI, TX, RX, 25);
+    // for (int i = 0; i < 25; i++)
+    //     std::cout << TX[i] << "-";
+    // std::cout << std::endl;
+    // for (int i = 0; i < 25; i++)
+    //     std::cout << RX[i] << "-";
+    // std::cout << std::endl;
+
+    // TX[0] = 0x05;
+    // TX[1] = 0x00;
+    // TX[2] = 0x00;
+    // TX[3] = 0x00;
+    // TX[4] = 0x00;
+    // TX[5] = 0x00;
+    // TX[6] = 0x00;
+    // SPI_Transfer(SPI, TX, RX, 5);
+    // for (int i = 0; i < 5; i++)
+    //     std::cout << TX[i] << "-";
+    // std::cout << std::endl;
+    // for (int i = 0; i < 5; i++)
+    //     std::cout << RX[i] << "-";
+    // std::cout << std::endl;
+
+    // std::cin >> buf;
+
+    // TX[0] = 0x03;
+    // TX[1] = 0x88;
+    // TX[2] = 0x88;
+    // TX[3] = 0x00;
+    // TX[4] = 0x00;
+    // TX[5] = 0x00;
+    // TX[6] = 0x00;
+    // SPI_Transfer(SPI, TX, RX, 25);
+    // std::cin >> buf;
+    // for (int i = 0; i < 25; i++)
+    //     std::cout << TX[i] << "-";
+    // std::cout << std::endl;
+    // for (int i = 0; i < 25; i++)
+    //     std::cout << RX[i] << "-";
+    // std::cout << std::endl;
 
     /* MCP 9808
      *

@@ -15,6 +15,7 @@
 #include <iostream>
 #include <cerrno>
 #include <cstring>
+#include <unistd.h>
 
 // ==============================================================================
 // PRIVATE
@@ -22,7 +23,7 @@
 constexpr int WREN = 0x06;  // No following data
 constexpr int WRDI = 0x04;  // No following data
 constexpr int RDSR = 0x05;  // No following data
-constexpr int WRSR = 0x01;  // No following data
+constexpr int WRSR = 0x01;  // 8 bit data
 constexpr int READ = 0x03;  // 2 bytes address page
 constexpr int WRITE = 0x02; // 2 bytes address page
 
@@ -76,20 +77,20 @@ int M95256::ReadStatus(int *const WriteProtectStatus,
                        int *const WriteEnable,
                        int *const WriteInProgress)
 {
-    int buf[3] = {0};
+    int buf[4] = {0};
     int res = 0;
 
     buf[0] = RDSR;
 
-    res = SPI_Transfer(&this->SPI, buf, buf, 2);
+    res = SPI_Transfer(&this->SPI, &buf[0], &buf[2], 2);
 
     if (res != 0)
         return -1;
 
-    *WriteProtectStatus = (buf[0] & 0x80) >> 7;
-    *ProtectedBlock = EEPROM_WP{(buf[0] & 0x0C) >> 2};
-    *WriteEnable = (buf[0] & 0x02) >> 1;
-    *WriteInProgress = buf[0] & 0x01;
+    *WriteProtectStatus = (buf[3] & 0x80) >> 7;
+    *ProtectedBlock = EEPROM_WP{(buf[3] & 0x0C) >> 2};
+    *WriteEnable = (buf[3] & 0x02) >> 1;
+    *WriteInProgress = buf[3] & 0x01;
 
     return 0;
 }
@@ -97,17 +98,23 @@ int M95256::ReadStatus(int *const WriteProtectStatus,
 int M95256::WriteStatus(const int WriteProtectStatus,
                         const EEPROM_WP ProtectedBlock)
 {
-    int buf[3] = {0};
+    int buf[2] = {0};
     int res = 0;
 
-    buf[0] = (bool)WriteProtectStatus;
-    buf[0] = buf[0] << 4 | (int)ProtectedBlock;
-    buf[0] = buf[0] << 2;
+    this->WriteEnable();
 
-    res = SPI_Transfer(&this->SPI, buf, buf, 1);
+    buf[0] = WRSR;
+    buf[1] = (bool)WriteProtectStatus;
+    buf[1] = buf[1] << 5 | (int)ProtectedBlock;
+    buf[1] = buf[1] << 2;
+
+    res = SPI_Transfer(&this->SPI, buf, buf, 2);
 
     if (res != 0)
         return -1;
+
+    usleep(7000); // 7 ms of delay, to ensure correct write.
+
     return 0;
 }
 
@@ -128,12 +135,12 @@ int M95256::Read(const int Address, int *const Data, const int Len)
         return -1;
     }
 
-    memset(buf, 0x00, (sizeof(int) * (Len + 1)));
+    memset(buf, 0x00, (sizeof(int) * (Len + 3)));
     buf[0] = READ;
     buf[1] = Address & 0xFF00;
     buf[2] = Address & 0x00FF;
 
-    res = SPI_Transfer(&this->SPI, buf, buf, 1);
+    res = SPI_Transfer(&this->SPI, buf, buf, (Len + 3));
 
     for (int i = 0; i < Len; i++)
         Data[i] = buf[i + 3];
@@ -165,18 +172,21 @@ int M95256::Write(const int Address, int *const Data, const int Len)
         return -1;
     }
 
+    this->WriteEnable();
+
     buf[0] = WRITE;
     buf[1] = Address & 0xFF00;
     buf[2] = Address & 0x00FF;
     memcpy(&buf[3], Data, Len * sizeof(int));
 
-    res = SPI_Transfer(&this->SPI, buf, buf, 1);
-
+    res = SPI_Transfer(&this->SPI, buf, buf, (Len + 3));
     if (res != 0)
     {
         free(buf);
         return -2;
     }
+
+    usleep(7000); // 7 ms of delay, to ensure correct write.
 
     free(buf);
     return 0;
