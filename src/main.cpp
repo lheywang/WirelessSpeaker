@@ -43,24 +43,22 @@ int main()
      */
     std::cout << "Hello World !" << std::endl;
 
-    char buf;
+    // SPI_Bus *SPI = SPI_GetInfos();
+    // SPI_Configure(SPI, SPI_MODE_0, 8, 500'000);
+    // M95256 EEPROM = M95256(SPI);
 
-    SPI_Bus *SPI = SPI_GetInfos();
-    SPI_Configure(SPI, SPI_MODE_0, 8, 500'000);
-    M95256 EEPROM = M95256(SPI);
+    // int TX[100] = {0};
+    // int RX[100] = {0};
 
-    int TX[100] = {0};
-    int RX[100] = {0};
+    // std::cout << EEPROM.WriteStatus(0, EEPROM_WP::SOFT_WP_DISABLED) << std::endl;
 
-    std::cout << EEPROM.WriteStatus(0, EEPROM_WP::SOFT_WP_DISABLED) << std::endl;
+    // int WriteProtec = 0,
+    //     WriteEnable = 0,
+    //     WriteStatus = 0;
+    // EEPROM_WP WP;
+    // EEPROM.ReadStatus(&WriteProtec, &WP, &WriteEnable, &WriteStatus);
 
-    int WriteProtec = 0,
-        WriteEnable = 0,
-        WriteStatus = 0;
-    EEPROM_WP WP;
-    EEPROM.ReadStatus(&WriteProtec, &WP, &WriteEnable, &WriteStatus);
-
-    std::cout << WriteProtec << " - " << WriteEnable << " - " << WriteStatus << " - " << (int)WP << std::endl;
+    // std::cout << WriteProtec << " - " << WriteEnable << " - " << WriteStatus << " - " << (int)WP << std::endl;
 
     // for (int i = 0; i < 100; i++)
     //     TX[i] = i;
@@ -76,7 +74,7 @@ int main()
     //     std::cout << RX[i] << "-";
     // std::cout << std::endl;
 
-    SPI_Close(SPI);
+    // SPI_Close(SPI);
 
     // TX[0] = 0x06;
     // SPI_Transfer(SPI, TX, RX, 1);
