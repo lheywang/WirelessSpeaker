@@ -20,7 +20,7 @@
 #include "Drivers/GPIO/GPIO.hpp"
 #include "Drivers/UART/UART.hpp"
 
-#include <libudev.h>
+#include <ctime>
 
 // entry point
 int main()
@@ -41,7 +41,53 @@ int main()
             - Audio playback
             - ...
      */
+    sizeof(ConfigV1);
+
     std::cout << "Hello World !" << std::endl;
+
+    struct Test
+    {
+        int A;
+        uint8_t B;
+        uint16_t C;
+    };
+
+    Test T{
+        .A = 0x5AAAAAAA,
+        .B = 0xFF,
+        .C = 0x5555,
+    };
+
+    std::cout << (int)T.A
+              << " - "
+              << (int)T.B
+              << " - "
+              << (int)T.C
+              << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    uint8_t buf[8] = {0};
+
+    memcpy(buf, &T, sizeof(T));
+
+    for (int i = 0; i < 8; i++)
+        std::cout << std::hex << (int)buf[i] << "-";
+    std::cout << std::endl;
+
+    Test T2;
+
+    memcpy(&T2, buf, sizeof(T2));
+
+    std::cout << std::dec
+              << (int)T.A
+              << " - "
+              << (int)T.B
+              << " - "
+              << (int)T.C
+              << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
 
     // SPI_Bus *SPI = SPI_GetInfos();
     // SPI_Configure(SPI, SPI_MODE_0, 8, 500'000);

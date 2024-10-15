@@ -37,8 +37,9 @@ set(ExternalIncludes    ${CMAKE_SOURCE_DIR}/Drivers/GPIO/includes/clk.cpp\\
                         ${CMAKE_SOURCE_DIR}/Drivers/I2C/includes/smbus.cpp)
 
 # Modules 
-set(Modules ${CMAKE_SOURCE_DIR}/Modules/Leds/Leds.cpp\\
-            ${CMAKE_SOURCE_DIR}/Modules/Temperature/Temperature.cpp)
+set(Modules ${CMAKE_SOURCE_DIR}/Modules/EEPROM/reader.cpp\\
+            ${CMAKE_SOURCE_DIR}/Modules/EEPROM/writter.cpp\\
+            ${CMAKE_SOURCE_DIR}/Modules/EEPROM/updater.cpp)
 
 # ========================================================================================
 # CMAKES SETTINGS
