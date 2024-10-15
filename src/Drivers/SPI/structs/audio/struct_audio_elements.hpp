@@ -47,7 +47,7 @@ struct Global
 
 constexpr int MAX_COEFF = 256;       /*!< Maximal number of coefficients for the DSP*/
 constexpr int MAX_INSTR = 1024;      /*!< Maximal number of instructions for the DSP*/
-constexpr int MAX_PROFILE_CHAR = 50; /*!< Maximal number of characters in the name of a DSP profile*/
+constexpr int MAX_PROFILE_CHAR = 30; /*!< Maximal number of characters in the name of a DSP profile*/
 
 /*! Define values that are stored on the EEPROM for the Amplifiers */
 struct DAC_Config
@@ -76,30 +76,10 @@ struct DAC_Config
     bool LeftAnalogBoost;  /*!< Enable an analog +0.5dB of boost on the left*/
     bool RightAnalogBoost; /*!< Enable an analog +0.5dB of boost on the right*/
 
-    char DSP_Profile1[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 1*/
+    uint8_t DSP_Profile1[MAX_PROFILE_CHAR];  /*!< Name of the DSP Profile 1*/
     uint32_t DSP_BufferA_values1[MAX_COEFF]; /*!< Buffer A values for the DSP Profile 1*/
     uint32_t DSP_BufferB_values1[MAX_COEFF]; /*!< Buffer B values for the DSP Profile 1*/
     uint32_t DSP_Intr_values1[MAX_INSTR];    /*!< Instruction buffer for the DSP Profile 1*/
-
-    char DSP_Profile2[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 2*/
-    uint32_t DSP_BufferA_values2[MAX_COEFF]; /*!< Buffer A values for the DSP Profile 2*/
-    uint32_t DSP_BufferB_values2[MAX_COEFF]; /*!< Buffer B values for the DSP Profile 2*/
-    uint32_t DSP_Intr_values2[MAX_INSTR];    /*!< Instruction buffer for the DSP Profile 2*/
-
-    char DSP_Profile3[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 3*/
-    uint32_t DSP_BufferA_values3[MAX_COEFF]; /*!< Buffer A values for the DSP Profile 3*/
-    uint32_t DSP_BufferB_values3[MAX_COEFF]; /*!< Buffer B values for the DSP Profile 3*/
-    uint32_t DSP_Intr_values3[MAX_INSTR];    /*!< Instruction buffer for the DSP Profile 3*/
-
-    char DSP_Profile4[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 4*/
-    uint32_t DSP_BufferA_values4[MAX_COEFF]; /*!< Buffer A values for the DSP Profile 4*/
-    uint32_t DSP_BufferB_values4[MAX_COEFF]; /*!< Buffer B values for the DSP Profile 4*/
-    uint32_t DSP_Intr_values4[MAX_INSTR];    /*!< Instruction buffer for the DSP Profile 4*/
-
-    char DSP_Profile5[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 5*/
-    uint32_t DSP_BufferA_values5[MAX_COEFF]; /*!< Buffer A values for the DSP Profile 5*/
-    uint32_t DSP_BufferB_values5[MAX_COEFF]; /*!< Buffer B values for the DSP Profile 5*/
-    uint32_t DSP_Intr_values5[MAX_INSTR];    /*!< Instruction buffer for the DSP Profile 5*/
 };
 
 /*! Define values that are stored on the EEPROM for the Amplifiers */

@@ -20,10 +20,12 @@
 #include "interfaces/struct_internal.hpp"
 #include "interfaces/struct_automated_interfaces.hpp"
 
+constexpr int MAX_CHAR_SPEAKER_NAME = 50;
+
 /*! Define values that are stored on the EEPROM for the overall speaker configuration */
-struct Config
+struct ConfigV1
 {
-    std::string Speaker_Name; /*!< Configure the speaker friendly name*/
+    uint8_t SpeakerName[MAX_CHAR_SPEAKER_NAME * 2]; /*!< Configure the speaker friendly name. UTF16 Accepted !*/
 
     struct Audio Audio; /*!< Configure all of the audio related settings*/
 
@@ -42,9 +44,6 @@ struct Config
     struct Temperature TemperaturePowerInput; /*!< Configure the response for the Power input stage amplifier temperature sensor*/
     struct Temperature TemperatureMainBuck;   /*!< Configure the response for the Main SMPS amplifier temperature sensor*/
     struct Temperature TemperatureAuxBuck;    /*!< Configure the response for the Secondary SMPS amplifier temperature sensor*/
-
-    struct VoltageMonitor MainMonitor;         /*!< Configure the main ADC to monitor voltages*/
-    struct VoltageMonitor AnalogSupplyMonitor; /*!< Configure the second ADC to monitor analog voltages*/
 
     struct BasicPDO PDProfile1; /*!< Store the usb-c user defined profile 1*/
     struct BasicPDO PDProfile2; /*!< Store the usb-c user defined profile 2*/
