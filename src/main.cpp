@@ -85,6 +85,8 @@ int main()
         .DATA_ADD = 0x279,
         .DATA_LEN = 25631};
 
+    std::cout << sizeof(Header) << std::endl;
+
     SPI_Bus *SPI = SPI_GetInfos();
     SPI_Configure(SPI, SPI_MODE_0, 8, 500'000);
     M95256 EEPROM = M95256(SPI);

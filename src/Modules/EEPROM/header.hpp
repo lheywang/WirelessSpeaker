@@ -69,15 +69,15 @@ struct EEPROM_HEADER_V1
         uint8_t Seconds; /*!< Seconds values, expressed from 0-60*/
     } DESIGN_DATE;
 
-    uint16_t HeaderCRC16; /*!< CRC16 value*/
+    uint16_t HeaderCRC16 = 0x0000; /*!< CRC16 value*/
 
     uint16_t DATA_CRC_ADD; /*!< Address of the CRC block for the data*/
     uint16_t DATA_CRC_LEN; /*!< Length of the CRC block for the data*/
 
-    uint8_t __padding2[8] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
+    uint8_t __padding3[8] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
 
     uint16_t DATA_ADD; /*!< Address of the DATA Block*/
     uint16_t DATA_LEN; /*!< Length of the DATA Block*/
 
-    uint8_t __padding3[7] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
+    uint8_t __padding4[7] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
 };

@@ -17,13 +17,15 @@ int EEPROM_WriteHeaderV1(M95256 Slave, EEPROM_HEADER_V1 *const Header)
 {
     // Creating a buffer value
     uint8_t *buf = (uint8_t *)malloc(HEADER_SIZE);
+    memset(buf, 0x00, HEADER_SIZE);
+
+    // Set a dummy value on the CRC16 field and copy the data to an array of uint8_t.
+    Header->HeaderCRC16 = 0xAAAA;
     memcpy(buf, Header, HEADER_SIZE);
 
     // Compute the CRC
     uint16_t calc_CRC = crc_16(buf, HEADER_SIZE);
-    Header->HeaderCRC16 = calc_CRC; // Overwrite the CRC value.
-
-    std::cout << calc_CRC << std::endl;
+    Header->HeaderCRC16 = calc_CRC;
 
     // Copying the data
     memcpy(buf, Header, HEADER_SIZE);

@@ -128,7 +128,7 @@ int M95256::Read(const int Address, uint8_t *const Data, const int Len)
         return -2;
 
     int res = 0;
-    int *buf = (int *)malloc((sizeof(int) * (Len + 3)));
+    uint8_t *buf = (uint8_t *)malloc(Len + 3);
     if (buf == 0)
     {
         std::cerr << "[ M95256 ][ Read ] Could not allocate memory for read operation "
@@ -137,7 +137,7 @@ int M95256::Read(const int Address, uint8_t *const Data, const int Len)
         return -1;
     }
 
-    memset(buf, 0x00, (sizeof(int) * (Len + 3)));
+    memset(buf, 0x00, Len + 3);
     buf[0] = READ;
     buf[1] = Address & 0xFF00;
     buf[2] = Address & 0x00FF;
@@ -165,7 +165,7 @@ int M95256::Write(const int Address, uint8_t *const Data, const int Len)
         return -2;
 
     int res = 0;
-    int *buf = (int *)malloc((sizeof(int) * (Len + 3)));
+    uint8_t *buf = (uint8_t *)malloc(Len + 3);
     if (buf == 0)
     {
         std::cerr << "[ M95256 ][ Write ] Could not allocate memory for read operation "
@@ -174,22 +174,21 @@ int M95256::Write(const int Address, uint8_t *const Data, const int Len)
         return -1;
     }
 
-    this->WriteEnable();
-
+    memset(buf, 0x00, Len + 3);
     buf[0] = WRITE;
     buf[1] = Address & 0xFF00;
     buf[2] = Address & 0x00FF;
-    memcpy(&buf[3], Data, Len * sizeof(int));
+    memcpy(&buf[3], Data, Len);
+
+    this->WriteEnable();
 
     res = SPI_Transfer(&this->SPI, buf, buf, (Len + 3));
-    if (res != 0)
-    {
-        free(buf);
-        return -2;
-    }
-
-    usleep(7000); // 7 ms of delay, to ensure correct write.
-
     free(buf);
+
+    if (res != 0)
+        return -2;
+
+    usleep(7000); // 7 ms of delay, to ensure page write.
+
     return 0;
 }

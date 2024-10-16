@@ -27,9 +27,9 @@ int EEPROM_ReadHeaderV1(M95256 Slave, EEPROM_HEADER_V1 *const Header)
 
     // CRC Check
     uint16_t read_CRC = Header->HeaderCRC16;
+    Header->HeaderCRC16 = 0xAAAA; // Set the dummy value to ensure integrity of the computation.
+    memcpy(buf, Header, HEADER_SIZE);
     uint16_t calc_CRC = crc_16(buf, HEADER_SIZE);
-
-    std::cout << Header->HeaderCRC16 << " - " << calc_CRC << std::endl;
 
     // Free memory
     free(buf);
