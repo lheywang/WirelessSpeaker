@@ -17,13 +17,12 @@
 
 #include "audio/struct_audio.hpp"
 #include "interfaces/struct_user_interfaces.hpp"
-#include "interfaces/struct_internal.hpp"
 #include "interfaces/struct_automated_interfaces.hpp"
 
 constexpr int MAX_CHAR_SPEAKER_NAME = 50;
 
 /*! Define values that are stored on the EEPROM for the overall speaker configuration */
-struct ConfigV1
+struct CONFIG_V1
 {
     uint8_t SpeakerName[MAX_CHAR_SPEAKER_NAME * 2]; /*!< Configure the speaker friendly name. UTF16 Accepted !*/
 
@@ -35,15 +34,6 @@ struct ConfigV1
     struct LEDS LedsTop3; /*!< Configure the leds placed at the top 3*/
 
     struct Capacitive Capacitive; /*!< Configure the capacitive touch sensor*/
-
-    struct Temperature TemperatureAmpBass;    /*!< Configure the response for the bass amplifier temperature sensor*/
-    struct Temperature TemperatureAmpRight;   /*!< Configure the response for the right amplifier temperature sensor*/
-    struct Temperature TemperatureAmpLeft;    /*!< Configure the response for the left amplifier temperature sensor*/
-    struct Temperature TemperatureDac;        /*!< Configure the response for the DAC temperature sensor*/
-    struct Temperature TemperatureAnalog;     /*!< Configure the response for the Analog filters amplifier temperature sensor*/
-    struct Temperature TemperaturePowerInput; /*!< Configure the response for the Power input stage amplifier temperature sensor*/
-    struct Temperature TemperatureMainBuck;   /*!< Configure the response for the Main SMPS amplifier temperature sensor*/
-    struct Temperature TemperatureAuxBuck;    /*!< Configure the response for the Secondary SMPS amplifier temperature sensor*/
 
     struct BasicPDO PDProfile1; /*!< Store the usb-c user defined profile 1*/
     struct BasicPDO PDProfile2; /*!< Store the usb-c user defined profile 2*/

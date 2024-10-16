@@ -48,7 +48,7 @@ int EEPROM_ReadHeaderV1(M95256 Slave, EEPROM_HEADER_V1 *const Header);
  * @return  0 : OK
  * @return -1 : Write failed.
  */
-int EEPROM_WriteConfigV1(M95256 Slave, ConfigV1 *const Data);
+int EEPROM_WriteConfigV1(M95256 Slave, CONFIG_V1 *const Data);
 
 /**
  * @brief Read the config from the EEPROM. CRC is computed. An Header read is highly recommended to get the date.
@@ -60,7 +60,7 @@ int EEPROM_WriteConfigV1(M95256 Slave, ConfigV1 *const Data);
  * @return -1 : Read failed.
  * @return -2 : Invalid CRC.
  */
-int EEPROM_ReadConfigV1(M95256 Slave, ConfigV1 *const Data);
+int EEPROM_ReadConfigV1(M95256 Slave, CONFIG_V1 *const Data);
 
 /**
  * @brief Convert an ConfigV1 struct to a ConfigV.. struct.
@@ -73,7 +73,7 @@ int EEPROM_ReadConfigV1(M95256 Slave, ConfigV1 *const Data);
  * @return  0 : OK
  * @return -1 : Update failed.
  */
-int EEPROM_UpdateConfigV1(ConfigV1 *Src, ConfigV1 *Dest);
+int EEPROM_UpdateConfigV1(CONFIG_V1 *Src, CONFIG_V1 *Dest);
 
 /**
  * @brief Convert an HeaderV1 struc to a HeaderV.. struct.

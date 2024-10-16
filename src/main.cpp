@@ -46,6 +46,15 @@ int main()
 
     std::cout << "Hello World !" << std::endl;
 
+    int size = sizeof(CONFIG_V1) * sizeof(int);
+    std::cout << size << " octets" << std::endl;
+
+    int opt = 25632 - size;
+    std::cout << "Bytes gained from start : " << opt << " which is : " << opt / 64 << " page(s)" << std::endl;
+
+    struct CONFIG_V1 Cfg;
+
+    /*
     EEPROM_HEADER_V1 Header{
         .DATA_VERSION{
             .Major = 0x00,
@@ -96,8 +105,7 @@ int main()
     usleep(10000);
 
     std::cout << EEPROM_ReadHeaderV1(EEPROM, &Header) << std::endl;
-
-    std::cout << "DATA LEN " << Header.DATA_LEN << std::endl;
+    */
 
     // int TX[100] = {0};
     // int RX[100] = {0};

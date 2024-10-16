@@ -45,16 +45,16 @@ struct Global
     uint8_t RL_eq;  /*!< Right /-/ Left analog equalization*/
 };
 
-constexpr int MAX_COEFF = 256;       /*!< Maximal number of coefficients for the DSP*/
-constexpr int MAX_INSTR = 1024;      /*!< Maximal number of instructions for the DSP*/
+// Values arent the maximum ones, since there is a little to no case the are able to use them. Passed 48 kHz instruction are capped to 512.
+// For some low sampling frequencies, you can always combine both of the parameters.
+// And there is always the option to load some DSP profiles externaly, by software on the SD card.
+constexpr int MAX_COEFF = 128;       /*!< Maximal number of coefficients for the DSP*/
+constexpr int MAX_INSTR = 512;       /*!< Maximal number of instructions for the DSP*/
 constexpr int MAX_PROFILE_CHAR = 30; /*!< Maximal number of characters in the name of a DSP profile*/
 
 /*! Define values that are stored on the EEPROM for the Amplifiers */
 struct DAC_Config
 {
-    bool Audio_44k; /*!< Take true if playback was a multiple of 44.1 kHz*/
-    bool Audio_48k; /*!< Take true if playback was a multiple of 48 kHz*/
-
     uint8_t Automute_delay; /*!< Value for the automute setting*/
     uint8_t Global_Volume;  /*!< Value for the global digital volume*/
     uint8_t Left_Volume;    /*!< Left specific volume*/
@@ -63,23 +63,18 @@ struct DAC_Config
     uint8_t LeftDataPath;  /*!< Left data input selection*/
     uint8_t RightDataPath; /*!< Right data input selection*/
 
-    uint8_t RampDownSpeed;      /*!< Speed to go on mute on automute*/
-    uint8_t RampUpSpeed;        /*!< Speed to leaving mute after automute*/
-    uint8_t EmergencyRampSpeed; /*!< Speed to go on mute on mute in case of emergency*/
-    uint8_t RampDownStep;       /*!< Step size to go on mute on automute*/
-    uint8_t RampUpStep;         /*!< Step size to leave mute after automute*/
-    uint8_t EmergencyRampStep;  /*!< Step size to go on mute in case of emergency*/
-
     bool LeftAnalogAtten;  /*!< Enable -6dB of analog attenuation on the left*/
     bool RightAnalogAtten; /*!< Enable -6dB of analog attenuation on the right*/
 
-    bool LeftAnalogBoost;  /*!< Enable an analog +0.5dB of boost on the left*/
-    bool RightAnalogBoost; /*!< Enable an analog +0.5dB of boost on the right*/
+    uint8_t DSP_Profile1[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 1*/
+    uint8_t DSP_BufferA_values1[MAX_COEFF * 3]; /*!< Buffer A values for the DSP Profile 1*/
+    uint8_t DSP_BufferB_values1[MAX_COEFF * 3]; /*!< Buffer B values for the DSP Profile 1*/
+    uint8_t DSP_Intr_values1[MAX_INSTR * 4];    /*!< Instruction buffer for the DSP Profile 1*/
 
-    uint8_t DSP_Profile1[MAX_PROFILE_CHAR];  /*!< Name of the DSP Profile 1*/
-    uint32_t DSP_BufferA_values1[MAX_COEFF]; /*!< Buffer A values for the DSP Profile 1*/
-    uint32_t DSP_BufferB_values1[MAX_COEFF]; /*!< Buffer B values for the DSP Profile 1*/
-    uint32_t DSP_Intr_values1[MAX_INSTR];    /*!< Instruction buffer for the DSP Profile 1*/
+    uint8_t DSP_Profile2[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 2*/
+    uint8_t DSP_BufferA_values2[MAX_COEFF * 3]; /*!< Buffer A values for the DSP Profile 2*/
+    uint8_t DSP_BufferB_values2[MAX_COEFF * 3]; /*!< Buffer B values for the DSP Profile 2*/
+    uint8_t DSP_Intr_values2[MAX_INSTR * 4];    /*!< Instruction buffer for the DSP Profile 2*/
 };
 
 /*! Define values that are stored on the EEPROM for the Amplifiers */

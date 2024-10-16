@@ -40,7 +40,7 @@ int EEPROM_WriteHeaderV1(M95256 Slave, EEPROM_HEADER_V1 *const Header)
     return 0;
 }
 
-int EEPROM_WriteConfigV1(M95256 Slave, ConfigV1 *const Data)
+int EEPROM_WriteConfigV1(M95256 Slave, CONFIG_V1 *const Data)
 {
     return 0;
 }
