@@ -120,7 +120,7 @@ int M95256::WriteStatus(const int WriteProtectStatus,
     return 0;
 }
 
-int M95256::Read(const int Address, int *const Data, const int Len)
+int M95256::Read(const int Address, uint8_t *const Data, const int Len)
 {
     if ((0 > Address) | (Address > MAX_ADDRESS))
         return -1;
@@ -157,7 +157,7 @@ int M95256::Read(const int Address, int *const Data, const int Len)
     return 0;
 }
 
-int M95256::Write(const int Address, int *const Data, const int Len)
+int M95256::Write(const int Address, uint8_t *const Data, const int Len)
 {
     if ((0 > Address) | (Address > MAX_ADDRESS))
         return -1;

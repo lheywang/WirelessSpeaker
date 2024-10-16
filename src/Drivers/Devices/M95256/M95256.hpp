@@ -14,6 +14,7 @@
 
 // type include
 #include "../../SPI/SPI.hpp"
+#include <cstdint>
 
 // ==============================================================================
 // PUBLIC DEFINES
@@ -26,6 +27,8 @@ enum class EEPROM_WP
     SOFT_WP_UPPER_HALF = 0x02,    /*!< Upper half protected*/
     SOFT_WP_FULL = 0x03,          /*!< Full memory protected*/
 };
+
+constexpr int PAGE_SIZE = 64;
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -109,7 +112,7 @@ public:
      * @return -2 : Invalid Len (May be triggered if Address + Len > MAX_ADDRESS)
      * @return -3 : IOCTL error.
      */
-    int Read(const int Address, int *const Data, const int Len);
+    int Read(const int Address, uint8_t *const Data, const int Len);
 
     /**
      * @brief Write content to EEPROM. Only possible if write has been enabled !
@@ -123,5 +126,5 @@ public:
      * @return -2 : Invalid Len (May be triggered if Address + Len > MAX_ADDRESS)
      * @return -3 : IOCTL error.
      */
-    int Write(const int Address, int *const Data, const int Len);
+    int Write(const int Address, uint8_t *const Data, const int Len);
 };
