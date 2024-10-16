@@ -9,13 +9,37 @@
  *
  */
 #include "eeprom.hpp"
+#include "../libcrc/checksum.h"
 
-int ReadHeaderV1(EEPROM_HEADER_V1 *const Header)
+#include <iostream>
+
+int EEPROM_ReadHeaderV1(M95256 Slave, EEPROM_HEADER_V1 *const Header)
 {
+    // Alocate the data
+    uint8_t *buf = (uint8_t *)malloc(HEADER_SIZE);
+    memset(buf, 0x00, HEADER_SIZE);
+
+    // Read the data and put it on the structure
+    int res = Slave.Read(HEADER_ADDRESS, buf, HEADER_SIZE);
+    if (res < 0)
+        return -1;
+    memcpy(Header, buf, HEADER_SIZE);
+
+    // CRC Check
+    uint16_t read_CRC = Header->HeaderCRC16;
+    uint16_t calc_CRC = crc_16(buf, HEADER_SIZE);
+
+    std::cout << Header->HeaderCRC16 << " - " << calc_CRC << std::endl;
+
+    // Free memory
+    free(buf);
+
+    if (read_CRC != calc_CRC)
+        return -2;
     return 0;
 }
 
-int ReadConfigV1(ConfigV1 *const Data)
+int EEPROM_ReadConfigV1(M95256 Slave, ConfigV1 *const Data)
 {
     return 0;
 }

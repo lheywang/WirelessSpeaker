@@ -34,7 +34,15 @@ set(PeripheralDrivers   ${CMAKE_SOURCE_DIR}/Drivers/I2C/I2C_Engine.cpp\\
 
 # External libraries includes                       
 set(ExternalIncludes    ${CMAKE_SOURCE_DIR}/Drivers/GPIO/includes/clk.cpp\\
-                        ${CMAKE_SOURCE_DIR}/Drivers/I2C/includes/smbus.cpp)
+                        ${CMAKE_SOURCE_DIR}/Drivers/I2C/includes/smbus.cpp\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crc8.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crc16.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crc32.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crc64.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crcccitt.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crckrmit.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crcsick.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/nmea-chk.c)
 
 # Modules 
 set(Modules ${CMAKE_SOURCE_DIR}/Modules/EEPROM/reader.cpp\\

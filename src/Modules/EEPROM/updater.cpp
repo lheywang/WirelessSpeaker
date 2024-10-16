@@ -11,12 +11,12 @@
 
 #include "eeprom.hpp"
 
-int UpdateHeaderV1(EEPROM_HEADER_V1 *Src, EEPROM_HEADER_V1 *Dest)
+int EEPROM_UpdateHeaderV1(EEPROM_HEADER_V1 *Src, EEPROM_HEADER_V1 *Dest)
 {
     return 0;
 }
 
-int UpdateConfigV1(ConfigV1 *Src, ConfigV1 *Dest)
+int EEPROM_UpdateConfigV1(ConfigV1 *Src, ConfigV1 *Dest)
 {
     return 0;
 }

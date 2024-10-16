@@ -20,6 +20,8 @@
 #include "Drivers/GPIO/GPIO.hpp"
 #include "Drivers/UART/UART.hpp"
 
+#include "Modules/EEPROM/eeprom.hpp"
+
 #include <ctime>
 
 // entry point
@@ -41,57 +43,59 @@ int main()
             - Audio playback
             - ...
      */
-    sizeof(ConfigV1);
 
     std::cout << "Hello World !" << std::endl;
 
-    struct Test
-    {
-        int A;
-        uint8_t B;
-        uint16_t C;
-    };
+    EEPROM_HEADER_V1 Header{
+        .DATA_VERSION{
+            .Major = 0x00,
+            .Median = 0x01,
+            .Minor = 0x00,
+        },
+        .LAST_WRITE{
+            .Year = {20, 24},
+            .Month = 10,
+            .Day = 16,
+            .Hour = 20,
+            .Minutes = 14,
+            .Seconds = 0,
+        },
+        .HARDWARE_VERSION{
+            .Major = 0x00,
+            .Minor = 0x01,
+        },
+        .BOM_VERSION{
+            .Major = 0x00,
+            .Minor = 0x01,
+        },
+        .SERIAL_NB{
+            .Letters = {'W', 'S'},
+            .Decimals = {'0', '0', '0', '0', '0', '0'},
+        },
+        .DESIGN_DATE{
+            .Year = {20, 24},
+            .Month = 10,
+            .Day = 01,
+            .Hour = 19,
+            .Minutes = 00,
+            .Seconds = 0,
+        },
+        .DATA_CRC_ADD = 0x0079,
+        .DATA_CRC_LEN = 447,
+        .DATA_ADD = 0x279,
+        .DATA_LEN = 25631};
 
-    Test T{
-        .A = 0x5AAAAAAA,
-        .B = 0xFF,
-        .C = 0x5555,
-    };
+    SPI_Bus *SPI = SPI_GetInfos();
+    SPI_Configure(SPI, SPI_MODE_0, 8, 500'000);
+    M95256 EEPROM = M95256(SPI);
 
-    std::cout << (int)T.A
-              << " - "
-              << (int)T.B
-              << " - "
-              << (int)T.C
-              << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
+    std::cout << EEPROM_WriteHeaderV1(EEPROM, &Header) << std::endl;
 
-    uint8_t buf[8] = {0};
+    usleep(10000);
 
-    memcpy(buf, &T, sizeof(T));
+    std::cout << EEPROM_ReadHeaderV1(EEPROM, &Header) << std::endl;
 
-    for (int i = 0; i < 8; i++)
-        std::cout << std::hex << (int)buf[i] << "-";
-    std::cout << std::endl;
-
-    Test T2;
-
-    memcpy(&T2, buf, sizeof(T2));
-
-    std::cout << std::dec
-              << (int)T.A
-              << " - "
-              << (int)T.B
-              << " - "
-              << (int)T.C
-              << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-
-    // SPI_Bus *SPI = SPI_GetInfos();
-    // SPI_Configure(SPI, SPI_MODE_0, 8, 500'000);
-    // M95256 EEPROM = M95256(SPI);
+    std::cout << "DATA LEN " << Header.DATA_LEN << std::endl;
 
     // int TX[100] = {0};
     // int RX[100] = {0};
