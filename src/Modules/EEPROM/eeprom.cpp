@@ -108,6 +108,16 @@ int EEPROM::WriteHeaderV1() // OK
         return -2;
     return 0;
 }
+int EEPROM::SetConfigCRC(const uint16_t CRC)
+{
+    this->Header->ConfigCRC16 = CRC;
+    return 0;
+}
+int EEPROM::GetConfigCRC(uint16_t *const CRC)
+{
+    *CRC = this->Header->ConfigCRC16;
+    return 0;
+}
 
 // PUBLIC
 int EEPROM::GetHeaderV1(EEPROM_HEADER_V1 *const Header) // OK
@@ -125,11 +135,57 @@ int EEPROM::SetHeaderV1(EEPROM_HEADER_V1 *const Header)
 
 int EEPROM::WriteConfigV1(CONFIG_V1 *const Data)
 {
+    // Creating a buffer value
+    uint8_t *buf = (uint8_t *)malloc(CONFIG_SIZE);
+    if (buf == nullptr)
+        return -1;
+    memset(buf, 0x00, CONFIG_SIZE);
+
+    // Compute the CRC
+    uint16_t calc_CRC = crc_16(buf, CONFIG_SIZE);
+    this->SetConfigCRC(calc_CRC);
+    this->WriteHeaderV1();
+
+    // Copying the data
+    memcpy(buf, Data, CONFIG_SIZE);
+
+    // Write the data (one write per 64 bytes, per page !) and free the buffer.
+    int ret = 0;
+    for (int i = 0; i < (4 * PAGE_SIZE); i += PAGE_SIZE)
+        ret += this->Slave.Write(CONFIG_ADDRESS, (buf + (i * sizeof(uint8_t))), PAGE_SIZE);
+    free(buf);
+
+    // Returns
+    if (ret < 0)
+        return -2;
     return 0;
 }
 
 int EEPROM::ReadConfigV1(CONFIG_V1 *const Data)
 {
+    // Alocate the data
+    uint8_t *buf = (uint8_t *)malloc(CONFIG_SIZE);
+    if (buf == nullptr)
+        return -1;
+    // Copy the data
+    memset(buf, 0x00, CONFIG_SIZE);
+
+    // Read the data and put it on the structure
+    int res = this->Slave.Read(CONFIG_ADDRESS, buf, CONFIG_SIZE);
+    if (res < 0)
+        return -2;
+    memcpy(Data, buf, CONFIG_SIZE);
+
+    // CRC Check
+    uint16_t calc_CRC = crc_16(buf, CONFIG_SIZE);
+    uint16_t read_CRC = 0;
+    this->GetConfigCRC(&read_CRC);
+
+    // Free memory
+    free(buf);
+
+    if (read_CRC != calc_CRC)
+        return -3;
     return 0;
 }
 

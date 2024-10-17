@@ -41,7 +41,7 @@ struct SPI_Bus
 };
 
 constexpr int SPI_DEFAULT_WORDSIZE = 8;       /*!< Default value for SPI wordsize*/
-constexpr int SPI_DEFAULT_SPEED = 20'000'000; /*!< Default value for SPI speed*/
+constexpr int SPI_DEFAULT_SPEED = 12'000'000; /*!< Default value for SPI speed*/
 
 // ==============================================================================
 // PROTOTYPES

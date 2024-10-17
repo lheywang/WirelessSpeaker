@@ -16,6 +16,7 @@ struct DSP_PROFILE_INFO
 {
     uint16_t Address; /*!< Address of the DSP Profile*/
     uint16_t Len;     /*!< Length in bytes of the DSP Profile*/
+    uint32_t CRC;     /*!< CRC-32 of this profile to ensure integrity*/
 };
 
 /*! This struct represent the memory layout for the Header, as defined in the PDF file. */
@@ -88,7 +89,7 @@ struct EEPROM_HEADER_V1
 
     // END OF PAGE 0
 
-    struct DSP_PROFILE_INFO Profile[16]; /*!< DSP Profile 0-15*/
+    struct DSP_PROFILE_INFO Profile[8]; /*!< DSP Profile 0-15*/
 
     // END OF PAGE 1
 };
@@ -133,66 +134,42 @@ constexpr struct EEPROM_HEADER_V1 DEFAULT_HEADER_V1
             {
                 .Address = 0x01C0,
                 .Len = 0x0000,
+                .CRC = 0x00000000,
             },
             {
                 .Address = 0x0000,
                 .Len = 0x0000,
+                .CRC = 0x00000000,
             },
             {
                 .Address = 0x0000,
                 .Len = 0x0000,
+                .CRC = 0x00000000,
             },
             {
                 .Address = 0x0000,
                 .Len = 0x0000,
+                .CRC = 0x00000000,
             },
             {
                 .Address = 0x0000,
                 .Len = 0x0000,
+                .CRC = 0x00000000,
             },
             {
                 .Address = 0x0000,
                 .Len = 0x0000,
+                .CRC = 0x00000000,
             },
             {
                 .Address = 0x0000,
                 .Len = 0x0000,
+                .CRC = 0x00000000,
             },
             {
                 .Address = 0x0000,
                 .Len = 0x0000,
-            },
-            {
-                .Address = 0x0000,
-                .Len = 0x0000,
-            },
-            {
-                .Address = 0x0000,
-                .Len = 0x0000,
-            },
-            {
-                .Address = 0x0000,
-                .Len = 0x0000,
-            },
-            {
-                .Address = 0x0000,
-                .Len = 0x0000,
-            },
-            {
-                .Address = 0x0000,
-                .Len = 0x0000,
-            },
-            {
-                .Address = 0x0000,
-                .Len = 0x0000,
-            },
-            {
-                .Address = 0x0000,
-                .Len = 0x0000,
-            },
-            {
-                .Address = 0x0000,
-                .Len = 0x0000,
+                .CRC = 0x00000000,
             },
     },
 };

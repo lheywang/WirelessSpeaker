@@ -29,6 +29,8 @@ private:
     SPI_Bus *SPI;
     int ReadHeaderV1();
     int WriteHeaderV1();
+    int SetConfigCRC(const uint16_t CRC);
+    int GetConfigCRC(uint16_t *const CRC);
 
 public:
     /**
