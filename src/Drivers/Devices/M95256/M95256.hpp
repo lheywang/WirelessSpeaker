@@ -41,6 +41,7 @@ class M95256
 {
 private:
     SPI_Bus SPI;
+    uint8_t Openned;
 
 public:
     /**
@@ -49,6 +50,12 @@ public:
      * @param SPI An SPI object to be used as base
      */
     M95256(const SPI_Bus *SPI);
+
+    /**
+     * @brief Constructor for the M95256 class.
+     *
+     */
+    M95256();
 
     /**
      * @brief Destructor for the M95256 class.

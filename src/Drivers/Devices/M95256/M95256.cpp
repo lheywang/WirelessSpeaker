@@ -38,6 +38,23 @@ constexpr int MAX_ADDRESS = 0x7FFF;
 M95256::M95256(const SPI_Bus *SPI)
 {
     this->SPI = *SPI;
+    this->Openned = 0x00;
+    return;
+}
+
+M95256::M95256()
+{
+    // Open a new SPI device
+    SPI_Bus *ptr = SPI_GetInfos();
+    if (ptr == nullptr)
+        throw std::runtime_error("[ M95256 ][ CONSTRUCTOR ] : Failed to allocate memory for the SPI obect");
+
+    // copy the SPI Device
+    this->SPI = *ptr;
+
+    // Load default settings of the SPI Bus.
+    SPI_Configure(&this->SPI, SPI_MODE_0, SPI_DEFAULT_WORDSIZE, SPI_DEFAULT_SPEED);
+
     return;
 }
 
