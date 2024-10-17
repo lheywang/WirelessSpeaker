@@ -9,8 +9,8 @@
  *
  */
 
-#include "header.hpp"
-#include "../../Drivers/SPI/SPI.hpp"
+#include "header/header.hpp"
+#include "structs/StructV1.hpp"
 #include "../../Drivers/Devices/M95256/M95256.hpp"
 
 constexpr int HEADER_SIZE = 64;        /*!< Define the size in bytes of the header.*/

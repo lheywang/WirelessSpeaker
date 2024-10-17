@@ -21,11 +21,8 @@
 /*! Create the abstraction layer that handle all of the audio configuration */
 struct Audio
 {
-    struct Trebbles Trebbles; /*!< Trebbles configuration*/
-    struct Medium Mediums;    /*!< Mediums configuration*/
-    struct Bass Bass;         /*!< Bass configuration*/
-    struct Global Global;     /*!< Global analog config (volume...)*/
-    struct DAC_Config DAC;    /*!< DAC Config*/
+    struct EQ EQ;          /*!< Analog equializer configuration */
+    struct DAC_Config DAC; /*!< DAC Config*/
 
     struct AMP BassAmp;  /*!< Bass amplifier settings*/
     struct AMP LeftAmp;  /*!< Left amplifier settings*/
