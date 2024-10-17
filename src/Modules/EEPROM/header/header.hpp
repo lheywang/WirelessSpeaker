@@ -11,6 +11,13 @@
 
 #include <cstdint>
 
+/*!< Stores the infos about where and how to find a DSP Profile*/
+struct DSP_PROFILE_INFO
+{
+    uint16_t Address = 0x00; /*!< Address of the DSP Profile*/
+    uint16_t Len = 0x00;     /*!< Length in bytes of the DSP Profile*/
+};
+
 /*! This struct represent the memory layout for the Header, as defined in the PDF file. */
 struct EEPROM_HEADER_V1
 {
@@ -56,6 +63,7 @@ struct EEPROM_HEADER_V1
         uint8_t Decimals[6]; /*!< Six natural decimals for the Serial number*/
     } SERIAL_NB;
 
+    // May be for further usage...
     uint8_t __padding1[8] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
 
     /*! This sixth struct store a fabrication date, in the same format as the eeprom write date. */
@@ -69,12 +77,56 @@ struct EEPROM_HEADER_V1
         uint8_t Seconds; /*!< Seconds values, expressed from 0-60*/
     } DESIGN_DATE;
 
-    uint16_t HeaderCRC16 = 0x0000; /*!< CRC16 value*/
+    uint16_t HeaderCRC16 = 0x0000; /*!< CRC16 value for the header*/
+    uint16_t ConfigCRC16 = 0x0000; /*!< CRC16 value for the config*/
 
-    uint16_t DATA_ADD; /*!< Address of the DATA Block*/
-    uint16_t DATA_LEN; /*!< Length of the DATA Block*/
+    uint8_t __padding3[8] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
 
-    uint8_t __padding3[12] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
+    uint8_t DSP_PROFILE_NUMBER; /*!< Number of DSP Profiles*/
 
-    uint8_t __padding4[7] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
+    uint8_t __padding4[12] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
+
+    // END OF PAGE 0
+
+    struct DSP_PROFILE_INFO Profile[16]; /*!< DSP Profile 0-15*/
+
+    // END OF PAGE 1
+};
+
+constexpr struct EEPROM_HEADER_V1 DEFAULT_HEADER_V1
+{
+    .DATA_VERSION{
+        .Major = 1,
+        .Median = 0,
+        .Minor = 0,
+    },
+        .LAST_WRITE{
+            .Year = {19, 70},
+            .Month = 01,
+            .Day = 01,
+            .Hour = 00,
+            .Minutes = 00,
+            .Seconds = 01,
+        },
+        .HARDWARE_VERSION{
+            .Major = 1,
+            .Minor = 0,
+        },
+        .BOM_VERSION{
+            .Major = 1,
+            .Minor = 0,
+        },
+        .SERIAL_NB{
+            .Letters = {'S', 'P'},
+            .Decimals = {'0', '0', '0', '0', '0', '0'},
+        },
+        .DESIGN_DATE{
+            .Year = {19, 70},
+            .Month = 01,
+            .Day = 01,
+            .Hour = 00,
+            .Minutes = 00,
+            .Seconds = 01,
+        },
+        .DSP_PROFILE_NUMBER = 0x00,
 };

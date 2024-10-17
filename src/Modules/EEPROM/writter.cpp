@@ -17,6 +17,8 @@ int EEPROM_WriteHeaderV1(M95256 Slave, EEPROM_HEADER_V1 *const Header)
 {
     // Creating a buffer value
     uint8_t *buf = (uint8_t *)malloc(HEADER_SIZE);
+    if (buf == 0)
+        return -1;
     memset(buf, 0x00, HEADER_SIZE);
 
     // Set a dummy value on the CRC16 field and copy the data to an array of uint8_t.
@@ -27,16 +29,20 @@ int EEPROM_WriteHeaderV1(M95256 Slave, EEPROM_HEADER_V1 *const Header)
     uint16_t calc_CRC = crc_16(buf, HEADER_SIZE);
     Header->HeaderCRC16 = calc_CRC;
 
+    std::cout << calc_CRC << std::endl;
+
     // Copying the data
     memcpy(buf, Header, HEADER_SIZE);
 
     // Write the data
-    int ret = Slave.Write(HEADER_ADDRESS, buf, HEADER_SIZE);
+    int ret = 0;
+    ret += Slave.Write(HEADER_ADDRESS, buf, PAGE_SIZE);
+    ret += Slave.Write(HEADER_ADDRESS, buf + PAGE_SIZE * sizeof(uint8_t), PAGE_SIZE);
     free(buf);
 
     // Returns
     if (ret < 0)
-        return -1;
+        return -2;
     return 0;
 }
 

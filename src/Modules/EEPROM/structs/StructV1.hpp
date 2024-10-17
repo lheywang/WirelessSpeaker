@@ -15,6 +15,7 @@
 // Libs
 #include <iostream>
 
+// Sub Structs
 #include "audio/struct_audio.hpp"
 #include "audio/struct_dsp_profile.hpp"
 #include "interfaces/struct_user_interfaces.hpp"
@@ -39,7 +40,80 @@ struct CONFIG_V1
 
     uint8_t __padding1[22] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
 
-    char SpeakerName[MAX_CHAR_SPEAKER_NAME * 2] = {0x00}; /*!< Configure the speaker friendly name. UTF16 Accepted ! Fit on a page*/
+    // End of first page
+
+    char SpeakerName[MAX_CHAR_SPEAKER_NAME * 2] = {0x00}; /*!< Configure the speaker friendly name. UTF16 Accepted !*/
+
+    // End of second page
 
     uint8_t __padding2[128] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
+
+    // End of fourth page
+};
+
+constexpr struct CONFIG_V1 CONFIG_DEFAULT
+{
+    .Audio{
+        .EQ{
+            .BassGain = 0x80,
+            .MediumGainRight = 0x80,
+            .MediumGainLeft = 0x80,
+            .HighGainRight = 0x80,
+            .HighGainLeft = 0x80,
+            .LowPassValueLeft = 0x20,
+            .LowPassValueRight = 0x20,
+            .HighPassValueLeft = 0x20,
+            .HighPassValueRight = 0x20,
+        },
+        .DAC{
+            .Automute_delay = 0x04,
+            .Global_Volume = 0x30,
+            .Left_Volume = 0x30,
+            .Right_Volume = 0x30,
+            .LeftDataPath = 0x01,
+            .RightDataPath = 0x01,
+            .LeftAnalogAtten = 0x00,
+            .RightAnalogAtten = 0x00,
+        },
+        .BassAmp{
+            .PowerLimit = 0xFF,
+        },
+        .LeftAmp{
+            .PowerLimit = 0xFF,
+        },
+        .RightAmp{
+            .PowerLimit = 0xFF,
+        },
+    },
+        .LedsBack{
+            .Brightness = 0xC0,
+            .MaximalBrightness = 0xFF,
+        },
+        .LedsTop1{
+            .Brightness = 0xC0,
+            .MaximalBrightness = 0xFF,
+        },
+        .LedsTop2{
+            .Brightness = 0xC0,
+            .MaximalBrightness = 0xFF,
+        },
+        .LedsTop3{
+            .Brightness = 0xC0,
+            .MaximalBrightness = 0xFF,
+        },
+        .Capacitive{
+            .Threshold = 0x04,
+            .Sensivity = 0x03,
+        },
+        .PDProfile1{
+            .Voltage = {20, 00},
+            .Current = {5, 00},
+            .EnablePPS = 0x00,
+        },
+        .PDProfile2{
+            .Voltage = {20, 00},
+            .Current{3, 6},
+            .EnablePPS = 0x00,
+        },
+        .SpeakerName = "WIRELESS SPEAKER !",
 };

@@ -46,55 +46,16 @@ int main()
 
     std::cout << "Hello World !" << std::endl;
 
-    int size = sizeof(CONFIG_V1) * sizeof(int);
-    std::cout << size << " octets" << std::endl;
+    int size = sizeof(EEPROM_HEADER_V1);
+    std::cout << size << " octets (header)" << std::endl;
+
+    size = sizeof(CONFIG_V1);
+    std::cout << size << " octets (config)" << std::endl;
 
     int opt = 25632 - size;
     std::cout << "Bytes gained from start : " << opt << " which is : " << opt / 64 << " page(s)" << std::endl;
 
-    struct CONFIG_V1 Cfg;
-
-    /*
-    EEPROM_HEADER_V1 Header{
-        .DATA_VERSION{
-            .Major = 0x00,
-            .Median = 0x01,
-            .Minor = 0x00,
-        },
-        .LAST_WRITE{
-            .Year = {20, 24},
-            .Month = 10,
-            .Day = 16,
-            .Hour = 20,
-            .Minutes = 14,
-            .Seconds = 0,
-        },
-        .HARDWARE_VERSION{
-            .Major = 0x00,
-            .Minor = 0x01,
-        },
-        .BOM_VERSION{
-            .Major = 0x00,
-            .Minor = 0x01,
-        },
-        .SERIAL_NB{
-            .Letters = {'W', 'S'},
-            .Decimals = {'0', '0', '0', '0', '0', '0'},
-        },
-        .DESIGN_DATE{
-            .Year = {20, 24},
-            .Month = 10,
-            .Day = 01,
-            .Hour = 19,
-            .Minutes = 00,
-            .Seconds = 0,
-        },
-        .DATA_CRC_ADD = 0x0079,
-        .DATA_CRC_LEN = 447,
-        .DATA_ADD = 0x279,
-        .DATA_LEN = 25631};
-
-    std::cout << sizeof(Header) << std::endl;
+    struct EEPROM_HEADER_V1 Header = DEFAULT_HEADER_V1; // Load some settings
 
     SPI_Bus *SPI = SPI_GetInfos();
     SPI_Configure(SPI, SPI_MODE_0, 8, 500'000);
@@ -105,7 +66,6 @@ int main()
     usleep(10000);
 
     std::cout << EEPROM_ReadHeaderV1(EEPROM, &Header) << std::endl;
-    */
 
     // int TX[100] = {0};
     // int RX[100] = {0};

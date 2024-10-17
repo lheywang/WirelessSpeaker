@@ -48,8 +48,6 @@ struct DAC_Config
 
     uint8_t LeftAnalogAtten;  /*!< Enable -6dB of analog attenuation on the left*/
     uint8_t RightAnalogAtten; /*!< Enable -6dB of analog attenuation on the right*/
-
-    uint8_t NumberOfDSPProfiles; /*!< Number of DSP Profiles able to be loaded.*/
 };
 
 /*! Define values that are stored on the EEPROM for the Amplifiers */

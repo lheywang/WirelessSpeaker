@@ -31,6 +31,8 @@ int EEPROM_ReadHeaderV1(M95256 Slave, EEPROM_HEADER_V1 *const Header)
     memcpy(buf, Header, HEADER_SIZE);
     uint16_t calc_CRC = crc_16(buf, HEADER_SIZE);
 
+    std::cout << read_CRC << " - " << calc_CRC << std::endl;
+
     // Free memory
     free(buf);
 

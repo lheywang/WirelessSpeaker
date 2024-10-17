@@ -13,7 +13,7 @@
 #include "structs/StructV1.hpp"
 #include "../../Drivers/Devices/M95256/M95256.hpp"
 
-constexpr int HEADER_SIZE = 64;        /*!< Define the size in bytes of the header.*/
+constexpr int HEADER_SIZE = 128;       /*!< Define the size in bytes of the header.*/
 constexpr int HEADER_ADDRESS = 0x0000; /*!< Define the base address of the header*/
 
 /**
@@ -23,7 +23,8 @@ constexpr int HEADER_ADDRESS = 0x0000; /*!< Define the base address of the heade
  * @param[in] Slave The M95256 SPI Slave to which the operation shall take.
  *
  * @return  0 : OK
- * @return -1 : Write failed.
+ * @return -1 : Memory allocation failed.
+ * @return -2 : Write failed.
  */
 int EEPROM_WriteHeaderV1(M95256 Slave, EEPROM_HEADER_V1 *const Header);
 
@@ -34,8 +35,9 @@ int EEPROM_WriteHeaderV1(M95256 Slave, EEPROM_HEADER_V1 *const Header);
  * @param[in] Slave The M95256 SPI Slave to which the operation shall take.
  *
  * @return  0 : OK
- * @return -1 : Read failed.
- * @return -2 : Invalid CRC.
+ * @return -1 : Memory allocation failed.
+ * @return -2 : Read failed.
+ * @return -3 : Invalid CRC.
  */
 int EEPROM_ReadHeaderV1(M95256 Slave, EEPROM_HEADER_V1 *const Header);
 
@@ -45,8 +47,9 @@ int EEPROM_ReadHeaderV1(M95256 Slave, EEPROM_HEADER_V1 *const Header);
  * @param Data A reference to the Data structure to be wrote.
  * @param[in] Slave The M95256 SPI Slave to which the operation shall take.
  *
- * @return  0 : OK
- * @return -1 : Write failed.
+ * @return  0 : OK.
+ * @return -1 : Memory allocation failed.
+ * @return -2 : Write failed.
  */
 int EEPROM_WriteConfigV1(M95256 Slave, CONFIG_V1 *const Data);
 
@@ -57,8 +60,9 @@ int EEPROM_WriteConfigV1(M95256 Slave, CONFIG_V1 *const Data);
  * @param[in] Slave The M95256 SPI Slave to which the operation shall take.
  *
  * @return  0 : OK
- * @return -1 : Read failed.
- * @return -2 : Invalid CRC.
+ * @return -1 : Memory allocation failed.
+ * @return -2 : Read failed.
+ * @return -3 : Invalid CRC.
  */
 int EEPROM_ReadConfigV1(M95256 Slave, CONFIG_V1 *const Data);
 
