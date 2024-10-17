@@ -64,6 +64,7 @@ constexpr struct CONFIG_V1 CONFIG_DEFAULT
             .LowPassValueRight = 0x20,
             .HighPassValueLeft = 0x20,
             .HighPassValueRight = 0x20,
+            .RL_eq = 0x20,
         },
         .DAC{
             .Automute_delay = 0x04,
