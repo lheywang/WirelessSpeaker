@@ -16,16 +16,15 @@
 #include <iostream>
 
 #include "audio/struct_audio.hpp"
+#include "audio/struct_dsp_profile.hpp"
 #include "interfaces/struct_user_interfaces.hpp"
 #include "interfaces/struct_automated_interfaces.hpp"
 
-constexpr int MAX_CHAR_SPEAKER_NAME = 50;
+constexpr int MAX_CHAR_SPEAKER_NAME = 32;
 
 /*! Define values that are stored on the EEPROM for the overall speaker configuration */
 struct CONFIG_V1
 {
-    uint8_t SpeakerName[MAX_CHAR_SPEAKER_NAME * 2]; /*!< Configure the speaker friendly name. UTF16 Accepted !*/
-
     struct Audio Audio; /*!< Configure all of the audio related settings*/
 
     struct LEDS LedsBack; /*!< Configure the leds placed at the back of the speaker*/
@@ -37,4 +36,10 @@ struct CONFIG_V1
 
     struct BasicPDO PDProfile1; /*!< Store the usb-c user defined profile 1*/
     struct BasicPDO PDProfile2; /*!< Store the usb-c user defined profile 2*/
+
+    uint8_t __padding1[22] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
+
+    char SpeakerName[MAX_CHAR_SPEAKER_NAME * 2] = {0x00}; /*!< Configure the speaker friendly name. UTF16 Accepted ! Fit on a page*/
+
+    uint8_t __padding2[128] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
 };

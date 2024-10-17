@@ -46,8 +46,8 @@ struct DAC_Config
     uint8_t LeftDataPath;  /*!< Left data input selection*/
     uint8_t RightDataPath; /*!< Right data input selection*/
 
-    bool LeftAnalogAtten;  /*!< Enable -6dB of analog attenuation on the left*/
-    bool RightAnalogAtten; /*!< Enable -6dB of analog attenuation on the right*/
+    uint8_t LeftAnalogAtten;  /*!< Enable -6dB of analog attenuation on the left*/
+    uint8_t RightAnalogAtten; /*!< Enable -6dB of analog attenuation on the right*/
 
     uint8_t NumberOfDSPProfiles; /*!< Number of DSP Profiles able to be loaded.*/
 };
