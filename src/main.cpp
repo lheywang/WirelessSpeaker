@@ -57,15 +57,13 @@ int main()
 
     struct EEPROM_HEADER_V1 Header = DEFAULT_HEADER_V1; // Load some settings
 
-    SPI_Bus *SPI = SPI_GetInfos();
-    SPI_Configure(SPI, SPI_MODE_0, 8, 500'000);
-    M95256 EEPROM = M95256(SPI);
+    EEPROM Mem = EEPROM();
 
-    std::cout << EEPROM_WriteHeaderV1(EEPROM, &Header) << std::endl;
+    std::cout << Mem.WriteHeaderV1(&Header) << std::endl;
 
     usleep(10000);
 
-    std::cout << EEPROM_ReadHeaderV1(EEPROM, &Header) << std::endl;
+    std::cout << Mem.GetHeaderV1(&Header) << std::endl;
 
     // int TX[100] = {0};
     // int RX[100] = {0};
