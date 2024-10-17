@@ -59,9 +59,9 @@ int main()
 
     EEPROM Mem = EEPROM();
 
-    std::cout << Mem.WriteHeaderV1(&Header) << std::endl;
+    std::cout << Mem.SetHeaderV1(&Header) << std::endl;
 
-    usleep(10000);
+    // usleep(10000);
 
     std::cout << Mem.GetHeaderV1(&Header) << std::endl;
 

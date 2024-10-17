@@ -28,6 +28,7 @@ private:
     EEPROM_HEADER_V1 *Header;
     SPI_Bus *SPI;
     int ReadHeaderV1();
+    int WriteHeaderV1();
 
 public:
     /**
@@ -51,7 +52,7 @@ public:
      * @return -1 : Memory allocation failed.
      * @return -2 : Write failed.
      */
-    int WriteHeaderV1(EEPROM_HEADER_V1 *const Header);
+    int SetHeaderV1(EEPROM_HEADER_V1 *const Header);
 
     /**
      * @brief Read the header from the EEPROM. CRC is checked.
