@@ -137,12 +137,10 @@ int EEPROM::GetHeaderV1(EEPROM_HEADER_V1 *const Header) // OK
 
 int EEPROM::WriteConfigV1(CONFIG_V1 *const Data)
 {
-    // Creating a buffer value
+    // Creating a buffer value and cop
     uint8_t *buf = (uint8_t *)malloc(CONFIG_SIZE);
     if (buf == nullptr)
         return -1;
-    memset(buf, 0x00, CONFIG_SIZE);
-    // Copying the data
     memcpy(buf, Data, CONFIG_SIZE);
 
     // Compute the CRC
