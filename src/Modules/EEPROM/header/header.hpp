@@ -30,7 +30,7 @@ struct EEPROM_HEADER_V1
         uint8_t Major;  /*!< Major decimal of the data revision : 1.x.x*/
         uint8_t Median; /*!< Median decimal of the data revision : x.0.x*/
         uint8_t Minor;  /*!< Minor decimal of the data revision : x.x.0*/
-    } DATA_VERSION;
+    } DATA_VERSION;     /*!< Store an indicator of the header version*/
 
     /*! This second struct store the value of the last write to the EEPROM. */
     struct TIMESTAMP
@@ -41,28 +41,28 @@ struct EEPROM_HEADER_V1
         uint8_t Hour;    /*!< Hour value, expressed from 0-60*/
         uint8_t Minutes; /*!< Minutes values, expressed from 0-60*/
         uint8_t Seconds; /*!< Seconds values, expressed from 0-60*/
-    } LAST_WRITE;
+    } LAST_WRITE;        /*!< Store an indicator of the timestam of the last header write*/
 
     /*! This third struct define the hardware version of the PCB. */
     struct HARDWARE_VERSION
     {
-        uint8_t Major; /*!< Major hardware revision*/
-        uint8_t Minor; /*!< Minor hardware revision*/
-    } HARDWARE_VERSION;
+        uint8_t Major;  /*!< Major hardware revision*/
+        uint8_t Minor;  /*!< Minor hardware revision*/
+    } HARDWARE_VERSION; /*!< Store an indicator about the hardware version of the speaker*/
 
     /*! This fourth struct define the BOM version of the speaker. */
     struct BOM_VERSION
     {
         uint8_t Major; /*!< Major component revision*/
         uint8_t Minor; /*!< Minor component revision*/
-    } BOM_VERSION;
+    } BOM_VERSION;     /*!< Store an indicator about the component version of the speaker*/
 
     /*! This fifth struct store a serial number. */
     struct SERIAL_NB
     {
         uint8_t Letters[2];  /*!< Two letters for the Serial number*/
         uint8_t Decimals[6]; /*!< Six natural decimals for the Serial number*/
-    } SERIAL_NB;
+    } SERIAL_NB;             /*!< Store the serial number of the speaker*/
 
     // May be for further usage...
     uint8_t __padding1[8] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
@@ -76,7 +76,7 @@ struct EEPROM_HEADER_V1
         uint8_t Hour;    /*!< Hour value, expressed from 0-60*/
         uint8_t Minutes; /*!< Minutes values, expressed from 0-60*/
         uint8_t Seconds; /*!< Seconds values, expressed from 0-60*/
-    } DESIGN_DATE;
+    } DESIGN_DATE;       /*!< Store the timestam of the design date of this speaker, or more accuratly it's production date*/
 
     uint16_t HeaderCRC16 = 0x0000; /*!< CRC16 value for the header*/
     uint16_t ConfigCRC16 = 0x0000; /*!< CRC16 value for the config*/
@@ -94,6 +94,7 @@ struct EEPROM_HEADER_V1
     // END OF PAGE 1
 };
 
+/*! Define defaults values for the base header */
 constexpr struct EEPROM_HEADER_V1 DEFAULT_HEADER_V1
 {
     .DATA_VERSION{

@@ -1,5 +1,5 @@
 /**
- * @file Struct.hpp
+ * @file StructV1.hpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define the global structure that store all of our settings on the eeprom.
  * @version 0.1
@@ -21,7 +21,7 @@
 #include "interfaces/struct_user_interfaces.hpp"
 #include "interfaces/struct_automated_interfaces.hpp"
 
-constexpr int MAX_CHAR_SPEAKER_NAME = 32;
+constexpr int MAX_CHAR_SPEAKER_NAME = 32; /*!< Define the maximal lengh allowed for the Speaker friendly name*/
 
 /*! Define values that are stored on the EEPROM for the overall speaker configuration */
 struct CONFIG_V1
@@ -51,6 +51,7 @@ struct CONFIG_V1
     // End of fourth page
 };
 
+/*! Define default configuration for the config struct */
 constexpr struct CONFIG_V1 CONFIG_DEFAULT
 {
     .Audio{

@@ -209,26 +209,32 @@ int EEPROM::CheckForDSPProfileSpace(DSP_PROFILE *const Profile)
     if (this->Header->DSP_PROFILE_NUMBER == 0xFF) // All profiles are used.
         return -1;
     // 0 1 0 1 1 0 1 1 --> Each bit = One DSP Profile.
+    return 0;
 }
 
 int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
 {
+    return 0;
 }
 
 int EEPROM::RemoveDSPProfile(const int ProfileNumber)
 {
+    return 0;
 }
 
 int EEPROM::GetDSPProfileName(const int ProfileNumber, char const ProfileName[MAX_PROFILE_CHAR])
 {
+    return 0;
 }
 
 int EEPROM::GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile)
 {
+    return 0;
 }
 
 int EEPROM::GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE *const Profile)
 {
+    return 0;
 }
 /*
     switch (Profile->Size)

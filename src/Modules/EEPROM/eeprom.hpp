@@ -15,12 +15,17 @@
 
 // HEADER CONSTANTS
 constexpr int HEADER_SIZE = 128;       /*!< Define the size in bytes of the header.*/
-constexpr int HEADER_ADDRESS = 0x0000; /*!< Define the base address of the header*/
+constexpr int HEADER_ADDRESS = 0x0000; /*!< Define the size of the header*/
 
 // CONFIG CONSTANTS
-constexpr int CONFIG_SIZE = 256;
-constexpr int CONFIG_ADDRESS = 0x080;
+constexpr int CONFIG_SIZE = 256;      /*!< Define the base address of the config*/
+constexpr int CONFIG_ADDRESS = 0x080; /*!< Define the size of the config*/
 
+/**
+ * @brief Base class for the usage of the EEPROM.
+ *        This class provide an high level interraction to the EEPROM with masked addressing procedures.
+ *
+ */
 class EEPROM
 {
 private:
@@ -39,7 +44,7 @@ public:
      * @param[in] ForceWrite Ignore the read issues and force the write of a new header. Will be logged.
      *
      */
-    EEPROM(bool ForceWrite);
+    EEPROM(bool ForceWrite = false);
 
     /**
      * @brief Destruct an EEPROM class.
@@ -64,7 +69,6 @@ public:
      * @brief Write the config to the EEPROM. Date and CRC are also updated.
      *
      * @param[in] Data A reference to the Data structure to be wrote.
-     * @param[in] Data The data to be wrotten
      *
      * @return  0 : OK.
      * @return -1 : Memory allocation failed.
@@ -91,7 +95,7 @@ public:
     /**
      * @brief Check if there is enough space of a DSP Profile of Len Size.
      *
-     * @param[in] Len A DSP_PROFILE Struct.
+     * @param[in] Profile A DSP_PROFILE Struct.
      *
      * @return  0 : OK
      * @return -1 : Not enough space.
@@ -101,7 +105,7 @@ public:
     /**
      * @brief Write a new DSP Profile to the EEPROM, if there is enough space for it.
      *
-     * @param[in] ProfilePointer A pointer to a DSP_PROFILE struct member.
+     * @param[in] Profile A pointer to a DSP_PROFILE struct member.
      * @param[out] ProfileNumber The function return the number of the DSP Profile that has been given to this profile.
      *
      * @return  0 : OK
@@ -150,7 +154,7 @@ public:
      * @brief Return the size of a DSP Profile
      *
      * @param[in] ProfileNumber An integer to select a profile number
-     * @param[out] Size A member of the DSP_PROFILE_TYPE enum that evalute the size.
+     * @param[out] Profile A member of the DSP_PROFILE_TYPE enum that evalute the size.
      *
      * @return  0 : OK
      * @return -1 : Invalid profile number value.

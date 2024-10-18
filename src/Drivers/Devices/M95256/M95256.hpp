@@ -28,7 +28,7 @@ enum class EEPROM_WP
     SOFT_WP_FULL = 0x03,          /*!< Full memory protected*/
 };
 
-constexpr int PAGE_SIZE = 64;
+constexpr int PAGE_SIZE = 64; /*!< Define EEPROM page size*/
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
