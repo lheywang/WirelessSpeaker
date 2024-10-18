@@ -36,25 +36,16 @@ public:
     /**
      * @brief Construct a new EEPROM
      *
+     * @param[in] ForceWrite Ignore the read issues and force the write of a new header. Will be logged.
+     *
      */
-    EEPROM();
+    EEPROM(bool ForceWrite);
 
     /**
      * @brief Destruct an EEPROM class.
      *
      */
     ~EEPROM();
-
-    /**
-     * @brief Write the header to the EEPROM. CRC is computed and wrote.
-     *
-     * @param[in] Header A reference to an header struct.
-     *
-     * @return  0 : OK
-     * @return -1 : Memory allocation failed.
-     * @return -2 : Write failed.
-     */
-    int SetHeaderV1(EEPROM_HEADER_V1 *const Header);
 
     /**
      * @brief Read the header from the EEPROM. CRC is checked.

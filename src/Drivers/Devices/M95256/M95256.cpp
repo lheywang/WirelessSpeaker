@@ -193,8 +193,8 @@ int M95256::Write(const int Address, uint8_t *const Data, const int Len)
 
     memset(buf, 0x00, Len + 3);
     buf[0] = WRITE;
-    buf[1] = Address & 0xFF00;
-    buf[2] = Address & 0x00FF;
+    buf[1] = (uint8_t)((Address & 0xFF00) >> 8);
+    buf[2] = (uint8_t)(Address & 0x00FF);
     memcpy(&buf[3], Data, Len);
 
     this->WriteEnable();

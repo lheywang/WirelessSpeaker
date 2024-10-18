@@ -18,7 +18,7 @@
 #include <stdexcept>
 
 // CONSTRUCTORS
-EEPROM::EEPROM()
+EEPROM::EEPROM(bool ForceWrite)
 {
     // Open a new SPI device
     this->SPI = SPI_GetInfos();
@@ -34,7 +34,16 @@ EEPROM::EEPROM()
 
     int ret = this->ReadHeaderV1();
     if (ret != 0)
-        throw std::runtime_error("[ EEPROM ][ CONSTRUCTOR ] : Failed to read header from the EEPROM");
+    {
+        if (ForceWrite == true)
+        {
+            memcpy(this->Header, &DEFAULT_HEADER_V1, HEADER_SIZE);
+            this->WriteHeaderV1();
+            std::clog << "[ EEPROM ][ CONSTRUCTOR ] : Failed to read the header. Default one was wrote. Error code was : " << ret << std::endl;
+        }
+        else
+            throw std::runtime_error("[ EEPROM ][ CONSTRUCTOR ] : Failed to read header from the EEPROM");
+    }
 
     return;
 }
@@ -99,8 +108,8 @@ int EEPROM::WriteHeaderV1() // OK
 
     // Write the data (one write per 64 bytes, per page !)
     int ret = 0;
-    ret += this->Slave.Write(HEADER_ADDRESS, buf, PAGE_SIZE);
-    ret += this->Slave.Write(HEADER_ADDRESS + PAGE_SIZE, buf + PAGE_SIZE * sizeof(uint8_t), PAGE_SIZE);
+    ret += this->Slave.Write(HEADER_ADDRESS, &buf[0], PAGE_SIZE);
+    ret += this->Slave.Write((HEADER_ADDRESS + PAGE_SIZE), &buf[PAGE_SIZE], PAGE_SIZE);
     free(buf);
 
     // Returns
@@ -126,13 +135,6 @@ int EEPROM::GetHeaderV1(EEPROM_HEADER_V1 *const Header) // OK
     return 0;
 }
 
-int EEPROM::SetHeaderV1(EEPROM_HEADER_V1 *const Header)
-{
-    memcpy(this->Header, Header, HEADER_SIZE);
-    this->WriteHeaderV1();
-    return 0;
-}
-
 int EEPROM::WriteConfigV1(CONFIG_V1 *const Data)
 {
     // Creating a buffer value
@@ -143,6 +145,8 @@ int EEPROM::WriteConfigV1(CONFIG_V1 *const Data)
 
     // Compute the CRC
     uint16_t calc_CRC = crc_16(buf, CONFIG_SIZE);
+    std::cout << "computed CRC : " << calc_CRC << std::endl;
+
     this->SetConfigCRC(calc_CRC);
     this->WriteHeaderV1();
 
@@ -151,8 +155,20 @@ int EEPROM::WriteConfigV1(CONFIG_V1 *const Data)
 
     // Write the data (one write per 64 bytes, per page !) and free the buffer.
     int ret = 0;
-    for (int i = 0; i < (4 * PAGE_SIZE); i += PAGE_SIZE)
-        ret += this->Slave.Write(CONFIG_ADDRESS, (buf + (i * sizeof(uint8_t))), PAGE_SIZE);
+    for (int i = 0; i < CONFIG_SIZE; i += PAGE_SIZE)
+    {
+        uint8_t *ptr = &buf[i];
+        std::cout << "Writing EEPROM at address " << std::dec << CONFIG_ADDRESS + i << std::endl;
+        std::cout << "Address of passed buf : " << std::hex << (long *)ptr << std::endl;
+
+        for (int ii = 0; ii < PAGE_SIZE; ii++)
+            std::cout << std::hex << (int)buf[ii + i] << "-";
+        std::cout << std::endl;
+
+        ret += this->Slave.Write((CONFIG_ADDRESS + i), &buf[i], PAGE_SIZE);
+        std::cout << std::endl;
+        usleep(1000);
+    }
     free(buf);
 
     // Returns

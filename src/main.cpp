@@ -58,14 +58,12 @@ int main()
     struct EEPROM_HEADER_V1 Header = DEFAULT_HEADER_V1; // Load some settings
     struct CONFIG_V1 Config = CONFIG_DEFAULT;           // Load some settings.
 
-    EEPROM Mem = EEPROM();
+    EEPROM Mem = EEPROM(true);
 
-    std::cout << Mem.SetHeaderV1(&Header) << std::endl;
     std::cout << Mem.WriteConfigV1(&Config) << std::endl;
 
     usleep(10000);
 
-    std::cout << Mem.GetHeaderV1(&Header) << std::endl;
     std::cout << Mem.ReadConfigV1(&Config) << std::endl;
 
     // int TX[100] = {0};
