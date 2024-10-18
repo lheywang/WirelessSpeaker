@@ -142,6 +142,8 @@ int EEPROM::WriteConfigV1(CONFIG_V1 *const Data)
     if (buf == nullptr)
         return -1;
     memset(buf, 0x00, CONFIG_SIZE);
+    // Copying the data
+    memcpy(buf, Data, CONFIG_SIZE);
 
     // Compute the CRC
     uint16_t calc_CRC = crc_16(buf, CONFIG_SIZE);
@@ -149,9 +151,6 @@ int EEPROM::WriteConfigV1(CONFIG_V1 *const Data)
 
     this->SetConfigCRC(calc_CRC);
     this->WriteHeaderV1();
-
-    // Copying the data
-    memcpy(buf, Data, CONFIG_SIZE);
 
     // Write the data (one write per 64 bytes, per page !) and free the buffer.
     int ret = 0;
