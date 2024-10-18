@@ -143,29 +143,15 @@ int EEPROM::WriteConfigV1(CONFIG_V1 *const Data)
         return -1;
     memcpy(buf, Data, CONFIG_SIZE);
 
-    // Compute the CRC
+    // Compute the CRC and write it on the header / EEPROM
     uint16_t calc_CRC = crc_16(buf, CONFIG_SIZE);
-    std::cout << "computed CRC : " << calc_CRC << std::endl;
-
     this->SetConfigCRC(calc_CRC);
     this->WriteHeaderV1();
 
     // Write the data (one write per 64 bytes, per page !) and free the buffer.
     int ret = 0;
     for (int i = 0; i < CONFIG_SIZE; i += PAGE_SIZE)
-    {
-        uint8_t *ptr = &buf[i];
-        std::cout << "Writing EEPROM at address " << std::dec << CONFIG_ADDRESS + i << std::endl;
-        std::cout << "Address of passed buf : " << std::hex << (long *)ptr << std::endl;
-
-        for (int ii = 0; ii < PAGE_SIZE; ii++)
-            std::cout << std::hex << (int)buf[ii + i] << "-";
-        std::cout << std::endl;
-
         ret += this->Slave.Write((CONFIG_ADDRESS + i), &buf[i], PAGE_SIZE);
-        std::cout << std::endl;
-        usleep(1000);
-    }
     free(buf);
 
     // Returns
