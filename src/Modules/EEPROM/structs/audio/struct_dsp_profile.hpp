@@ -18,31 +18,50 @@ constexpr int MAX_INSTR = 1024;      /*!< Maximal number of instructions for the
 constexpr int MAX_PROFILE_CHAR = 30; /*!< Maximal number of characters in the name of a DSP profile*/
 
 /*! Define an optionnal user customized DSP profile with the maximum number of elements. Usefull for particularly slow audio sampling rates.*/
-struct DSP_PROFILE_1024
+struct __PROFILE_1024
 {
     uint8_t DSP_Profile1[MAX_PROFILE_CHAR];     /*!< Name of the DSP Profile 1*/
     uint8_t DSP_BufferA_values1[MAX_COEFF * 3]; /*!< Buffer A values for the DSP Profile 1*/
     uint8_t DSP_BufferB_values1[MAX_COEFF * 3]; /*!< Buffer B values for the DSP Profile 1*/
     uint8_t DSP_Intr_values1[MAX_INSTR * 4];    /*!< Instruction buffer for the DSP Profile 1*/
 };
-constexpr int DSP_PROFILE_1024_SIZE = 5662;
 
 /*! Define an optionnal user customized DSP profile with the half of number of elements. Usefull for particularly normal audio sampling rates.*/
-struct DSP_PROFILE_512
+struct __PROFILE_512
 {
     uint8_t DSP_Profile1[MAX_PROFILE_CHAR];           /*!< Name of the DSP Profile 1*/
     uint8_t DSP_BufferA_values1[(MAX_COEFF / 2) * 3]; /*!< Buffer A values for the DSP Profile 1*/
     uint8_t DSP_BufferB_values1[(MAX_COEFF / 2) * 3]; /*!< Buffer B values for the DSP Profile 1*/
     uint8_t DSP_Intr_values1[(MAX_INSTR / 2) * 4];    /*!< Instruction buffer for the DSP Profile 1*/
 };
-constexpr int DSP_PROFILE_512_SIZE = 2846;
 
 /*! Define an optionnal user customized DSP profile with the quarter of number of elements. Usefull for particularly fast or very fast audio sampling rates.*/
-struct DSP_PROFILE_256
+struct __PROFILE_256
 {
     uint8_t DSP_Profile1[MAX_PROFILE_CHAR];           /*!< Name of the DSP Profile 1*/
     uint8_t DSP_BufferA_values1[(MAX_COEFF / 4) * 3]; /*!< Buffer A values for the DSP Profile 1*/
     uint8_t DSP_BufferB_values1[(MAX_COEFF / 4) * 3]; /*!< Buffer B values for the DSP Profile 1*/
     uint8_t DSP_Intr_values1[(MAX_INSTR / 4) * 4];    /*!< Instruction buffer for the DSP Profile 1*/
 };
-constexpr int DSP_PROFILE_256_SIZE = 1438;
+
+/*! List the different DSP Profile size. Used to limit the call function to one of theses ones.*/
+struct DSP_PROFILE
+{
+    union
+    {
+        __PROFILE_1024 VAL_PROFILE_1024; /*!< Size for the 1024 instructions profile*/
+        __PROFILE_512 VAL_PROFILE_512;   /*!< Size for the 512 instructions profile*/
+        __PROFILE_256 VAL_PROFILE_256;   /*!< Size for the 256 instructions profile*/
+    };
+
+    enum Size
+    {
+        PROFILE_1024, /*!< Size identifier for the 1024 instructions profile*/
+        PROFILE_512,  /*!< Size identifier for the 512 instructions profile*/
+        PROFILE_256   /*!< Size identifier for the 256 instructions profile*/
+    };
+
+    /*! Create the struct.*/
+    DSP_PROFILE(Size size) : Size(size) {}
+    Size Size; /*!< Store the struct size.*/
+};

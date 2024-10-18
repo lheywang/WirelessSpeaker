@@ -83,7 +83,7 @@ struct EEPROM_HEADER_V1
 
     uint8_t __padding3[8] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
 
-    uint8_t DSP_PROFILE_NUMBER; /*!< Number of DSP Profiles*/
+    uint8_t DSP_PROFILE_NUMBER; /*!< Used DSP Profiles. Each bit correspond to a DSP Profile*/
 
     uint8_t __padding4[12] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
 

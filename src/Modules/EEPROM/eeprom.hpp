@@ -47,6 +47,10 @@ public:
      */
     ~EEPROM();
 
+    // ==============================================================================
+    // GLOBAL MANAGEMENT
+    // ==============================================================================
+
     /**
      * @brief Read the header from the EEPROM. CRC is checked.
      *
@@ -80,29 +84,76 @@ public:
      */
     int ReadConfigV1(CONFIG_V1 *const Data);
 
-    /**
-     * @brief Convert an ConfigV1 struct to a ConfigV.. struct.
-     *
-     * @warning This function isn't implemented for now and won't be until a Rev2 has been defined.
-     *
-     * @param Src A reference to the input Config struct.
-     * @param Dest A reference to the output Config struct.
-     *
-     * @return  0 : OK
-     * @return -1 : Update failed.
-     */
-    int UpdateConfigV1(CONFIG_V1 *Src, CONFIG_V1 *Dest);
+    // ==============================================================================
+    // DSP PROFILE FUNCTIONS
+    // ==============================================================================
 
     /**
-     * @brief Convert an HeaderV1 struc to a HeaderV.. struct.
+     * @brief Check if there is enough space of a DSP Profile of Len Size.
      *
-     * @warning This function isn't implemented for now and won't be until a Rev2 has been defined.
-     *
-     * @param Src A reference to the input header struct.
-     * @param Dest A reference to the output header struct.
+     * @param[in] Len A DSP_PROFILE Struct.
      *
      * @return  0 : OK
-     * @return -1 : Update failed.
+     * @return -1 : Not enough space.
      */
-    int UpdateHeaderV1(EEPROM_HEADER_V1 *Src, EEPROM_HEADER_V1 *Dest);
+    int CheckForDSPProfileSpace(DSP_PROFILE *const Profile);
+
+    /**
+     * @brief Write a new DSP Profile to the EEPROM, if there is enough space for it.
+     *
+     * @param[in] ProfilePointer A pointer to a DSP_PROFILE struct member.
+     * @param[out] ProfileNumber The function return the number of the DSP Profile that has been given to this profile.
+     *
+     * @return  0 : OK
+     * @return -1 : Not enough space
+     * @return -2 : Invalid pointer
+     * @return -3 : IOCTL error.
+     */
+    int AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber);
+
+    /**
+     * @brief Delete on the EEPROM (on the header only, the values remains until the next write)
+     *
+     * @param[in] ProfileNumber The number of the DSP Profile.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid profile number value.
+     * @return -2 : IOCTL error.
+     */
+    int RemoveDSPProfile(const int ProfileNumber);
+
+    /**
+     * @brief Return the name of a specific DSP Profile
+     *
+     * @param[in] ProfileNumber An integer to select a profile number.
+     * @param[out] ProfileName A char array of MAX_PROFILE_CHAR length to be filled.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid profile number value.
+     * @return -2 : IOCTL error.
+     */
+    int GetDSPProfileName(const int ProfileNumber, char const ProfileName[MAX_PROFILE_CHAR]);
+
+    /**
+     * @brief Read the DSP Profile in memory and return it.
+     *
+     * @param[in] ProfileNumber An integer to select a profile number
+     * @param[out] Profile A DSP_PROFILE object filled with the right size.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid profile number value.
+     * @return -2 : IOCTL error.
+     */
+    int GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile);
+
+    /**
+     * @brief Return the size of a DSP Profile
+     *
+     * @param[in] ProfileNumber An integer to select a profile number
+     * @param[out] Size A member of the DSP_PROFILE_TYPE enum that evalute the size.
+     *
+     * @return  0 : OK
+     * @return -1 : Invalid profile number value.
+     */
+    int GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE *const Profile);
 };

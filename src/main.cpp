@@ -46,25 +46,17 @@ int main()
 
     std::cout << "Hello World !" << std::endl;
 
-    int size = sizeof(EEPROM_HEADER_V1);
-    std::cout << size << " octets (header)" << std::endl;
-
-    size = sizeof(CONFIG_V1);
-    std::cout << size << " octets (config)" << std::endl;
-
-    int opt = 25632 - size;
-    std::cout << "Bytes gained from start : " << opt << " which is : " << opt / 64 << " page(s)" << std::endl;
-
     struct EEPROM_HEADER_V1 Header = DEFAULT_HEADER_V1; // Load some settings
     struct CONFIG_V1 Config = CONFIG_DEFAULT;           // Load some settings.
 
     EEPROM Mem = EEPROM(true);
 
-    std::cout << Mem.WriteConfigV1(&Config) << std::endl;
+    DSP_PROFILE Profile = DSP_PROFILE(DSP_PROFILE::PROFILE_256);
+    std::cout << Mem.CheckForDSPProfileSpace(&Profile) << std::endl;
 
-    usleep(10000);
-
-    std::cout << Mem.ReadConfigV1(&Config) << std::endl;
+    // std::cout << Mem.WriteConfigV1(&Config) << std::endl;
+    // usleep(10000);
+    // std::cout << Mem.ReadConfigV1(&Config) << std::endl;
 
     // int TX[100] = {0};
     // int RX[100] = {0};

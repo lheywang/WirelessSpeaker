@@ -17,7 +17,10 @@
 #include <iostream>
 #include <stdexcept>
 
+// ==============================================================================
 // CONSTRUCTORS
+// ==============================================================================
+
 EEPROM::EEPROM(bool ForceWrite)
 {
     // Open a new SPI device
@@ -48,14 +51,20 @@ EEPROM::EEPROM(bool ForceWrite)
     return;
 }
 
-// DESCTRUCTORS
+// ==============================================================================
+// DESTRUCTORS
+// ==============================================================================
+
 EEPROM::~EEPROM()
 {
     delete this->Header;
     return;
 }
 
+// ==============================================================================
 // PRIVATE
+// ==============================================================================
+
 int EEPROM::ReadHeaderV1() // OK
 {
     // Alocate the data
@@ -117,25 +126,28 @@ int EEPROM::WriteHeaderV1() // OK
         return -2;
     return 0;
 }
-int EEPROM::SetConfigCRC(const uint16_t CRC)
+int EEPROM::SetConfigCRC(const uint16_t CRC) // OK
 {
     this->Header->ConfigCRC16 = CRC;
     return 0;
 }
-int EEPROM::GetConfigCRC(uint16_t *const CRC)
+int EEPROM::GetConfigCRC(uint16_t *const CRC) // OK
 {
     *CRC = this->Header->ConfigCRC16;
     return 0;
 }
 
-// PUBLIC
+// ==============================================================================
+// GLOBAL MANAGEMENT
+// ==============================================================================
+
 int EEPROM::GetHeaderV1(EEPROM_HEADER_V1 *const Header) // OK
 {
     memcpy(Header, this->Header, HEADER_SIZE); // The header was cached, thus we don't bother reading it over SPI.
     return 0;
 }
 
-int EEPROM::WriteConfigV1(CONFIG_V1 *const Data)
+int EEPROM::WriteConfigV1(CONFIG_V1 *const Data) // OK
 {
     // Creating a buffer value and cop
     uint8_t *buf = (uint8_t *)malloc(CONFIG_SIZE);
@@ -160,7 +172,7 @@ int EEPROM::WriteConfigV1(CONFIG_V1 *const Data)
     return 0;
 }
 
-int EEPROM::ReadConfigV1(CONFIG_V1 *const Data)
+int EEPROM::ReadConfigV1(CONFIG_V1 *const Data) // OK
 {
     // Alocate the data
     uint8_t *buf = (uint8_t *)malloc(CONFIG_SIZE);
@@ -188,12 +200,43 @@ int EEPROM::ReadConfigV1(CONFIG_V1 *const Data)
     return 0;
 }
 
-int EEPROM::UpdateHeaderV1(EEPROM_HEADER_V1 *Src, EEPROM_HEADER_V1 *Dest)
+// ==============================================================================
+// DSP PROFILE FUNCTIONS
+// ==============================================================================
+
+int EEPROM::CheckForDSPProfileSpace(DSP_PROFILE *const Profile)
 {
-    return 0;
+    if (this->Header->DSP_PROFILE_NUMBER == 0xFF) // All profiles are used.
+        return -1;
+    // 0 1 0 1 1 0 1 1 --> Each bit = One DSP Profile.
 }
 
-int EEPROM::UpdateConfigV1(CONFIG_V1 *Src, CONFIG_V1 *Dest)
+int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
 {
-    return 0;
 }
+
+int EEPROM::RemoveDSPProfile(const int ProfileNumber)
+{
+}
+
+int EEPROM::GetDSPProfileName(const int ProfileNumber, char const ProfileName[MAX_PROFILE_CHAR])
+{
+}
+
+int EEPROM::GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile)
+{
+}
+
+int EEPROM::GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE *const Profile)
+{
+}
+/*
+    switch (Profile->Size)
+    {
+    case DSP_PROFILE::PROFILE_1024:
+        return 1;
+    case DSP_PROFILE::PROFILE_512:
+        return 2;
+    case DSP_PROFILE::PROFILE_256:
+        return 3;
+    }*/
