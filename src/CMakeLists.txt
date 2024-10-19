@@ -67,14 +67,3 @@ add_compile_options(-g)
 # EXECUTABLES
 # ========================================================================================
 add_executable(${AppName} main.cpp ${DeviceDrivers} ${PeripheralDrivers} ${Modules} ${ExternalIncludes})
-
-# ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/sync.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/strerror.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/io.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/hotplug.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/descriptor.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/core.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/os/linux_netlink.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/os/linux_udev.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/os/linux_usbfs.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/os/threads_posix.c
