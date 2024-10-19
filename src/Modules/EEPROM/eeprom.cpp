@@ -58,6 +58,8 @@ EEPROM::EEPROM(bool ForceWrite)
 EEPROM::~EEPROM()
 {
     delete this->Header;
+    delete this->Slave;
+    SPI_Close(this->SPI);
     return;
 }
 
@@ -245,4 +247,5 @@ int EEPROM::GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE *const Profil
         return 2;
     case DSP_PROFILE::PROFILE_256:
         return 3;
-    }*/
+    }
+*/

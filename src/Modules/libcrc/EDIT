@@ -5,3 +5,6 @@ DATE : October 2024
 1)  Change of includes path to match a non installed situation.
 
 2)  Commented main function to not cause any issues when building the project.
+
+3)  Pre-compiled gentab32.inc and gentab64.inc files.
+    Generation was deleted.
