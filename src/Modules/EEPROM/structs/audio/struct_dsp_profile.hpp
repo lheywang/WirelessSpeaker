@@ -49,9 +49,14 @@ struct DSP_PROFILE
 {
     union
     {
+        // 5662 bytes
         __PROFILE_1024 VAL_PROFILE_1024; /*!< Size for the 1024 instructions profile*/
-        __PROFILE_512 VAL_PROFILE_512;   /*!< Size for the 512 instructions profile*/
-        __PROFILE_256 VAL_PROFILE_256;   /*!< Size for the 256 instructions profile*/
+
+        // 2846 bytes
+        __PROFILE_512 VAL_PROFILE_512; /*!< Size for the 512 instructions profile*/
+
+        // 1438 bytes
+        __PROFILE_256 VAL_PROFILE_256; /*!< Size for the 256 instructions profile*/
     };
 
     enum Size

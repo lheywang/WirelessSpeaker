@@ -52,7 +52,9 @@ int main()
     EEPROM Mem = EEPROM(true);
 
     DSP_PROFILE Profile = DSP_PROFILE(DSP_PROFILE::PROFILE_256);
-    std::cout << Mem.CheckForDSPProfileSpace(&Profile) << std::endl;
+
+    int ID;
+    std::cout << Mem.CheckForDSPProfileSpace(&Profile, &ID) << std::endl;
 
     // std::cout << Mem.WriteConfigV1(&Config) << std::endl;
     // usleep(10000);

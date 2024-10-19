@@ -21,6 +21,9 @@ constexpr int HEADER_ADDRESS = 0x0000; /*!< Define the size of the header*/
 constexpr int CONFIG_SIZE = 256;      /*!< Define the base address of the config*/
 constexpr int CONFIG_ADDRESS = 0x080; /*!< Define the size of the config*/
 
+// GENERIC VALUES
+constexpr int EEPROM_MAX_ADDRESS = 0x7FFF; /*!< Define the end of the EEPROM*/
+
 /**
  * @brief Base class for the usage of the EEPROM.
  *        This class provide an high level interraction to the EEPROM with masked addressing procedures.
@@ -96,11 +99,12 @@ public:
      * @brief Check if there is enough space of a DSP Profile of Len Size.
      *
      * @param[in] Profile A DSP_PROFILE Struct.
+     * @param[out] PossibleProfileID Return the ID of the possible profile ID.
      *
      * @return  0 : OK
      * @return -1 : Not enough space.
      */
-    int CheckForDSPProfileSpace(DSP_PROFILE *const Profile);
+    int CheckForDSPProfileSpace(DSP_PROFILE *const Profile, int *const PossibleProfileID);
 
     /**
      * @brief Write a new DSP Profile to the EEPROM, if there is enough space for it.
@@ -136,7 +140,7 @@ public:
      * @return -1 : Invalid profile number value.
      * @return -2 : IOCTL error.
      */
-    int GetDSPProfileName(const int ProfileNumber, char const ProfileName[MAX_PROFILE_CHAR]);
+    int GetDSPProfileName(const int ProfileNumber, char ProfileName[MAX_PROFILE_CHAR]);
 
     /**
      * @brief Read the DSP Profile in memory and return it.
@@ -146,7 +150,8 @@ public:
      *
      * @return  0 : OK
      * @return -1 : Invalid profile number value.
-     * @return -2 : IOCTL error.
+     * @return -2 : Failed to allocate memory
+     * @return -3 : IOCTL error.
      */
     int GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile);
 
