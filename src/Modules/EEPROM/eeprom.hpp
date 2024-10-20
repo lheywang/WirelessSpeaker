@@ -111,6 +111,15 @@ public:
      */
     int ReadConfigV1(CONFIG_V1 *const Data);
 
+    /**
+     * @brief Ask for the software to load the default configuration.
+     *
+     * @return  0 : OK
+     * @return -1 : Incorrect file size. Note : This error take it's root on the compilation steps. Cannot be easily debugged.
+     * @return -2 : IOCTL error.
+     */
+    int LoadDefaultConfigV1();
+
     // ==============================================================================
     // DSP PROFILE FUNCTIONS
     // ==============================================================================

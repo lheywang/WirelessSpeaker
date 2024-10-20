@@ -46,9 +46,6 @@ int main()
 
     std::cout << "Hello World !" << std::endl;
 
-    struct EEPROM_HEADER_V1 Header = DEFAULT_HEADER_V1; // Load some settings
-    struct CONFIG_V1 Config = CONFIG_DEFAULT;           // Load some settings.
-
     EEPROM Mem = EEPROM(true);
 
     DSP_PROFILE Profile = DSP_PROFILE("TEST", DSP_PROFILE_SIZE::LARGE);
