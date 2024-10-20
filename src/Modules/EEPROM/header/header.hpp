@@ -68,7 +68,7 @@ struct EEPROM_HEADER_V1
     uint8_t __padding1[8] = {0x00}; /*!< MEMORY PADDING. DO NOT TOUCH*/
 
     /*! This sixth struct store a fabrication date, in the same format as the eeprom write date. */
-    struct DESIGN_DATE
+    struct PRODUCTION_DATE
     {
         uint8_t Year[2]; /*!< Year value, expressed as two 8b integer : 20-24*/
         uint8_t Month;   /*!< Month value, expressed from 0-12*/
@@ -76,7 +76,7 @@ struct EEPROM_HEADER_V1
         uint8_t Hour;    /*!< Hour value, expressed from 0-60*/
         uint8_t Minutes; /*!< Minutes values, expressed from 0-60*/
         uint8_t Seconds; /*!< Seconds values, expressed from 0-60*/
-    } DESIGN_DATE;       /*!< Store the timestam of the design date of this speaker, or more accuratly it's production date*/
+    } PRODUCTION_DATE;   /*!< Store the timestam of the design date of this speaker, or more accuratly it's production date*/
 
     uint16_t HeaderCRC16 = 0x0000; /*!< CRC16 value for the header*/
     uint16_t ConfigCRC16 = 0x0000; /*!< CRC16 value for the config*/
@@ -122,7 +122,7 @@ constexpr struct EEPROM_HEADER_V1 DEFAULT_HEADER_V1
             .Letters = {'S', 'P'},
             .Decimals = {'0', '0', '0', '0', '0', '0'},
         },
-        .DESIGN_DATE{
+        .PRODUCTION_DATE{
             .Year = {19, 70},
             .Month = 01,
             .Day = 01,

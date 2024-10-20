@@ -18,8 +18,8 @@ constexpr int HEADER_SIZE = 128;       /*!< Define the size in bytes of the head
 constexpr int HEADER_ADDRESS = 0x0000; /*!< Define the size of the header*/
 
 // CONFIG CONSTANTS
-constexpr int CONFIG_SIZE = 256;      /*!< Define the base address of the config*/
-constexpr int CONFIG_ADDRESS = 0x080; /*!< Define the size of the config*/
+constexpr int CONFIG_SIZE = 256;       /*!< Define the base address of the config*/
+constexpr int CONFIG_ADDRESS = 0x0080; /*!< Define the size of the config*/
 
 // GENERIC VALUES
 constexpr int EEPROM_MAX_ADDRESS = 0x7FFF; /*!< Define the end of the EEPROM*/
