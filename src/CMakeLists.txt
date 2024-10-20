@@ -48,6 +48,10 @@ set(ExternalIncludes    ${CMAKE_SOURCE_DIR}/Drivers/GPIO/includes/clk.cpp\\
 set(Modules ${CMAKE_SOURCE_DIR}/Modules/EEPROM/eeprom.cpp\\
             ${CMAKE_SOURCE_DIR}/Modules/EEPROM/dsp_profile/dsp_profile.cpp)
 
+# Internal libraries
+set(LIBS    ${CMAKE_SOURCE_DIR}/../default/config/config.o\\
+            ${CMAKE_SOURCE_DIR}/../default/header/header.o)
+
 # ========================================================================================
 # CMAKES SETTINGS
 # ========================================================================================
@@ -63,8 +67,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcpu=cortex-a53 -O3 -std=c++20 -MMD -Wa
 
 # Comment to disable debug
 add_compile_options(-g)
+# set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # ========================================================================================
 # EXECUTABLES
 # ========================================================================================
-add_executable(${AppName} main.cpp ${DeviceDrivers} ${PeripheralDrivers} ${Modules} ${ExternalIncludes})
+add_executable(${AppName} main.cpp ${DeviceDrivers} ${PeripheralDrivers} ${Modules} ${ExternalIncludes} ${LIBS})
