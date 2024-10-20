@@ -1,0 +1,12 @@
+# Set the default config file
+# Theses values correspond to electrical settings applied on the analog section
+# Any changes here may reflect in a performance loss
+
+[Versions]
+HeaderVersion = [1, 0, 0]
+HardwareVersion = [1, 0]
+BOMVersion = [1, 0]
+
+[SN]
+Serial = "SP000000"
+
