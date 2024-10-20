@@ -40,11 +40,16 @@ enum class DSP_PROFILE_SIZE
 // ==============================================================================
 class DSP_PROFILE
 {
+    // Enabling to the EEPROM class to access to the buffers,
+    // to make easier the copy of the data directly, without requiring setters and getters.
     friend class EEPROM;
 
 private:
 protected:
     int size;
+    int sizebufferA;
+    int sizebufferB;
+    int sizeinstr;
 
     char *Name;
     uint8_t *bufferA;
@@ -90,21 +95,21 @@ public:
      * @param buf
      * @return int
      */
-    int WriteBufferA(float *const buf);
+    int WriteBufferA(float *const buf, const int bufLen);
 
     /**
      * @brief
      * @param buf
      * @return
      */
-    int WriteBufferB(float *const buf);
+    int WriteBufferB(float *const buf, const int bufLen);
 
     /**
      * @brief
      * @param Instructions
      * @return
      */
-    int WriteInstructions(int *const Instructions);
+    int WriteInstructions(int *const Instructions, const int bufLen);
 
     /**
      * @brief

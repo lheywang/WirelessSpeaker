@@ -15,6 +15,7 @@
 #include "eeprom.hpp"
 #include "../libcrc/checksum.h"
 #include "../../Drivers/Devices/M95256/M95256.hpp"
+#include "config/default.def"
 
 #include <iostream>
 #include <stdexcept>
@@ -66,7 +67,7 @@ EEPROM::EEPROM(bool ForceWrite)
     {
         if (ForceWrite == true)
         {
-            memcpy(this->Header, &DEFAULT_HEADER_V1, HEADER_SIZE);
+            memcpy(this->Header, &CONFIG_DEFAULT, HEADER_SIZE);
             this->WriteHeaderV1();
             std::clog << "[ EEPROM ][ CONSTRUCTOR ] : Failed to read the header. Default one was wrote. Error code was : " << ret << std::endl;
         }
