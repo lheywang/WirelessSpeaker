@@ -45,7 +45,8 @@ set(ExternalIncludes    ${CMAKE_SOURCE_DIR}/Drivers/GPIO/includes/clk.cpp\\
                         ${CMAKE_SOURCE_DIR}/Modules/libcrc/nmea-chk.c)
 
 # Modules 
-set(Modules ${CMAKE_SOURCE_DIR}/Modules/EEPROM/eeprom.cpp)
+set(Modules ${CMAKE_SOURCE_DIR}/Modules/EEPROM/eeprom.cpp\\
+            ${CMAKE_SOURCE_DIR}/Modules/EEPROM/dsp_profile/dsp_profile.cpp)
 
 # ========================================================================================
 # CMAKES SETTINGS

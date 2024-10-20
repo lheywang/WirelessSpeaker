@@ -17,7 +17,6 @@
 
 // Sub Structs
 #include "audio/struct_audio.hpp"
-#include "audio/struct_dsp_profile.hpp"
 #include "interfaces/struct_user_interfaces.hpp"
 #include "interfaces/struct_automated_interfaces.hpp"
 

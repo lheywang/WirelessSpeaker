@@ -9,6 +9,7 @@
  *
  */
 
+#pragma once
 #include <cstdint>
 
 /*!< Stores the infos about where and how to find a DSP Profile*/

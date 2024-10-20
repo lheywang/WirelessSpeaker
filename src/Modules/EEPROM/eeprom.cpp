@@ -43,10 +43,6 @@ constexpr int PROFILES[] = {
     PROFILE_7,
 };
 
-constexpr int LARGE_PROFILE = 5662;
-constexpr int MEDIUM_PROFILE = 2846;
-constexpr int SMALL_PROFILE = 1438;
-
 // ==============================================================================
 // CONSTRUCTORS
 // ==============================================================================
@@ -260,18 +256,7 @@ int EEPROM::CheckForDSPProfileSpace(DSP_PROFILE *const Profile, int *const Possi
     int PredictedAddress = 0;
 
     // Identify the size of the profile
-    switch (Profile->Size)
-    {
-    case DSP_PROFILE::PROFILE_1024:
-        ProfileSize = LARGE_PROFILE;
-        break;
-    case DSP_PROFILE::PROFILE_512:
-        ProfileSize = MEDIUM_PROFILE;
-        break;
-    case DSP_PROFILE::PROFILE_256:
-        ProfileSize = SMALL_PROFILE;
-        break;
-    }
+    ProfileSize = Profile->size;
 
     // Iterate over the profiles
     for (int i = 0; i < 8; i++)
@@ -314,27 +299,12 @@ int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
 {
     int ret = 0;
 
-    // Allocate memory
-    int Size = 0;
-    switch (Profile->Size)
-    {
-    case DSP_PROFILE::PROFILE_1024:
-        Size = LARGE_PROFILE;
-        break;
-    case DSP_PROFILE::PROFILE_512:
-        Size = MEDIUM_PROFILE;
-        break;
-    case DSP_PROFILE::PROFILE_256:
-        Size = SMALL_PROFILE;
-        break;
-    }
-
     // Get Profile parameters
     this->CheckForDSPProfileSpace(Profile, ProfileNumber);
     int Address = this->Header->Profile[*ProfileNumber].Address;
 
     // Get the number of pages
-    int Pages = ceil(Size / 64);
+    int Pages = ceil(Profile->size / 64);
 
     // Malloc
     uint8_t *buf = (uint8_t *)malloc(Pages * 64);
@@ -342,7 +312,7 @@ int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
         return -2;
 
     // Prepare data
-    memcpy(buf, Profile, Size);
+    memcpy(buf, Profile, Profile->size);
 
     // Write data per 64 bytes pages
     for (int i = 0; i < Pages; i++)
@@ -404,33 +374,18 @@ int EEPROM::GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile)
     if (CheckProfileValue(ProfileNumber) != 0)
         return -1;
 
-    // Allocate memory
-    int Size = 0;
-    switch (Profile->Size)
-    {
-    case DSP_PROFILE::PROFILE_1024:
-        Size = LARGE_PROFILE;
-        break;
-    case DSP_PROFILE::PROFILE_512:
-        Size = MEDIUM_PROFILE;
-        break;
-    case DSP_PROFILE::PROFILE_256:
-        Size = SMALL_PROFILE;
-        break;
-    }
-
     // Get Profile parameters
     int Address = this->Header->Profile[ProfileNumber - 1].Address;
     int Len = this->Header->Profile[ProfileNumber - 1].Len;
 
     // Malloc
-    uint8_t *buf = (uint8_t *)malloc(Size);
+    uint8_t *buf = (uint8_t *)malloc(Profile->size);
     if (buf == nullptr)
         return -2;
 
     // Read data
     this->Slave.Read(Address, buf, Len);
-    memcpy(Profile, buf, Len);
+    // memcpy(Profile, buf, Len); //////// TO BE CHANGED !!!!!!!!!!!!!!!
     free(buf);
 
     return 0;
@@ -441,19 +396,6 @@ int EEPROM::GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE *const Profil
     if (CheckProfileValue(ProfileNumber) != 0)
         return -1;
 
-    int Size = this->Header->Profile[ProfileNumber - 1].Len;
-
-    switch (Size)
-    {
-    case SMALL_PROFILE:
-        *Profile = DSP_PROFILE{DSP_PROFILE::PROFILE_256};
-        break;
-    case MEDIUM_PROFILE:
-        *Profile = DSP_PROFILE{DSP_PROFILE::PROFILE_512};
-        break;
-    case LARGE_PROFILE:
-        *Profile = DSP_PROFILE{DSP_PROFILE::PROFILE_1024};
-        break;
-    }
+    Profile->size = this->Header->Profile[ProfileNumber - 1].Len;
     return 0;
 }

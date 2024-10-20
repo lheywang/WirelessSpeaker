@@ -9,6 +9,7 @@
  *
  */
 
+#pragma once
 #include <cstdint>
 
 /*! Define values that are stored on the EEPROM for the USB-C PD3 Interface*/

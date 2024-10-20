@@ -9,21 +9,34 @@
  *
  */
 
+// ==============================================================================
+// INCLUDES
+// ==============================================================================
 #include "header/header.hpp"
-#include "structs/StructV1.hpp"
+#include "config/config.hpp"
+#include "dsp_profile/dsp_profile.hpp"
 #include "../../Drivers/Devices/M95256/M95256.hpp"
 
+// ==============================================================================
 // HEADER CONSTANTS
+// ==============================================================================
 constexpr int HEADER_SIZE = 128;       /*!< Define the size in bytes of the header.*/
 constexpr int HEADER_ADDRESS = 0x0000; /*!< Define the size of the header*/
 
+// ==============================================================================
 // CONFIG CONSTANTS
+// ==============================================================================
 constexpr int CONFIG_SIZE = 256;       /*!< Define the base address of the config*/
 constexpr int CONFIG_ADDRESS = 0x0080; /*!< Define the size of the config*/
 
-// GENERIC VALUES
+// ==============================================================================
+// EEPROM CONSTANTS
+// ==============================================================================
 constexpr int EEPROM_MAX_ADDRESS = 0x7FFF; /*!< Define the end of the EEPROM*/
 
+// ==============================================================================
+// CLASS
+// ==============================================================================
 /**
  * @brief Base class for the usage of the EEPROM.
  *        This class provide an high level interraction to the EEPROM with masked addressing procedures.
@@ -31,6 +44,7 @@ constexpr int EEPROM_MAX_ADDRESS = 0x7FFF; /*!< Define the end of the EEPROM*/
  */
 class EEPROM
 {
+
 private:
     M95256 Slave;
     EEPROM_HEADER_V1 *Header;
@@ -41,6 +55,9 @@ private:
     int GetConfigCRC(uint16_t *const CRC);
 
 public:
+    // ==============================================================================
+    // CONSTRUCTORS
+    // ==============================================================================
     /**
      * @brief Construct a new EEPROM
      *
@@ -49,6 +66,9 @@ public:
      */
     EEPROM(bool ForceWrite = false);
 
+    // ==============================================================================
+    // DESTRUCTORS
+    // ==============================================================================
     /**
      * @brief Destruct an EEPROM class.
      *

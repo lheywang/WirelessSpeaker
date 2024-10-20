@@ -51,7 +51,7 @@ int main()
 
     EEPROM Mem = EEPROM(true);
 
-    DSP_PROFILE Profile = DSP_PROFILE(DSP_PROFILE::PROFILE_256);
+    DSP_PROFILE Profile = DSP_PROFILE("TEST", DSP_PROFILE_SIZE::LARGE);
 
     int ID;
     std::cout << Mem.CheckForDSPProfileSpace(&Profile, &ID) << std::endl;
