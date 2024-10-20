@@ -350,6 +350,8 @@ int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
         ret += this->Slave.Write((Address + (i * PAGE_SIZE)), &buf[i * PAGE_SIZE], PAGE_SIZE);
     }
 
+    free(buf);
+
     if (ret != 0)
         return -3;
     return 0;
@@ -429,6 +431,7 @@ int EEPROM::GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile)
     // Read data
     this->Slave.Read(Address, buf, Len);
     memcpy(Profile, buf, Len);
+    free(buf);
 
     return 0;
 }
