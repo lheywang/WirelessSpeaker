@@ -49,8 +49,8 @@ set(Modules ${CMAKE_SOURCE_DIR}/Modules/EEPROM/eeprom.cpp\\
             ${CMAKE_SOURCE_DIR}/Modules/EEPROM/dsp_profile/dsp_profile.cpp)
 
 # Internal libraries
-set(LIBS    ${CMAKE_SOURCE_DIR}/../default/config/config.o\\
-            ${CMAKE_SOURCE_DIR}/../default/header/header.o)
+set(LIBS    ${CMAKE_BINARY_DIR}/bin/config.o\\
+            ${CMAKE_BINARY_DIR}/bin/header.o)
 
 # ========================================================================================
 # CMAKES SETTINGS

@@ -50,9 +50,9 @@ constexpr int PROFILES[] = {
  * This file is provided as argument to the linker automaticaly on the Cmake File.
  *
  * Export symbols :
- *      - _binary_default_config_config_bin_start
- *      - _binary_default_config_config_bin_end
- *      - _binary_default_config_config_bin_size (buggy with G++ ??)
+ *      - _binary_build_bin_config_bin_start
+ *      - _binary_build_bin_config_bin_end
+ *      - _binary_build_bin_config_bin_size (buggy with G++ ??)
  *
  * Theses symbols are data addresses.
  *
@@ -60,8 +60,8 @@ constexpr int PROFILES[] = {
  *        This enable to the file user to interract with the configuration file easily, without handling complex data.
  *
  */
-extern uint8_t *_binary_default_config_config_bin_start[];
-extern uint8_t *_binary_default_config_config_bin_end[];
+extern uint8_t *_binary_build_bin_config_bin_start[];
+extern uint8_t *_binary_build_bin_config_bin_end[];
 
 /*
  * This extern statement include data that is used as default values for the config struct.
@@ -70,9 +70,9 @@ extern uint8_t *_binary_default_config_config_bin_end[];
  * This file is provided as argument to the linker automaticaly on the Cmake File.
  *
  * Export symbols :
- *      - _binary_default_config_config_bin_start
- *      - _binary_default_config_config_bin_end
- *      - _binary_default_config_config_bin_size (buggy with G++ ??)
+ *      - _binary_build_bin_header_bin_start
+ *      - _binary_build_bin_header_bin_end
+ *      - _binary_build_bin_header_bin_size (buggy with G++ ??)
  *
  * Theses symbols are data addresses.
  *
@@ -80,8 +80,8 @@ extern uint8_t *_binary_default_config_config_bin_end[];
  *        This enable to the file user to interract with the configuration file easily, without handling complex data.
  *
  */
-extern uint8_t *_binary_default_header_header_bin_start[];
-extern uint8_t *_binary_default_header_header_bin_end[];
+extern uint8_t *_binary_build_bin_header_bin_start[];
+extern uint8_t *_binary_build_bin_header_bin_end[];
 
 // ==============================================================================
 // CONSTRUCTORS
@@ -106,10 +106,10 @@ EEPROM::EEPROM(bool ForceWrite)
     {
         if (ForceWrite == true)
         {
-            if (_binary_default_header_header_bin_start - _binary_default_header_header_bin_end != 16)
+            if (_binary_build_bin_header_bin_start - _binary_build_bin_header_bin_end != 16)
                 throw std::runtime_error("[ EEPROM ][ CONSTRUCTOR ] : Provided default file has an incorrect size");
 
-            memcpy(this->Header, _binary_default_header_header_bin_start, HEADER_SIZE);
+            memcpy(this->Header, _binary_build_bin_header_bin_start, HEADER_SIZE);
             this->WriteHeaderV1();
             std::clog << "[ EEPROM ][ CONSTRUCTOR ] : Failed to read the header. Default one was wrote. Error code was : " << ret << std::endl;
         }
@@ -284,14 +284,14 @@ int EEPROM::ReadConfigV1(CONFIG_V1 *const Data) // OK
 
 int EEPROM::LoadDefaultConfigV1()
 {
-    if (_binary_default_header_header_bin_start - _binary_default_header_header_bin_end != 32)
+    if (_binary_build_bin_config_bin_start - _binary_build_bin_config_bin_end != 32)
         return -1;
 
     // Creating a buffer value and cop
     uint8_t *buf = (uint8_t *)malloc(CONFIG_SIZE);
     if (buf == nullptr)
         return -1;
-    memcpy(buf, _binary_default_config_config_bin_start, CONFIG_SIZE);
+    memcpy(buf, _binary_build_bin_config_bin_start, CONFIG_SIZE);
 
     // Compute the CRC and write it on the header / EEPROM
     uint16_t calc_CRC = crc_16(buf, CONFIG_SIZE);
