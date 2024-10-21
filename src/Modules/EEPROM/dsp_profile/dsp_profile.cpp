@@ -124,10 +124,34 @@ DSP_PROFILE::DSP_PROFILE(char name[MAX_PROFILE_CHAR], const DSP_PROFILE_SIZE len
 // ==============================================================================
 DSP_PROFILE::~DSP_PROFILE()
 {
-    free(this->bufferA);
-    free(this->bufferB);
-    free(this->instr);
-    free(this->Name);
+    // Buffer A
+    if (this->bufferA != nullptr)
+    {
+        free(this->bufferA);
+        this->bufferA = nullptr;
+    }
+
+    // Buffer B
+    if (this->bufferB != nullptr)
+    {
+        free(this->bufferB);
+        this->bufferB = nullptr;
+    }
+
+    // Buffer instr
+    if (this->instr != nullptr)
+    {
+        free(this->instr);
+        this->instr = nullptr;
+    }
+
+    // Buffer Name
+    if (this->Name != nullptr)
+    {
+        free(this->Name);
+        this->Name = nullptr;
+    }
+    // return
     return;
 }
 
@@ -178,13 +202,46 @@ int ConvertFloatToFixedPoint4dot20(const float In, int *const Out)
 // PRIVATE
 // ==============================================================================
 
+int DSP_PROFILE::ReadBuffers(uint8_t *const buf, int *const Len)
+{
+    // Safety checks
+    if (*Len < this->size)
+        return -1;
+
+    // Copy the differents data as the memory layout define it !
+    // We use relative offsets to match a specification change easily !
+    memcpy(&buf[0], this->Name, MAX_PROFILE_CHAR);
+    memcpy(&buf[MAX_PROFILE_CHAR], this->bufferA, this->sizebufferA);
+    memcpy(&buf[MAX_PROFILE_CHAR + this->sizebufferA], this->bufferA, this->sizebufferB);
+    memcpy(&buf[MAX_PROFILE_CHAR + this->sizebufferA + this->sizebufferB], this->bufferA, this->sizeinstr);
+
+    *Len = MAX_PROFILE_CHAR + this->sizebufferA + this->sizebufferB + this->sizeinstr;
+    return 0;
+}
+
+int DSP_PROFILE::WriteBuffers(uint8_t *const buf, int *const Len)
+{
+    // Safety checks
+    if (*Len > this->size)
+        return -1;
+
+    // Copy the differents data as the memory layout define it !
+    // We use relative offsets to match a specification change easily !
+    memcpy(this->Name, &buf[0], MAX_PROFILE_CHAR);
+    memcpy(this->bufferA, &buf[MAX_PROFILE_CHAR], this->sizebufferA);
+    memcpy(this->bufferB, &buf[MAX_PROFILE_CHAR + this->sizebufferA], this->sizebufferB);
+    memcpy(this->instr, &buf[MAX_PROFILE_CHAR + this->sizebufferA + this->sizebufferB], this->sizeinstr);
+
+    *Len = MAX_PROFILE_CHAR + this->sizebufferA + this->sizebufferB + this->sizeinstr;
+    return 0;
+}
+
 // ==============================================================================
 // PUBLIC
 // ==============================================================================
 
 int DSP_PROFILE::LoadDefaultProfile(const int Profile)
 {
-    
     return 0;
 }
 

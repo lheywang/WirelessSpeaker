@@ -375,15 +375,17 @@ int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
     int Address = this->Header->Profile[*ProfileNumber].Address;
 
     // Get the number of pages
-    int Pages = ceil(Profile->size / 64);
+    int Pages = ceil(Profile->size / 64) + 1;
 
     // Malloc
     uint8_t *buf = (uint8_t *)malloc(Pages * 64);
     if (buf == nullptr)
         return -2;
+    memset(buf, 0x00, (Pages * 64));
 
     // Prepare data
-    memcpy(buf, Profile, Profile->size);
+    int size = Profile->size;
+    Profile->WriteBuffers(buf, &size);
 
     // Write data per 64 bytes pages
     for (int i = 0; i < Pages; i++)
@@ -395,6 +397,11 @@ int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
 
     if (ret != 0)
         return -3;
+
+    // Update the header
+    this->Header->DSP_PROFILE_NUMBER |= PROFILES[*ProfileNumber];
+    this->WriteHeaderV1();
+
     return 0;
 }
 
@@ -408,6 +415,7 @@ int EEPROM::RemoveDSPProfile(const int ProfileNumber)
 
     // Update the header.
     int ret = this->WriteHeaderV1();
+    std::cout << std::hex << "header : " << (int)this->Header->DSP_PROFILE_NUMBER << " mask : " << (~PROFILES[ProfileNumber - 1] & 0xFF);
 
     if (ret != 0)
         return -2;
@@ -434,6 +442,10 @@ int EEPROM::GetDSPProfileName(const int ProfileNumber, char ProfileName[MAX_PROF
         return -2;
     }
 
+    for (int i = 0; i < MAX_PROFILE_CHAR - 1; i++)
+        std::cout << std::hex << (int)buf[i];
+    std::cout << std::endl;
+
     // Copy the data
     memcpy(ProfileName, buf, MAX_PROFILE_CHAR);
     free(buf);
@@ -449,14 +461,18 @@ int EEPROM::GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile)
     int Address = this->Header->Profile[ProfileNumber - 1].Address;
     int Len = this->Header->Profile[ProfileNumber - 1].Len;
 
+    int Pages = ceil(Profile->size / 64) + 1;
+
     // Malloc
-    uint8_t *buf = (uint8_t *)malloc(Profile->size);
+    uint8_t *buf = (uint8_t *)malloc(Pages * 64);
     if (buf == nullptr)
         return -2;
+    memset(buf, 0x00, (Pages * 64));
 
     // Read data
     this->Slave.Read(Address, buf, Len);
-    // memcpy(Profile, buf, Len); //////// TO BE CHANGED !!!!!!!!!!!!!!!
+    int size = Profile->size;
+    Profile->WriteBuffers(buf, &size);
     free(buf);
 
     return 0;

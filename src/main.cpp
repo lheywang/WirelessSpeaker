@@ -48,10 +48,88 @@ int main()
 
     EEPROM Mem = EEPROM(true);
 
-    DSP_PROFILE Profile = DSP_PROFILE("TEST", DSP_PROFILE_SIZE::LARGE);
+    char Name[MAX_PROFILE_CHAR] = {0};
+    Name[0] = 'T';
+    Name[1] = 'H';
+    Name[2] = 'I';
+    Name[3] = 'S';
+    Name[4] = ' ';
+    Name[5] = 'I';
+    Name[6] = 'S';
+    Name[7] = ' ';
+    Name[8] = 'A';
+    Name[9] = ' ';
+    Name[10] = 'T';
+    Name[11] = 'E';
+    Name[12] = 'S';
+    Name[13] = 'T';
+    Name[14] = ' ';
+    Name[15] = 'F';
+    Name[16] = 'O';
+    Name[17] = 'R';
+    Name[18] = ' ';
+    Name[20] = 'W';
+    Name[21] = 'I';
+    Name[22] = 'R';
+    Name[23] = 'E';
+    Name[24] = 'L';
+    Name[25] = 'E';
+    Name[26] = 'S';
+    Name[27] = 'S';
+    Name[28] = ' ';
+    Name[29] = 'Y';
+
+    DSP_PROFILE Profile = DSP_PROFILE(Name, DSP_PROFILE_SIZE::LARGE);
+
+    // float buf[256] = {0};
+    // buf[0] = 3.3123123123;
+    // buf[1] = 2.4561586153;
+    // buf[2] = 8.869135214325;
+    // buf[3] = 5.658465135241;
+    // buf[4] = 6.2165165843243;
+
+    // int instr[1024] = {0};
+    // buf[0] = 1799421256;
+    // buf[0] = 4857964;
+    // buf[0] = 466734684;
+    // buf[0] = 468163544;
+    // buf[0] = 43246534;
+
+    // Profile.WriteBufferA(buf, 5);
+    // Profile.WriteBufferB(buf, 5);
+    // Profile.WriteInstructions(instr, 5);
 
     int ID;
-    std::cout << Mem.CheckForDSPProfileSpace(&Profile, &ID) << std::endl;
+
+    for (int i = 0; i < MAX_PROFILE_CHAR; i++)
+        std::cout << Name[i];
+    std::cout << std::endl;
+
+    for (int i = 0; i < 8; i++)
+    {
+        int ret = Mem.RemoveDSPProfile(i + 1);
+        std::cout << " - func : " << ret << std::endl;
+    }
+
+    int ret = Mem.AddDSPProfile(&Profile, &ID);
+    std::cout << " - func : " << ret << std::endl;
+
+    char t[MAX_PROFILE_CHAR] = {0};
+    std::cout << Mem.GetDSPProfileName(ID, t);
+
+    for (int i = 0; i < MAX_PROFILE_CHAR; i++)
+        std::cout << std::hex << (int)t[i];
+    std::cout << std::endl;
+
+    // for (int i = 0; i < 8; i++)
+    // {
+    //     int ret = Mem.RemoveDSPProfile(i + 1);
+    //     std::cout << " - func : " << ret << std::endl;
+    // }
+
+    std::cout
+        << "Profile "
+        << std::endl;
 
     // std::cout << Mem.WriteConfigV1(&Config) << std::endl;
     // usleep(10000);

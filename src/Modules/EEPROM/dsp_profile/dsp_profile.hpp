@@ -56,6 +56,29 @@ protected:
     uint8_t *bufferB;
     uint8_t *instr;
 
+    /**
+     * @brief This function is only available to friends class, and is used to write a serialized (from EEPROM) buffer to the differents fields.
+     *
+     * @param[in] buf The data to read
+     * @param[inout] Len First, the len of the input buffer, and then the number of wrote bytes.
+     *
+     * @return  0 : OK
+     * @return -1 : Buf too big
+     */
+    int WriteBuffers(uint8_t *const buf, int *const Len);
+
+    /**
+     * @brief This function is only available to friends class, and is used to fill a buffer of X len with the correct formatted data.
+     * @warning A too small buffer may be misinterpreted. You'll need to ensure this point.
+     *
+     * @param[out] buf The data to rode
+     * @param[inout] Len First, the len of the output buffer, and then the number of wrote bytes.
+     *
+     * @return  0 : OK
+     * @return -1 : Buf too small.
+     */
+    int ReadBuffers(uint8_t *const buf, int *const Len);
+
 public:
     // ==============================================================================
     // CONSTRUCTORS
