@@ -1,5 +1,5 @@
 /**
- * @file StructV1.hpp
+ * @file config.hpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define the global structure that store all of our settings on the eeprom.
  * @version 0.1

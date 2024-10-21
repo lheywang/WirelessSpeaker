@@ -1,5 +1,5 @@
 /**
- * @file struct_dsp_profile.hpp
+ * @file dsp_profile.hpp
  * @author l.heywang (leonard.heywang@gmail.com)
  * @brief Define a DSP profile for the DAC.
  * @version 0.1
@@ -28,16 +28,21 @@ constexpr int MAX_INSTR = 1024;      /*!< Maximal number of instructions for the
 // ==============================================================================
 // ENUMS
 // ==============================================================================
+/*! Enum used to communicate a standard size for DSP profile to prevent mistypes. */
 enum class DSP_PROFILE_SIZE
 {
-    LARGE = LARGE_PROFILE,
-    MEDIUM = MEDIUM_PROFILE,
-    SMALL = SMALL_PROFILE,
+    LARGE = LARGE_PROFILE,   /*!< Large profile. (0) = 5662 bytes.*/
+    MEDIUM = MEDIUM_PROFILE, /*!< Medium profile. (1) = 2846 bytes.*/
+    SMALL = SMALL_PROFILE,   /*!< Small profile. (2) = 1438 bytes.*/
 };
 
 // ==============================================================================
 // CLASS
 // ==============================================================================
+/**
+ * @brief Class to provide high level integration and management functions for the DSP Profiles for the PCM5252 DAC IC.
+ *
+ */
 class DSP_PROFILE
 {
     // Enabling to the EEPROM class to access to the buffers,
@@ -46,15 +51,15 @@ class DSP_PROFILE
 
 private:
 protected:
-    int size;
-    int sizebufferA;
-    int sizebufferB;
-    int sizeinstr;
+    int size;        /*!< Store the size in bytes of the DSP profile on the eeprom. This doesn't compare to the size in RAM for a class instance.*/
+    int sizebufferA; /*!< Store the size in bytes of the buffer A part of the DSP Profile*/
+    int sizebufferB; /*!< Store the size in bytes of the buffer B part of the DSP Profile*/
+    int sizeinstr;   /*!< Store the size in bytes of the instruction buffer part of the DSP Profile*/
 
-    char *Name;
-    uint8_t *bufferA;
-    uint8_t *bufferB;
-    uint8_t *instr;
+    char *Name;       /*!< Store the name of the DSP Profile*/
+    uint8_t *bufferA; /*!< Store the values of the coefficient A buffer of DSP Profile. Warning : Theses values are formatted to be exported on the DAC, thus expressed as a proprietary format.*/
+    uint8_t *bufferB; /*!< Store the values of the coefficient B buffer of DSP Profile. Warning : Theses values are formatted to be exported on the DAC, thus expressed as a proprietary format.*/
+    uint8_t *instr;   /*!< Store the values of the instructions buffer of DSP Profile. Warning : Theses values are formatted to be exported on the DAC, thus expressed as a proprietary format.*/
 
     /**
      * @brief This function is only available to friends class, and is used to write a serialized (from EEPROM) buffer to the differents fields.
