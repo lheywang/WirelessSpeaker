@@ -46,78 +46,71 @@ int main()
 
     std::cout << "Hello World !" << std::endl;
 
-    EEPROM Mem = EEPROM();
+    // EEPROM Mem = EEPROM();
 
-    char Name[MAX_PROFILE_CHAR] = {0};
-    Name[0] = 'T';
-    Name[1] = 'H';
-    Name[2] = 'I';
-    Name[3] = 'S';
-    Name[4] = ' ';
-    Name[5] = 'I';
-    Name[6] = 'S';
-    Name[7] = ' ';
-    Name[8] = 'A';
-    Name[9] = ' ';
-    Name[10] = 'T';
-    Name[11] = 'E';
-    Name[12] = 'S';
-    Name[13] = 'T';
-    Name[14] = ' ';
-    Name[15] = 'F';
-    Name[16] = 'O';
-    Name[17] = 'R';
-    Name[18] = ' ';
-    Name[20] = 'W';
-    Name[21] = 'I';
-    Name[22] = 'R';
-    Name[23] = 'E';
-    Name[24] = 'L';
-    Name[25] = 'E';
-    Name[26] = 'S';
-    Name[27] = 'S';
-    Name[28] = ' ';
-    Name[29] = 'Y';
-
-    DSP_PROFILE Profile = DSP_PROFILE(Name, DSP_PROFILE_SIZE::LARGE);
-
+    // char Name[MAX_PROFILE_CHAR] = {0};
+    // Name[0] = 'T';
+    // Name[1] = 'H';
+    // Name[2] = 'I';
+    // Name[3] = 'S';
+    // Name[4] = ' ';
+    // Name[5] = 'I';
+    // Name[6] = 'S';
+    // Name[7] = ' ';
+    // Name[8] = 'A';
+    // Name[9] = ' ';
+    // Name[10] = 'T';
+    // Name[11] = 'E';
+    // Name[12] = 'S';
+    // Name[13] = 'T';
+    // Name[14] = ' ';
+    // Name[15] = 'F';
+    // Name[16] = 'O';
+    // Name[17] = 'R';
+    // Name[18] = ' ';
+    // Name[20] = 'W';
+    // Name[21] = 'I';
+    // Name[22] = 'R';
+    // Name[23] = 'E';
+    // Name[24] = 'L';
+    // Name[25] = 'E';
+    // Name[26] = 'S';
+    // Name[27] = 'S';
+    // Name[28] = ' ';
+    // Name[29] = 'Y';
+    // DSP_PROFILE Profile = DSP_PROFILE(Name, DSP_PROFILE_SIZE::LARGE);
     // float buf[256] = {0};
-    // buf[0] = 3.3123123123;
-    // buf[1] = 2.4561586153;
-    // buf[2] = 8.869135214325;
-    // buf[3] = 5.658465135241;
-    // buf[4] = 6.2165165843243;
-
+    // for (int i = 0; i < 256; i++)
+    //     buf[i] = std::rand() % 3;
     // int instr[1024] = {0};
-    // buf[0] = 1799421256;
-    // buf[0] = 4857964;
-    // buf[0] = 466734684;
-    // buf[0] = 468163544;
-    // buf[0] = 43246534;
+    // for (int i = 0; i < 1024; i++)
+    //     buf[i] = std::rand();
+    // Profile.WriteBufferA(buf, 256);
+    // Profile.WriteBufferB(buf, 256);
+    // Profile.WriteInstructions(instr, 1024);
 
-    // Profile.WriteBufferA(buf, 5);
-    // Profile.WriteBufferB(buf, 5);
-    // Profile.WriteInstructions(instr, 5);
+    // uint8_t t[256 * 3] = {0};
+    // int ret = Profile.ReturnBufferAValues(t);
+    // std::cout << "ReturnName - func : " << ret << std::endl;
+    // for (int i = 0; i < 256 * 3; i++)
+    //     std::cout << std::hex << (int)t[i];
+    // std::cout << std::endl;
 
-    int ID = 0;
+    // int ID = 0;
 
-    int ret = Mem.AddDSPProfile(&Profile, &ID);
-    std::cout << "AddDSPProfile - func : " << ret << std::endl;
+    // ret = Mem.AddDSPProfile(&Profile, &ID);
+    // std::cout << "AddDSPProfile - func : " << ret << std::endl;
 
-    DSP_PROFILE_SIZE Profile2;
-    Mem.GetDSPProfileSize(ID, &Profile2);
+    // DSP_PROFILE_SIZE Profile2;
+    // Mem.GetDSPProfileSize(ID, &Profile2);
 
-    std::cout << (int)Profile2 << std::endl;
+    // std::cout << (int)Profile2 << std::endl;
 
-    if (ret < 0)
-    {
-        for (int i = 0; i < 8; i++)
-            Mem.RemoveDSPProfile(i);
-    }
-
-    // char t[MAX_PROFILE_CHAR] = {0};
-    // int ret = Mem.GetDSPProfileName(ID, t);
-    // std::cout << "GetDSPProfileName - func : " << ret << std::endl;
+    // if (ret < 0)
+    // {
+    //     for (int i = 0; i < 8; i++)
+    //         Mem.RemoveDSPProfile(i);
+    // }
 
     // for (int i = 0; i < MAX_PROFILE_CHAR; i++)
     //     std::cout << t[i];

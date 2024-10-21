@@ -156,4 +156,40 @@ public:
      * @return -1 : Incorrect buffer length (too big)
      */
     int LoadDefaultProfile(const int Profile);
+
+    /**
+     * @brief Return the buffer A formated values, ready to be flashed on the DAC.
+     *
+     * @param[out] buf The ouput buffer.
+     *
+     * @return  0 : OK
+     */
+    int ReturnBufferAValues(uint8_t *const buf);
+
+    /**
+     * @brief Return the buffer B formated values, ready to be flashed on the DAC.
+     *
+     * @param[out] buf The ouput buffer.
+     *
+     * @return  0 : OK
+     */
+    int ReturnBufferBValues(uint8_t *const buf);
+
+    /**
+     * @brief Return the instruction buffer formated values, ready to be flashed on the DAC.
+     *
+     * @param[out] buf The ouput buffer.
+     *
+     * @return  0 : OK
+     */
+    int ReturnInstrBufferValues(uint8_t *const buf);
+
+    /**
+     * @brief Return the name of the DSP Profile.
+     *
+     * @param[out] buf
+     *
+     * @return  0 : OK
+     */
+    int ReturnName(char buf[MAX_PROFILE_CHAR]);
 };

@@ -304,3 +304,27 @@ int DSP_PROFILE::WriteBufferA(float *const buf, const int bufLen)
     }
     return 0;
 }
+
+int DSP_PROFILE::ReturnBufferAValues(uint8_t *const buf)
+{
+    memcpy(buf, this->bufferA, this->sizebufferA);
+    return 0;
+}
+
+int DSP_PROFILE::ReturnBufferBValues(uint8_t *const buf)
+{
+    memcpy(buf, this->bufferB, this->sizebufferB);
+    return 0;
+}
+
+int DSP_PROFILE::ReturnInstrBufferValues(uint8_t *const buf)
+{
+    memcpy(buf, this->instr, this->sizeinstr);
+    return 0;
+}
+
+int DSP_PROFILE::ReturnName(char buf[MAX_PROFILE_CHAR]) // OK
+{
+    memcpy(buf, this->Name, MAX_PROFILE_CHAR);
+    return 0;
+}
