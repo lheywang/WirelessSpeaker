@@ -16,46 +16,40 @@
 
 #include <linux/gpio.h>
 
-#include <unistd.h>
-#include <fcntl.h>
-#include <string.h>
+#include <cstdint>
+#include <cstring>
 #include <errno.h>
-#include <sys/ioctl.h>
+#include <fcntl.h>
+#include <iostream>
 #include <stdint.h>
 #include <stdlib.h>
-#include <iostream>
-#include <cstring>
-#include <cstdint>
+#include <string.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 // ==============================================================================
 // FUNCTIONS
 // ==============================================================================
-GPIO *GPIO_GetInfos(const PINS Pin, const GPMODES Mode)
+GPIO* GPIO_GetInfos(const PINS Pin, const GPMODES Mode)
 {
-    GPIO *info = new GPIO;
+    GPIO* info = new GPIO;
     struct gpioline_info line;
 
     line.line_offset = (__u32)Pin;
     info->Mode = Mode;
 
     int fd = open(DEV_NAME, O_RDONLY);
-    if (fd < 0)
+    if(fd < 0)
     {
-        std::cerr << "[ GPIO ][ GetGPIOInfo ] : Failed to open the device file for "
-                  << DEV_NAME
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+        std::cerr << "[ GPIO ][ GetGPIOInfo ] : Failed to open the device file for " << DEV_NAME
+                  << " : " << strerror(errno) << std::endl;
         return info;
     }
     int ret = ioctl(fd, GPIO_GET_LINEINFO_IOCTL, &line);
-    if (ret < 0)
+    if(ret < 0)
     {
         std::cerr << "[ GPIO ][ GetGPIOInfo ] : Failed to read infos for GPIO at offset "
-                  << info->PinNumber
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+                  << info->PinNumber << " : " << strerror(errno) << std::endl;
         close(fd);
         return info;
     }
@@ -67,7 +61,9 @@ GPIO *GPIO_GetInfos(const PINS Pin, const GPMODES Mode)
     info->Polarity = (line.flags & GPIOLINE_FLAG_ACTIVE_LOW) ? true : false;
 
     info->Type = 0;
-    info->Type = (line.flags & GPIOLINE_FLAG_OPEN_DRAIN) ? 1 : ((line.flags & GPIOLINE_FLAG_OPEN_SOURCE) ? 2 : 0);
+    info->Type = (line.flags & GPIOLINE_FLAG_OPEN_DRAIN)
+                     ? 1
+                     : ((line.flags & GPIOLINE_FLAG_OPEN_SOURCE) ? 2 : 0);
 
     info->Kernel = (line.flags & GPIOLINE_FLAG_KERNEL) ? 1 : 0;
 
@@ -76,18 +72,17 @@ GPIO *GPIO_GetInfos(const PINS Pin, const GPMODES Mode)
     return info;
 }
 
-int GPIO_Close(GPIO *info)
+int GPIO_Close(GPIO* info)
 {
     delete info;
     return 0;
 }
 
-int GPIO_Read(GPIO *info, int *const status)
+int GPIO_Read(GPIO* info, int* const status)
 {
-    if (info->Mode == GPMODES::OUTPUT)
+    if(info->Mode == GPMODES::OUTPUT)
     {
-        std::cerr << "[ GPIO ][ ReadGPIO ] : Cannot read a GPIO declared as Output : "
-                  << DEV_NAME
+        std::cerr << "[ GPIO ][ ReadGPIO ] : Cannot read a GPIO declared as Output : " << DEV_NAME
                   << std::endl;
         return -1;
     }
@@ -96,13 +91,10 @@ int GPIO_Read(GPIO *info, int *const status)
     struct gpiohandle_data data;
 
     int fd = open(DEV_NAME, O_RDONLY);
-    if (fd < 0)
+    if(fd < 0)
     {
-        std::cerr << "[ GPIO ][ ReadGPIO ] : Failed to open the device file for "
-                  << DEV_NAME
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+        std::cerr << "[ GPIO ][ ReadGPIO ] : Failed to open the device file for " << DEV_NAME
+                  << " : " << strerror(errno) << std::endl;
         return -2;
     }
 
@@ -111,25 +103,19 @@ int GPIO_Read(GPIO *info, int *const status)
     rq.lines = 1;
     int ret = ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &rq);
     close(fd);
-    if (ret < 0)
+    if(ret < 0)
     {
         std::cerr << "[ GPIO ][ ReadGPIO ] : Failed to get the line handle for GPIO at offset "
-                  << info->PinNumber
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+                  << info->PinNumber << " : " << strerror(errno) << std::endl;
         return -3;
     }
 
     ret = ioctl(rq.fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
     close(rq.fd);
-    if (ret < 0)
+    if(ret < 0)
     {
         std::cerr << "[ GPIO ][ ReadGPIO ] : Unable to get line value using ioctl at offset "
-                  << info->PinNumber
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+                  << info->PinNumber << " : " << strerror(errno) << std::endl;
         return -4;
     }
     *status = data.values[0];
@@ -137,12 +123,11 @@ int GPIO_Read(GPIO *info, int *const status)
     return 0;
 }
 
-int GPIO_Write(GPIO *info, const int Status)
+int GPIO_Write(GPIO* info, const int Status)
 {
-    if (info->Mode == GPMODES::INPUT)
+    if(info->Mode == GPMODES::INPUT)
     {
-        std::cerr << "[ GPIO ][ WriteGPIO ] : Cannot write a GPIO declared as Input : "
-                  << DEV_NAME
+        std::cerr << "[ GPIO ][ WriteGPIO ] : Cannot write a GPIO declared as Input : " << DEV_NAME
                   << std::endl;
         return -1;
     }
@@ -151,13 +136,10 @@ int GPIO_Write(GPIO *info, const int Status)
     struct gpiohandle_data data;
 
     int fd = open(DEV_NAME, O_RDONLY);
-    if (fd < 0)
+    if(fd < 0)
     {
-        std::cerr << "[ GPIO ][ WriteGPIO ] : Failed to open the device file for "
-                  << DEV_NAME
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+        std::cerr << "[ GPIO ][ WriteGPIO ] : Failed to open the device file for " << DEV_NAME
+                  << " : " << strerror(errno) << std::endl;
         return -2;
     }
 
@@ -166,27 +148,21 @@ int GPIO_Write(GPIO *info, const int Status)
     rq.lines = 1;
     int ret = ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &rq);
     close(fd);
-    if (ret < 0)
+    if(ret < 0)
     {
         std::cerr << "[ GPIO ][ WriteGPIO ] : Failed to get the line handle for GPIO at offset"
-                  << info->PinNumber
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+                  << info->PinNumber << " : " << strerror(errno) << std::endl;
         return -3;
     }
 
     data.values[0] = (uint8_t)Status;
     ret = ioctl(rq.fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data);
     close(rq.fd);
-    if (ret == -1)
+    if(ret == -1)
 
     {
         std::cerr << "[ GPIO ][ WriteGPIO ] : Unable to set line value using ioctl at offset "
-                  << info->PinNumber
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+                  << info->PinNumber << " : " << strerror(errno) << std::endl;
         return -4;
     }
     info->InOut = true;

@@ -31,9 +31,9 @@
  * calculate a 32 bit CRC value of a sequence of bytes.
  */
 
+#include "checksum.h"
 #include <stdbool.h>
 #include <stdlib.h>
-#include "checksum.h"
 
 /*
  * Include the lookup table for the CRC 32 calculation
@@ -50,23 +50,26 @@
  * indicating the length.
  */
 
-uint32_t crc_32( const unsigned char *input_str, size_t num_bytes ) {
+uint32_t crc_32(const unsigned char* input_str, size_t num_bytes)
+{
 
-	uint32_t crc;
-	const unsigned char *ptr;
-	size_t a;
+    uint32_t crc;
+    const unsigned char* ptr;
+    size_t a;
 
-	crc = CRC_START_32;
-	ptr = input_str;
+    crc = CRC_START_32;
+    ptr = input_str;
 
-	if ( ptr != NULL ) for (a=0; a<num_bytes; a++) {
+    if(ptr != NULL)
+        for(a = 0; a < num_bytes; a++)
+        {
 
-		crc = (crc >> 8) ^ crc_tab32[ (crc ^ (uint32_t) *ptr++) & 0x000000FFul ];
-	}
+            crc = (crc >> 8) ^ crc_tab32[(crc ^ (uint32_t)*ptr++) & 0x000000FFul];
+        }
 
-	return (crc ^ 0xFFFFFFFFul);
+    return (crc ^ 0xFFFFFFFFul);
 
-}  /* crc_32 */
+} /* crc_32 */
 
 /*
  * uint32_t update_crc_32( uint32_t crc, unsigned char c );
@@ -75,8 +78,9 @@ uint32_t crc_32( const unsigned char *input_str, size_t num_bytes ) {
  * previous value of the CRC and the next byte of the data to be checked.
  */
 
-uint32_t update_crc_32( uint32_t crc, unsigned char c ) {
+uint32_t update_crc_32(uint32_t crc, unsigned char c)
+{
 
-	return (crc >> 8) ^ crc_tab32[ (crc ^ (uint32_t) c) & 0x000000FFul ];
+    return (crc >> 8) ^ crc_tab32[(crc ^ (uint32_t)c) & 0x000000FFul];
 
-}  /* update_crc_32 */
+} /* update_crc_32 */

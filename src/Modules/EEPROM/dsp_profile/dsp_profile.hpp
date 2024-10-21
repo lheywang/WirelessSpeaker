@@ -18,12 +18,13 @@
 // ==============================================================================
 // CONSTANTS
 // ==============================================================================
-constexpr int MAX_PROFILE_CHAR = 30; /*!< Maximal number of characters in the name of a DSP profile*/
-constexpr int LARGE_PROFILE = 5662;  /*!< Size in bytes for the largest DSP Profile*/
+constexpr int MAX_PROFILE_CHAR =
+    30; /*!< Maximal number of characters in the name of a DSP profile*/
+constexpr int LARGE_PROFILE = 5662; /*!< Size in bytes for the largest DSP Profile*/
 constexpr int MEDIUM_PROFILE = 2846; /*!< Size in bytes for the medium DSP Profile*/
-constexpr int SMALL_PROFILE = 1438;  /*!< Size in bytes for the smallest DSP Profile*/
-constexpr int MAX_COEFF = 256;       /*!< Maximal number of coefficients for the DSP*/
-constexpr int MAX_INSTR = 1024;      /*!< Maximal number of instructions for the DSP*/
+constexpr int SMALL_PROFILE = 1438; /*!< Size in bytes for the smallest DSP Profile*/
+constexpr int MAX_COEFF = 256; /*!< Maximal number of coefficients for the DSP*/
+constexpr int MAX_INSTR = 1024; /*!< Maximal number of instructions for the DSP*/
 
 // ==============================================================================
 // ENUMS
@@ -31,9 +32,9 @@ constexpr int MAX_INSTR = 1024;      /*!< Maximal number of instructions for the
 /*! Enum used to communicate a standard size for DSP profile to prevent mistypes. */
 enum class DSP_PROFILE_SIZE
 {
-    LARGE = LARGE_PROFILE,   /*!< Large profile. (0) = 5662 bytes.*/
+    LARGE = LARGE_PROFILE, /*!< Large profile. (0) = 5662 bytes.*/
     MEDIUM = MEDIUM_PROFILE, /*!< Medium profile. (1) = 2846 bytes.*/
-    SMALL = SMALL_PROFILE,   /*!< Small profile. (2) = 1438 bytes.*/
+    SMALL = SMALL_PROFILE, /*!< Small profile. (2) = 1438 bytes.*/
 };
 
 // ==============================================================================
@@ -51,15 +52,18 @@ class DSP_PROFILE
 
 private:
 protected:
-    int size;        /*!< Store the size in bytes of the DSP profile on the eeprom. This doesn't compare to the size in RAM for a class instance.*/
+    int size; /*!< Store the size in bytes of the DSP profile on the eeprom. This doesn't compare to the size in RAM for a class instance.*/
     int sizebufferA; /*!< Store the size in bytes of the buffer A part of the DSP Profile*/
     int sizebufferB; /*!< Store the size in bytes of the buffer B part of the DSP Profile*/
-    int sizeinstr;   /*!< Store the size in bytes of the instruction buffer part of the DSP Profile*/
+    int sizeinstr; /*!< Store the size in bytes of the instruction buffer part of the DSP Profile*/
 
-    char *Name;       /*!< Store the name of the DSP Profile*/
-    uint8_t *bufferA; /*!< Store the values of the coefficient A buffer of DSP Profile. Warning : Theses values are formatted to be exported on the DAC, thus expressed as a proprietary format.*/
-    uint8_t *bufferB; /*!< Store the values of the coefficient B buffer of DSP Profile. Warning : Theses values are formatted to be exported on the DAC, thus expressed as a proprietary format.*/
-    uint8_t *instr;   /*!< Store the values of the instructions buffer of DSP Profile. Warning : Theses values are formatted to be exported on the DAC, thus expressed as a proprietary format.*/
+    char* Name; /*!< Store the name of the DSP Profile*/
+    uint8_t*
+        bufferA; /*!< Store the values of the coefficient A buffer of DSP Profile. Warning : Theses values are formatted to be exported on the DAC, thus expressed as a proprietary format.*/
+    uint8_t*
+        bufferB; /*!< Store the values of the coefficient B buffer of DSP Profile. Warning : Theses values are formatted to be exported on the DAC, thus expressed as a proprietary format.*/
+    uint8_t*
+        instr; /*!< Store the values of the instructions buffer of DSP Profile. Warning : Theses values are formatted to be exported on the DAC, thus expressed as a proprietary format.*/
 
     /**
      * @brief This function is only available to friends class, and is used to write a serialized (from EEPROM) buffer to the differents fields.
@@ -70,7 +74,7 @@ protected:
      * @return  0 : OK
      * @return -1 : Buf too big
      */
-    int WriteBuffers(uint8_t *const buf, int *const Len);
+    int WriteBuffers(uint8_t* const buf, int* const Len);
 
     /**
      * @brief This function is only available to friends class, and is used to fill a buffer of X len with the correct formatted data.
@@ -82,7 +86,7 @@ protected:
      * @return  0 : OK
      * @return -1 : Buf too small.
      */
-    int ReadBuffers(uint8_t *const buf, int *const Len);
+    int ReadBuffers(uint8_t* const buf, int* const Len);
 
 public:
     // ==============================================================================
@@ -127,7 +131,7 @@ public:
      * @return -1 : Incorrect buffer length (too big)
      * @return -2 : Buffer contain at least an incorrect value that cannot be converted to binary format.
      */
-    int WriteBufferA(float *const buf, const int bufLen);
+    int WriteBufferA(float* const buf, const int bufLen);
 
     /**
      * @brief Write the coefficients to buffer B
@@ -139,7 +143,7 @@ public:
      * @return -1 : Incorrect buffer length (too big)
      * @return -2 : Buffer contain at least an incorrect value that cannot be converted to binary format.
      */
-    int WriteBufferB(float *const buf, const int bufLen);
+    int WriteBufferB(float* const buf, const int bufLen);
 
     /**
      * @brief Write the instructions
@@ -150,7 +154,7 @@ public:
      * @return  0 : OK
      * @return -1 : Incorrect buffer length (too big)
      */
-    int WriteInstructions(int *const Instructions, const int bufLen);
+    int WriteInstructions(int* const Instructions, const int bufLen);
 
     /**
      * @brief Ask the class to load a default profile. Shall be included in the executable package when compiled.
@@ -169,7 +173,7 @@ public:
      *
      * @return  0 : OK
      */
-    int ReturnBufferAValues(uint8_t *const buf);
+    int ReturnBufferAValues(uint8_t* const buf);
 
     /**
      * @brief Return the buffer B formated values, ready to be flashed on the DAC.
@@ -178,7 +182,7 @@ public:
      *
      * @return  0 : OK
      */
-    int ReturnBufferBValues(uint8_t *const buf);
+    int ReturnBufferBValues(uint8_t* const buf);
 
     /**
      * @brief Return the instruction buffer formated values, ready to be flashed on the DAC.
@@ -187,7 +191,7 @@ public:
      *
      * @return  0 : OK
      */
-    int ReturnInstrBufferValues(uint8_t *const buf);
+    int ReturnInstrBufferValues(uint8_t* const buf);
 
     /**
      * @brief Return the name of the DSP Profile.

@@ -13,10 +13,10 @@
 #include "STUSB4500.hpp"
 
 // Cpp modules
-#include <cstdint>
-#include <stdio.h>
-#include <math.h>
 #include "../../I2C/I2C.hpp"
+#include <cstdint>
+#include <math.h>
+#include <stdio.h>
 
 // ==============================================================================
 // IC REGISTER ADDRESSES
@@ -111,7 +111,7 @@ constexpr float CURRENT_MINIMAL_STEP = 0.010;
 // CONSTRUCTORS
 // =====================
 
-STUSB4500::STUSB4500(const I2C_Bus *I2C, const USB_PD address)
+STUSB4500::STUSB4500(const I2C_Bus* I2C, const USB_PD address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;
@@ -131,7 +131,7 @@ STUSB4500::~STUSB4500()
 // FUNCTIONS
 // =====================
 
-int STUSB4500::GetNormsRevision(int *const PD, int *const TYPEC)
+int STUSB4500::GetNormsRevision(int* const PD, int* const TYPEC)
 {
     int buf[4] = {0};
     int res = 0;
@@ -141,7 +141,7 @@ int STUSB4500::GetNormsRevision(int *const PD, int *const TYPEC)
     res += I2C_Read(&this->I2C, this->address, PD_REV_LSB, &buf[2]);
     res += I2C_Read(&this->I2C, this->address, PD_REV_MSB, &buf[3]);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     *TYPEC = (buf[1] << 8) | buf[0];
@@ -149,12 +149,12 @@ int STUSB4500::GetNormsRevision(int *const PD, int *const TYPEC)
     return 0;
 }
 
-int STUSB4500::GetPortStatus(int *const Transition,
-                             int *const AttachedDeviceStatus,
-                             int *const LowPowerStatus,
-                             int *const PowerMode,
-                             int *const DataMode,
-                             int *const AttachStatus)
+int STUSB4500::GetPortStatus(int* const Transition,
+                             int* const AttachedDeviceStatus,
+                             int* const LowPowerStatus,
+                             int* const PowerMode,
+                             int* const DataMode,
+                             int* const AttachStatus)
 {
     int buf[2] = {0};
     int res = 0;
@@ -162,7 +162,7 @@ int STUSB4500::GetPortStatus(int *const Transition,
     res += I2C_Read(&this->I2C, this->address, PORT_STATUS_0, &buf[0]);
     res += I2C_Read(&this->I2C, this->address, PORT_STATUS_1, &buf[1]);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     *Transition = buf[0] & 0x01;
@@ -174,18 +174,18 @@ int STUSB4500::GetPortStatus(int *const Transition,
     return 0;
 }
 
-int STUSB4500::GetPD3Status(int *const VBUSHigh,
-                            int *const VBUSLow,
-                            int *const VBUSReady,
-                            int *const VBUSSafe,
-                            int *const VBUSValid)
+int STUSB4500::GetPD3Status(int* const VBUSHigh,
+                            int* const VBUSLow,
+                            int* const VBUSReady,
+                            int* const VBUSSafe,
+                            int* const VBUSValid)
 {
     int buf = 0;
     int res = 0;
 
     res += I2C_Read(&this->I2C, this->address, TYPEC_STATUS_0, &buf);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     *VBUSHigh = (buf & 0x20) >> 5;
@@ -196,13 +196,13 @@ int STUSB4500::GetPD3Status(int *const VBUSHigh,
     return 0;
 }
 
-int STUSB4500::GetHardwareFault(int *const OVPTrans,
-                                int *const VPUValidTrans,
-                                int *const VbusDischFaultTrans,
-                                int *const OVPFault,
-                                int *const VPUValid,
-                                int *const VbusDischFault,
-                                int *const VsrcDischFault)
+int STUSB4500::GetHardwareFault(int* const OVPTrans,
+                                int* const VPUValidTrans,
+                                int* const VbusDischFaultTrans,
+                                int* const OVPFault,
+                                int* const VPUValid,
+                                int* const VbusDischFault,
+                                int* const VsrcDischFault)
 {
     int res = 0;
     int buf[2] = {0};
@@ -210,7 +210,7 @@ int STUSB4500::GetHardwareFault(int *const OVPTrans,
     res += I2C_Read(&this->I2C, this->address, HW_FAULT_0, &buf[0]);
     res += I2C_Read(&this->I2C, this->address, HW_FAULT_0, &buf[1]);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     *OVPTrans = (buf[0] & 0x20) >> 5;
@@ -223,7 +223,9 @@ int STUSB4500::GetHardwareFault(int *const OVPTrans,
     return 0;
 }
 
-int STUSB4500::GetTypeCStatus(int *const TypeCStatus, int *const ConnectionOrientation, int *const FSMStatus)
+int STUSB4500::GetTypeCStatus(int* const TypeCStatus,
+                              int* const ConnectionOrientation,
+                              int* const FSMStatus)
 {
     int res = 0;
     int buf[2] = {0};
@@ -231,7 +233,7 @@ int STUSB4500::GetTypeCStatus(int *const TypeCStatus, int *const ConnectionOrien
     res += I2C_Read(&this->I2C, this->address, USB_STATUS, &buf[0]);
     res += I2C_Read(&this->I2C, this->address, PRT_STATUS, &buf[0]);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     *ConnectionOrientation = (buf[0] & 0x80) >> 7;
@@ -246,9 +248,9 @@ int STUSB4500::SetVBUSMonitoring(const int DischargeThreshold,
                                  const int UVPLevel,
                                  const int EnableReset)
 {
-    if ((0 > OVPLevel) | (OVPLevel > 0x0F))
+    if((0 > OVPLevel) | (OVPLevel > 0x0F))
         return -1;
-    if ((0 > UVPLevel) | (UVPLevel > 0x0F))
+    if((0 > UVPLevel) | (UVPLevel > 0x0F))
         return -2;
 
     int res = 0;
@@ -264,7 +266,7 @@ int STUSB4500::SetVBUSMonitoring(const int DischargeThreshold,
     res += I2C_Write(&this->I2C, this->address, MONITORING_CTRL_2, &buf[1]);
     res += I2C_Write(&this->I2C, this->address, MONITORING_RESET, &buf[2]);
 
-    if (res != 0)
+    if(res != 0)
         return -3;
     return 0;
 }
@@ -274,9 +276,9 @@ int STUSB4500::SetVBUSDischarge(const int DischargeTo0V,
                                 const int EnableVBUSPath,
                                 const int ForceAssertion)
 {
-    if ((0 > DischargeTo0V) | (DischargeTo0V > 0x0F))
+    if((0 > DischargeTo0V) | (DischargeTo0V > 0x0F))
         return -1;
-    if ((0 > DischargeToNext) | (DischargeToNext > 0x0F))
+    if((0 > DischargeToNext) | (DischargeToNext > 0x0F))
         return -2;
 
     int buf[3] = {0};
@@ -293,7 +295,7 @@ int STUSB4500::SetVBUSDischarge(const int DischargeTo0V,
     res += I2C_Write(&this->I2C, this->address, VBUS_DISCHARGE_CTRL, &buf[1]);
     res += I2C_Write(&this->I2C, this->address, VBUS_CTRL, &buf[2]);
 
-    if (res != 0)
+    if(res != 0)
         return -3;
     return 0;
 }
@@ -307,12 +309,12 @@ int STUSB4500::SetGPIO3(const int Status)
 
     res += I2C_Write(&this->I2C, this->address, GPIO3_SW, &buf);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
 
-int STUSB4500::GetRXHeader(int *const Header)
+int STUSB4500::GetRXHeader(int* const Header)
 {
     int res = 0;
     int buf[2] = {0};
@@ -320,19 +322,19 @@ int STUSB4500::GetRXHeader(int *const Header)
     res += I2C_Read(&this->I2C, this->address, RX_HEADER_LSB, &buf[0]);
     res += I2C_Read(&this->I2C, this->address, RX_HEADER_MSB, &buf[1]);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     *Header = (buf[1] << 8) | buf[0];
     return 0;
 }
 
-int STUSB4500::GetPDO(const int PDONumber, PDO *const PDO)
+int STUSB4500::GetPDO(const int PDONumber, PDO* const PDO)
 {
     int res = 0;
     int buf[4] = {0};
 
     int offset = 0;
-    switch (PDONumber)
+    switch(PDONumber)
     {
     case 1:
         offset = 0;
@@ -352,7 +354,7 @@ int STUSB4500::GetPDO(const int PDONumber, PDO *const PDO)
     res += I2C_Read(&this->I2C, this->address, DPM_SNK_PDO1_2 + offset, &buf[2]); // reg 2 (16-23)
     res += I2C_Read(&this->I2C, this->address, DPM_SNK_PDO1_3 + offset, &buf[3]); // reg 3 (24-31)
 
-    if (res != 0)
+    if(res != 0)
         return -2;
 
     PDO->FixedSupply = (buf[3] & 0xC0) >> 6;
@@ -363,20 +365,21 @@ int STUSB4500::GetPDO(const int PDONumber, PDO *const PDO)
     PDO->DualRoleData = (bool)((buf[3] & 0x02) >> 1);
     PDO->FastSwap = ((buf[3] & 0x01) << 1) | ((buf[2] & 0x80) >> 7);
 
-    PDO->Voltage = (float)((((buf[2] & 0x0F) << 6) | ((buf[1] & 0xFC) >> 2)) * VOLTAGE_MINIMAL_STEP);
+    PDO->Voltage =
+        (float)((((buf[2] & 0x0F) << 6) | ((buf[1] & 0xFC) >> 2)) * VOLTAGE_MINIMAL_STEP);
     PDO->Current = (float)((((buf[2] & 0x03) << 8) | (buf[0])) * CURRENT_MINIMAL_STEP);
     return 0;
 }
 
 int STUSB4500::SetPDO(const int PDONumber, const PDO PDO)
 {
-    if (((int)USB_PSU_MODE::FIXED > PDO.FixedSupply) | (PDO.FixedSupply > (int)USB_PSU_MODE::PPS))
+    if(((int)USB_PSU_MODE::FIXED > PDO.FixedSupply) | (PDO.FixedSupply > (int)USB_PSU_MODE::PPS))
         return -1;
-    if (((int)USB_SWAP::FAST_SWAP_DISABLED > PDO.FastSwap) | (PDO.FastSwap > (int)USB_SWAP::V5_A3))
+    if(((int)USB_SWAP::FAST_SWAP_DISABLED > PDO.FastSwap) | (PDO.FastSwap > (int)USB_SWAP::V5_A3))
         return -2;
-    if (!PDO.HighCapability) // Check if we go higher than 3A without enabling High Capability bool
+    if(!PDO.HighCapability) // Check if we go higher than 3A without enabling High Capability bool
     {
-        if (round(PDO.Current) > 3.0)
+        if(round(PDO.Current) > 3.0)
             return -4;
     }
 
@@ -384,7 +387,7 @@ int STUSB4500::SetPDO(const int PDONumber, const PDO PDO)
     int buf[4] = {0};
 
     int offset = 0;
-    switch (PDONumber)
+    switch(PDONumber)
     {
     case 1:
         offset = 0;
@@ -425,12 +428,12 @@ int STUSB4500::SetPDO(const int PDONumber, const PDO PDO)
     res += I2C_Write(&this->I2C, this->address, DPM_SNK_PDO1_2 + offset, &buf[2]);
     res += I2C_Write(&this->I2C, this->address, DPM_SNK_PDO1_3 + offset, &buf[3]);
 
-    if (res != 0)
+    if(res != 0)
         return -5;
     return 0;
 }
 
-int STUSB4500::GetRDO(RDO *const RDO)
+int STUSB4500::GetRDO(RDO* const RDO)
 {
     int res = 0;
     int buf[4] = {0};
@@ -440,7 +443,7 @@ int STUSB4500::GetRDO(RDO *const RDO)
     res += I2C_Read(&this->I2C, this->address, DPM_SNK_PDO1_2, &buf[2]); // reg 2 (16-23)
     res += I2C_Read(&this->I2C, this->address, DPM_SNK_PDO1_3, &buf[3]); // reg 3 (24-31)
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     RDO->RequestedPDOID = (buf[3] & 0x70) >> 4;
@@ -450,7 +453,8 @@ int STUSB4500::GetRDO(RDO *const RDO)
     RDO->USBCommCapable = (buf[3] & 0x02) >> 1;
     RDO->USBSuspend = buf[3] & 0x01;
 
-    RDO->NominalCurrent = (float)((((buf[2] & 0x0F) << 6) | ((buf[1] & 0xFC) >> 2)) * CURRENT_MINIMAL_STEP);
+    RDO->NominalCurrent =
+        (float)((((buf[2] & 0x0F) << 6) | ((buf[1] & 0xFC) >> 2)) * CURRENT_MINIMAL_STEP);
     RDO->MinimalCurrent = (float)((((buf[2] & 0x03) << 8) | (buf[0])) * CURRENT_MINIMAL_STEP);
     return 0;
 }

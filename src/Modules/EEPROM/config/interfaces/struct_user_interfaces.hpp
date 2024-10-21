@@ -13,13 +13,13 @@
 #pragma once
 
 // Libs
-#include <iostream>
 #include <cstdint>
+#include <iostream>
 
 /*! Define values that are stored on the EEPROM for the leds drivers */
 struct LEDS
 {
-    uint8_t Brightness;        /*!< Define brightness value*/
+    uint8_t Brightness; /*!< Define brightness value*/
     uint8_t MaximalBrightness; /*!< Define the maximal brightness value*/
 };
 

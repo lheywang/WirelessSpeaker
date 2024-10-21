@@ -22,7 +22,10 @@
  * @param x The value to invert
  * @return The inverted value.
  */
-constexpr int SWAP_BYTES(int x) { return (((x & 0x00FF) << 8) | (x & 0xFF00) >> 8); }
+constexpr int SWAP_BYTES(int x)
+{
+    return (((x & 0x00FF) << 8) | (x & 0xFF00) >> 8);
+}
 
 // ==============================================================================
 // DATA STRUCTURES
@@ -31,9 +34,9 @@ constexpr int SWAP_BYTES(int x) { return (((x & 0x00FF) << 8) | (x & 0xFF00) >> 
 /*! Define the struct used internally by the I2C driver */
 struct I2C_Bus
 {
-    int I2C_file;          /*!< I2C file descriptor*/
+    int I2C_file; /*!< I2C file descriptor*/
     char I2C_filename[30]; /*!< I2C file name*/
-    long I2C_bus;          /*!< I2C bus number*/
+    long I2C_bus; /*!< I2C bus number*/
 };
 
 // ==============================================================================
@@ -46,7 +49,7 @@ struct I2C_Bus
  *
  * @return *I2C_Bus : WARNING : The file will be initialized to NULL if unable to open the file !
  */
-I2C_Bus *I2C_GetInfos();
+I2C_Bus* I2C_GetInfos();
 
 /**
  * @brief Close the I2C Bus. Any operation tempted by after will be failed.
@@ -56,7 +59,7 @@ I2C_Bus *I2C_GetInfos();
  * @return 0 : File closed
  *
  */
-int I2C_Close(I2C_Bus *I2C);
+int I2C_Close(I2C_Bus* I2C);
 
 /**
  * @brief This function perform a write of one or more bytes (depending on the lengh of the payload) to the I2C bus.
@@ -76,7 +79,8 @@ int I2C_Close(I2C_Bus *I2C);
  * @return -4 : Incorrect DataSize value.
  * @return -5 : IOCTL error.
  */
-int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 1, int DataSize = 1);
+int I2C_Write(
+    I2C_Bus* I2C, int Address, int Register, int* Payload, int Size = 1, int DataSize = 1);
 
 /**
  * @brief This function perform the read of N (Size) bytes on the IC.
@@ -94,4 +98,4 @@ int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 
  * @return -4 : Incorrect DataSize value.
  * @return -5 : IOCTL error.
  */
-int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size = 1, int DataSize = 1);
+int I2C_Read(I2C_Bus* I2C, int Address, int Register, int* Payload, int Size = 1, int DataSize = 1);

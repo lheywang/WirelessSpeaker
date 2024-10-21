@@ -11,11 +11,11 @@
  *
  */
 
+#include <cstdint>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <sys/mman.h>
-#include <cstdint>
 #include <unistd.h>
 
 #include "clk.hpp"
@@ -47,7 +47,7 @@
 
 #define CLK_SRCS 4
 
-#define CLK_CTL_SRC_OSC 1  /* 19.2 MHz or 54 MHz (Pi4)*/
+#define CLK_CTL_SRC_OSC 1 /* 19.2 MHz or 54 MHz (Pi4)*/
 #define CLK_CTL_SRC_PLLC 5 /* 1000 MHz */
 #define CLK_CTL_SRC_PLLD 6 /*  500 MHz  or 750 MHz (Pi4)*/
 #define CLK_CTL_SRC_HDMI 7 /*  216 MHz */
@@ -67,20 +67,18 @@
 #define PI_INPUT 0
 #define PI_ALT0 4
 
-static uint32_t *gpioReg = (uint32_t *)MAP_FAILED;
-static uint32_t *systReg = (uint32_t *)MAP_FAILED;
-static uint32_t *clkReg = (uint32_t *)MAP_FAILED;
+static uint32_t* gpioReg = (uint32_t*)MAP_FAILED;
+static uint32_t* systReg = (uint32_t*)MAP_FAILED;
+static uint32_t* clkReg = (uint32_t*)MAP_FAILED;
 
 // ==============================================================================
 // PRIVATE FUNCTIONS
 // ==============================================================================
 
-static uint32_t *initMapMem(int fd, uint32_t addr, uint32_t len)
+static uint32_t* initMapMem(int fd, uint32_t addr, uint32_t len)
 {
-    return (uint32_t *)mmap(0, len,
-                            PROT_READ | PROT_WRITE | PROT_EXEC,
-                            MAP_SHARED | MAP_LOCKED,
-                            fd, addr);
+    return (uint32_t*)mmap(
+        0, len, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_SHARED | MAP_LOCKED, fd, addr);
 }
 
 void gpioSetMode(unsigned gpio, unsigned mode)
@@ -99,10 +97,11 @@ int gpioInitialise()
 
     fd = open("/dev/mem", O_RDWR | O_SYNC);
 
-    if (fd < 0)
+    if(fd < 0)
     {
-        fprintf(stderr,
-                "[ GPCLK0 ][ gpioInitialise ] : This program needs root privileges. Try using sudo\n");
+        fprintf(
+            stderr,
+            "[ GPCLK0 ][ gpioInitialise ] : This program needs root privileges. Try using sudo\n");
         return -1;
     }
 
@@ -112,9 +111,7 @@ int gpioInitialise()
 
     close(fd);
 
-    if ((gpioReg == MAP_FAILED) ||
-        (systReg == MAP_FAILED) ||
-        (clkReg == MAP_FAILED))
+    if((gpioReg == MAP_FAILED) || (systReg == MAP_FAILED) || (clkReg == MAP_FAILED))
     {
         fprintf(stderr, "[ GPCLK0 ][ gpioInitialise ] : Bad, mmap failed\n");
         return -1;
@@ -128,31 +125,27 @@ int gpioInitialise()
 
 int initClock(int source, int divI, int divF, int MASH)
 {
-    if (gpioInitialise() < 0)
+    if(gpioInitialise() < 0)
         return -1;
     gpioSetMode(4, PI_ALT0);
 
-    int src[CLK_SRCS] =
-        {CLK_CTL_SRC_PLLD,
-         CLK_CTL_SRC_OSC,
-         CLK_CTL_SRC_HDMI,
-         CLK_CTL_SRC_PLLC};
+    int src[CLK_SRCS] = {CLK_CTL_SRC_PLLD, CLK_CTL_SRC_OSC, CLK_CTL_SRC_HDMI, CLK_CTL_SRC_PLLC};
 
     int clkSrc;
 
-    if ((source < 0) || (source > 3))
+    if((source < 0) || (source > 3))
         return -3;
-    if ((divI < 2) || (divI > 4095))
+    if((divI < 2) || (divI > 4095))
         return -4;
-    if ((divF < 0) || (divF > 4095))
+    if((divF < 0) || (divF > 4095))
         return -5;
-    if ((MASH < 0) || (MASH > 3))
+    if((MASH < 0) || (MASH > 3))
         return -6;
 
     clkSrc = src[source];
 
     /* wait for clock to stop */
-    while (*clkReg & CLK_CTL_BUSY)
+    while(*clkReg & CLK_CTL_BUSY)
     {
         usleep(10);
     }
@@ -172,7 +165,7 @@ int termClock()
     *clkReg = CLK_PASSWD | CLK_CTL_KILL; // Segfault if original syntax.
 
     /* wait for clock to stop */
-    while (*clkReg & CLK_CTL_BUSY)
+    while(*clkReg & CLK_CTL_BUSY)
     {
         usleep(10);
     }

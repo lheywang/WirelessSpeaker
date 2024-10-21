@@ -11,9 +11,9 @@
 // prevent multiple include
 #pragma once
 
+#include "../../I2C/I2C.hpp"
 #include <cstdint>
 #include <cstdlib>
-#include "../../I2C/I2C.hpp"
 
 // =====================
 // PUBLIC ENUMS
@@ -57,7 +57,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    PCM5252(const I2C_Bus *I2C, const DAC address);
+    PCM5252(const I2C_Bus* I2C, const DAC address);
 
     /**
      * @brief Destroy the PCM5252 object
@@ -115,7 +115,7 @@ public:
                      const int PLLP,
                      const float PLLK,
                      const int PLLR,
-                     int *const PLLLock);
+                     int* const PLLLock);
 
     /**
      * @brief Configure the GPIO Subsystem of the DAC. Some of the settings below may need an advanced clocking configuration before.
@@ -486,7 +486,8 @@ public:
      *
      * @test Function to test !
      */
-    int ConfigureVoltageProtection(const int EnableXSMUTEPowerLoss, const int EnableInternalPowerLoss);
+    int ConfigureVoltageProtection(const int EnableXSMUTEPowerLoss,
+                                   const int EnableInternalPowerLoss);
 
     /**
      * @brief Configure the clocking subsystem for the whole chip.
@@ -576,7 +577,9 @@ public:
      *
      * @test Function to test !
      */
-    int ConfigureDSPCoefficientBuffer(const DAC_BUFFER Buffer, int *const Values, const size_t CoeffNumber);
+    int ConfigureDSPCoefficientBuffer(const DAC_BUFFER Buffer,
+                                      int* const Values,
+                                      const size_t CoeffNumber);
 
     /**
      * @brief Write to a CRAM buffer a list of instructions for the DSP.
@@ -592,7 +595,7 @@ public:
      *
      * @test Function to test !
      */
-    int ConfigureDSPIntructions(int *const Instructions, const size_t InstrNumber);
+    int ConfigureDSPIntructions(int* const Instructions, const size_t InstrNumber);
 
     /**
      * @brief Configure the volume (digital) for the DAC.
@@ -645,7 +648,7 @@ public:
      *
      * @test Function to test !
      */
-    int ReadGPIOInput(int *const GPIOInputStatus);
+    int ReadGPIOInput(int* const GPIOInputStatus);
 
     /**
      * @brief Read the clock status of the DAC
@@ -671,21 +674,21 @@ public:
      *
      * @test Function to test !
      */
-    int ReadClockStatus(int *const DetectedBCKRatio,
-                        int *const SCKPresent,
-                        int *const PLLLocked,
-                        int *const LRCLKBCKPresent,
-                        int *const SCKRatio,
-                        int *const SCKRatioValid,
-                        int *const BCKValid,
-                        int *const FSValid,
-                        int *const LatchedClockHalt,
-                        int *const ClockMissing,
-                        int *const ClockResync,
-                        int *const ClockError,
-                        int *const FSSpeedMonitor,
-                        int *const DetectedFS,
-                        int *const DetectedSCK);
+    int ReadClockStatus(int* const DetectedBCKRatio,
+                        int* const SCKPresent,
+                        int* const PLLLocked,
+                        int* const LRCLKBCKPresent,
+                        int* const SCKRatio,
+                        int* const SCKRatioValid,
+                        int* const BCKValid,
+                        int* const FSValid,
+                        int* const LatchedClockHalt,
+                        int* const ClockMissing,
+                        int* const ClockResync,
+                        int* const ClockError,
+                        int* const FSSpeedMonitor,
+                        int* const DetectedFS,
+                        int* const DetectedSCK);
 
     /**
      * @brief Read the Mute status of the DAC
@@ -701,11 +704,11 @@ public:
      *
      * @test Function to test !
      */
-    int ReadMuteStatus(int *const AnalogLeftMute,
-                       int *const AnalogRightMute,
-                       int *const MuteZStatus,
-                       int *const AutoMuteLeftStatus,
-                       int *const AutoMuteRightStatus);
+    int ReadMuteStatus(int* const AnalogLeftMute,
+                       int* const AnalogRightMute,
+                       int* const MuteZStatus,
+                       int* const AutoMuteLeftStatus,
+                       int* const AutoMuteRightStatus);
 
     /**
      * @brief Read the DSP status
@@ -722,12 +725,12 @@ public:
      *
      * @test Function to test !
      */
-    int ReadDSPStatus(int *const DSPBootStatus,
-                      int *const DSPState,
-                      int *const UsedCRAM,
-                      int *const ActiveCRAM,
-                      int *const IDAC,
-                      int *const DSPOverflow);
+    int ReadDSPStatus(int* const DSPBootStatus,
+                      int* const DSPState,
+                      int* const UsedCRAM,
+                      int* const ActiveCRAM,
+                      int* const IDAC,
+                      int* const DSPOverflow);
 
     /**
      * @brief Read the Analog Output Status
@@ -740,6 +743,5 @@ public:
      *
      * @test Function to test !
      */
-    int ReadAnalogStatus(int *const ShortCircuitOccuring,
-                         int *const ShortCircuitDetected);
+    int ReadAnalogStatus(int* const ShortCircuitOccuring, int* const ShortCircuitDetected);
 };

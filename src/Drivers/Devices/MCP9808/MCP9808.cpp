@@ -15,9 +15,9 @@
 #include "MCP9808.hpp"
 
 // Cpp modules
+#include "../../I2C/I2C.hpp"
 #include <cstdint>
 #include <math.h>
-#include "../../I2C/I2C.hpp"
 
 // ==============================================================================
 // IC REGISTER ADDRESSES
@@ -37,13 +37,16 @@ constexpr int TEMP_RESOLUTION_REG = 0x08;
 // MACROS
 // ==============================================================================
 // Define the way of passing commands to this IC
-constexpr int REGISTER(int x) { return (x & 0x0F); }
+constexpr int REGISTER(int x)
+{
+    return (x & 0x0F);
+}
 
 // =====================
 // CONSTRUCTORS
 // =====================
 
-MCP9808::MCP9808(const I2C_Bus *I2C, const TEMP_SENSOR address)
+MCP9808::MCP9808(const I2C_Bus* I2C, const TEMP_SENSOR address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;
@@ -63,10 +66,10 @@ MCP9808::~MCP9808()
 // STATIC FUNCTIONS
 // =====================
 
-static void FloatToInts(const float Input, int *const OutputBuf)
+static void FloatToInts(const float Input, int* const OutputBuf)
 {
     int Sign = 0;
-    if (Input < 0)
+    if(Input < 0)
         Sign = 1; // We set to 1 the sign bit, since data is expressed as CPL2.
 
     // Compute the differents factors (rounding, then the float part)
@@ -87,9 +90,10 @@ static void FloatToInts(const float Input, int *const OutputBuf)
 int MCP9808::ConfigureResolution(const TEMP_RESOLUTION Resolution)
 {
     int TResolution = SWAP_BYTES((int)Resolution);
-    int res = I2C_Write(&this->I2C, this->address, REGISTER(TEMP_RESOLUTION_REG), &TResolution, 1, 1);
+    int res =
+        I2C_Write(&this->I2C, this->address, REGISTER(TEMP_RESOLUTION_REG), &TResolution, 1, 1);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
@@ -124,12 +128,12 @@ int MCP9808::Configure(const TEMP_HYSTERESIS Hysteresis,
     buf = SWAP_BYTES(buf);
     res = I2C_Write(&this->I2C, this->address, REGISTER(MCP9808_CONFIG), &buf, 1, 2);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
 
-int MCP9808::GetIDs(int *const DeviceID, int *const DeviceRevision, int *const ManufacturerID)
+int MCP9808::GetIDs(int* const DeviceID, int* const DeviceRevision, int* const ManufacturerID)
 {
     int res = 0;
     int buf = 0;
@@ -144,18 +148,18 @@ int MCP9808::GetIDs(int *const DeviceID, int *const DeviceRevision, int *const M
     buf = SWAP_BYTES(buf);
     *ManufacturerID = buf;
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
 
 int MCP9808::SetAlertTemperatures(const float Minimal, const float Maximal, const float Critical)
 {
-    if ((Minimal < -128) | (Minimal > 128))
+    if((Minimal < -128) | (Minimal > 128))
         return -1;
-    if ((Maximal < -128) | (Maximal > 128))
+    if((Maximal < -128) | (Maximal > 128))
         return -2;
-    if ((Critical < -128) | (Critical > 128))
+    if((Critical < -128) | (Critical > 128))
         return -3;
 
     int BufMin = 0;
@@ -176,18 +180,18 @@ int MCP9808::SetAlertTemperatures(const float Minimal, const float Maximal, cons
     res += I2C_Write(&this->I2C, this->address, REGISTER(LOWER_TEMP), &BufMin, 1, 2);
     res += I2C_Write(&this->I2C, this->address, REGISTER(CRIT_TEMP), &BufCrit, 1, 2);
 
-    if (res != 0)
+    if(res != 0)
         return -4;
     return 0;
 }
 
-int MCP9808::ReadTemperature(float *const Temperature, int *const Status)
+int MCP9808::ReadTemperature(float* const Temperature, int* const Status)
 {
     int buf = 0;
     int res = I2C_Read(&this->I2C, this->address, REGISTER(READ_TEMP), &buf, 1, 2);
     buf = SWAP_BYTES(buf);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     // Fetching in temp variables the correct values.
@@ -197,7 +201,7 @@ int MCP9808::ReadTemperature(float *const Temperature, int *const Status)
     int INT = (buf & 0x0FF0) >> 4;
     int FLOAT = buf & 0x000F;
 
-    if (Sign)
+    if(Sign)
         *Temperature = -(INT + FLOAT * 0.0625);
     else
         *Temperature = (INT + FLOAT * 0.0625);

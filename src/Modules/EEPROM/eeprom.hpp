@@ -12,21 +12,21 @@
 // ==============================================================================
 // INCLUDES
 // ==============================================================================
-#include "header/header.hpp"
+#include "../../Drivers/Devices/M95256/M95256.hpp"
 #include "config/config.hpp"
 #include "dsp_profile/dsp_profile.hpp"
-#include "../../Drivers/Devices/M95256/M95256.hpp"
+#include "header/header.hpp"
 
 // ==============================================================================
 // HEADER CONSTANTS
 // ==============================================================================
-constexpr int HEADER_SIZE = 128;       /*!< Define the size in bytes of the header.*/
+constexpr int HEADER_SIZE = 128; /*!< Define the size in bytes of the header.*/
 constexpr int HEADER_ADDRESS = 0x0000; /*!< Define the size of the header*/
 
 // ==============================================================================
 // CONFIG CONSTANTS
 // ==============================================================================
-constexpr int CONFIG_SIZE = 256;       /*!< Define the base address of the config*/
+constexpr int CONFIG_SIZE = 256; /*!< Define the base address of the config*/
 constexpr int CONFIG_ADDRESS = 0x0080; /*!< Define the size of the config*/
 
 // ==============================================================================
@@ -47,12 +47,12 @@ class EEPROM
 
 private:
     M95256 Slave;
-    EEPROM_HEADER_V1 *Header;
-    SPI_Bus *SPI;
+    EEPROM_HEADER_V1* Header;
+    SPI_Bus* SPI;
     int ReadHeaderV1();
     int WriteHeaderV1();
     int SetConfigCRC(const uint16_t CRC);
-    int GetConfigCRC(uint16_t *const CRC);
+    int GetConfigCRC(uint16_t* const CRC);
 
 public:
     // ==============================================================================
@@ -86,7 +86,7 @@ public:
      *
      * @return  0 : OK
      */
-    int GetHeaderV1(EEPROM_HEADER_V1 *const Header);
+    int GetHeaderV1(EEPROM_HEADER_V1* const Header);
 
     /**
      * @brief Write the config to the EEPROM. Date and CRC are also updated.
@@ -97,7 +97,7 @@ public:
      * @return -1 : Memory allocation failed.
      * @return -2 : Write failed.
      */
-    int WriteConfigV1(CONFIG_V1 *const Data);
+    int WriteConfigV1(CONFIG_V1* const Data);
 
     /**
      * @brief Read the config from the EEPROM. CRC is computed. An Header read is highly recommended to get the date.
@@ -109,7 +109,7 @@ public:
      * @return -2 : Read failed.
      * @return -3 : Invalid CRC.
      */
-    int ReadConfigV1(CONFIG_V1 *const Data);
+    int ReadConfigV1(CONFIG_V1* const Data);
 
     /**
      * @brief Ask for the software to load the default configuration.
@@ -133,7 +133,7 @@ public:
      * @return  0 : OK
      * @return -1 : Not enough space.
      */
-    int CheckForDSPProfileSpace(DSP_PROFILE *const Profile, int *const PossibleProfileID);
+    int CheckForDSPProfileSpace(DSP_PROFILE* const Profile, int* const PossibleProfileID);
 
     /**
      * @brief Write a new DSP Profile to the EEPROM, if there is enough space for it.
@@ -146,7 +146,7 @@ public:
      * @return -2 : Invalid pointer
      * @return -3 : IOCTL error.
      */
-    int AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber);
+    int AddDSPProfile(DSP_PROFILE* const Profile, int* const ProfileNumber);
 
     /**
      * @brief Delete on the EEPROM (on the header only, the values remains until the next write)
@@ -186,7 +186,7 @@ public:
      * @return -2 : Failed to allocate memory
      * @return -3 : IOCTL error.
      */
-    int GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile);
+    int GetDSPProfile(const int ProfileNumber, DSP_PROFILE* const Profile);
 
     /**
      * @brief Return the size of a DSP Profile
@@ -199,5 +199,5 @@ public:
      * @return  0 : OK
      * @return -1 : Invalid profile number value.
      */
-    int GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE_SIZE *const Profile);
+    int GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE_SIZE* const Profile);
 };

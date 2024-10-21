@@ -13,8 +13,8 @@
 #pragma once
 
 // type include
-#include <cstdint>
 #include "../../I2C/I2C.hpp"
+#include <cstdint>
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -43,7 +43,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    INA219(const I2C_Bus *I2C, const CURRENT_MONITOR address);
+    INA219(const I2C_Bus* I2C, const CURRENT_MONITOR address);
 
     /**
      * @brief Destroy the INA219 object
@@ -70,7 +70,12 @@ public:
      *
      * @test Function to test !
      */
-    int Configure(const int Reset, const int BusVoltageRange, const int SetPGAGain, const int BusVoltageADCResolution, const int BusCurrentADCResolution, const int OperatingMode);
+    int Configure(const int Reset,
+                  const int BusVoltageRange,
+                  const int SetPGAGain,
+                  const int BusVoltageADCResolution,
+                  const int BusCurrentADCResolution,
+                  const int OperatingMode);
 
     /**
      * @brief Read the voltage on the Shunt, thus the current.
@@ -82,7 +87,7 @@ public:
      *
      * @test Function to test !
      */
-    int ReadShuntVoltage(float *const Value);
+    int ReadShuntVoltage(float* const Value);
 
     /**
      * @brief Read the bus voltage, referenced from ground.
@@ -94,7 +99,7 @@ public:
      *
      * @test Function to test !
      */
-    int ReadBusVoltage(float *const Value);
+    int ReadBusVoltage(float* const Value);
 
     /**
      * @brief Read the power (current * voltage)
@@ -106,7 +111,7 @@ public:
      *
      * @test Function to test !
      */
-    int ReadPower(float *const Value);
+    int ReadPower(float* const Value);
 
     /**
      * @brief Read the bus current
@@ -118,7 +123,7 @@ public:
      *
      * @test Function to test !
      */
-    int ReadCurrent(float *const Value);
+    int ReadCurrent(float* const Value);
 
     /**
      * @brief Store the value used for the calibration. This is the full scale voltage drop for the shunt resistor.

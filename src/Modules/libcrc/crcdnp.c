@@ -31,16 +31,14 @@
  * the CRC value in DNP messages.
  */
 
-
-
+#include "checksum.h"
 #include <stdbool.h>
 #include <stdlib.h>
-#include "checksum.h"
 
-static void             init_crcdnp_tab( void );
+static void init_crcdnp_tab(void);
 
-static bool             crc_tabdnp_init         = false;
-static uint16_t         crc_tabdnp[256];
+static bool crc_tabdnp_init = false;
+static uint16_t crc_tabdnp[256];
 
 /*
  * uint16_t crc_dnp( const unsigned char* input_str, size_t num_bytes );
@@ -49,32 +47,36 @@ static uint16_t         crc_tabdnp[256];
  * string in one pass.
  */
 
-uint16_t crc_dnp( const unsigned char *input_str, size_t num_bytes ) {
+uint16_t crc_dnp(const unsigned char* input_str, size_t num_bytes)
+{
 
-	uint16_t crc;
-	uint16_t low_byte;
-	uint16_t high_byte;
-	const unsigned char *ptr;
-	size_t a;
+    uint16_t crc;
+    uint16_t low_byte;
+    uint16_t high_byte;
+    const unsigned char* ptr;
+    size_t a;
 
-	if ( ! crc_tabdnp_init ) init_crcdnp_tab();
+    if(!crc_tabdnp_init)
+        init_crcdnp_tab();
 
-	crc = CRC_START_DNP;
-	ptr = input_str;
+    crc = CRC_START_DNP;
+    ptr = input_str;
 
-	if ( ptr != NULL ) for (a=0; a<num_bytes; a++) {
+    if(ptr != NULL)
+        for(a = 0; a < num_bytes; a++)
+        {
 
-		crc = (crc >> 8) ^ crc_tabdnp[ (crc ^ (uint16_t) *ptr++) & 0x00FF ];
-	}
+            crc = (crc >> 8) ^ crc_tabdnp[(crc ^ (uint16_t)*ptr++) & 0x00FF];
+        }
 
-	crc       = ~crc;
-	low_byte  = (crc & 0xff00) >> 8;
-	high_byte = (crc & 0x00ff) << 8;
-	crc       = low_byte | high_byte;
+    crc = ~crc;
+    low_byte = (crc & 0xff00) >> 8;
+    high_byte = (crc & 0x00ff) << 8;
+    crc = low_byte | high_byte;
 
-	return crc;
+    return crc;
 
-}  /* crc_dnp */
+} /* crc_dnp */
 
 /*
  * uint16_t update_crc_dnp( uint16_t crc, unsigned char c );
@@ -83,13 +85,15 @@ uint16_t crc_dnp( const unsigned char *input_str, size_t num_bytes ) {
  * must be feeded tot the CRC-DNP routine to calculate the DNP CRC.
  */
 
-uint16_t update_crc_dnp( uint16_t crc, unsigned char c ) {
+uint16_t update_crc_dnp(uint16_t crc, unsigned char c)
+{
 
-	if ( ! crc_tabdnp_init ) init_crcdnp_tab();
+    if(!crc_tabdnp_init)
+        init_crcdnp_tab();
 
-	return (crc >> 8) ^ crc_tabdnp[ (crc ^ (uint16_t) c) & 0x00FF ];
+    return (crc >> 8) ^ crc_tabdnp[(crc ^ (uint16_t)c) & 0x00FF];
 
-}  /* update_crc_dnp */
+} /* update_crc_dnp */
 
 /*
  * static void init_crcdnp_tab( void );
@@ -100,29 +104,34 @@ uint16_t update_crc_dnp( uint16_t crc, unsigned char c ) {
  * init_crcdnp_tab() routine.
  */
 
-static void init_crcdnp_tab( void ) {
+static void init_crcdnp_tab(void)
+{
 
-	int i;
-	int j;
-	uint16_t crc;
-	uint16_t c;
+    int i;
+    int j;
+    uint16_t crc;
+    uint16_t c;
 
-	for (i=0; i<256; i++) {
+    for(i = 0; i < 256; i++)
+    {
 
-		crc = 0;
-		c   = (uint16_t) i;
+        crc = 0;
+        c = (uint16_t)i;
 
-		for (j=0; j<8; j++) {
+        for(j = 0; j < 8; j++)
+        {
 
-			if ( (crc ^ c) & 0x0001 ) crc = ( crc >> 1 ) ^ CRC_POLY_DNP;
-			else                      crc =   crc >> 1;
+            if((crc ^ c) & 0x0001)
+                crc = (crc >> 1) ^ CRC_POLY_DNP;
+            else
+                crc = crc >> 1;
 
-			c = c >> 1;
-		}
+            c = c >> 1;
+        }
 
-		crc_tabdnp[i] = crc;
-	}
+        crc_tabdnp[i] = crc;
+    }
 
-	crc_tabdnp_init = true;
+    crc_tabdnp_init = true;
 
-}  /* init_crcdnp_tab */
+} /* init_crcdnp_tab */

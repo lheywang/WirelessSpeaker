@@ -14,8 +14,8 @@
 #pragma once
 
 // type include
-#include <cstdint>
 #include "../../I2C/I2C.hpp"
+#include <cstdint>
 
 // ==============================================================================
 // PUBLIC ENUMS
@@ -23,9 +23,9 @@
 /*! Define values for the Temperature sensor resolution */
 enum class TEMP_RESOLUTION
 {
-    C0_5 = 0x00,    /*!< 0.5°C    resolution*/
-    C0_25 = 0x01,   /*!< 0.25°C   resolution*/
-    C0_125 = 0x02,  /*!< 0.125°C  resolution*/
+    C0_5 = 0x00, /*!< 0.5°C    resolution*/
+    C0_25 = 0x01, /*!< 0.25°C   resolution*/
+    C0_125 = 0x02, /*!< 0.125°C  resolution*/
     C0_0625 = 0x03, /*!< 0.0625°C resolution*/
 };
 
@@ -59,7 +59,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    MCP9808(const I2C_Bus *I2C, const TEMP_SENSOR address);
+    MCP9808(const I2C_Bus* I2C, const TEMP_SENSOR address);
 
     /**
      * @brief Destroy the MCP9808 object
@@ -116,7 +116,7 @@ public:
      * @return -1 : IOCTL error
      *
      */
-    int GetIDs(int *const DeviceID, int *const DeviceRevision, int *const ManufacturerID);
+    int GetIDs(int* const DeviceID, int* const DeviceRevision, int* const ManufacturerID);
 
     /**
      * @brief Set the Alert Temperatures object. Values are within the range -128 +127 °C
@@ -144,5 +144,5 @@ public:
      * @return -1 : IOCTL error.
      *
      */
-    int ReadTemperature(float *const Temperature, int *const Status);
+    int ReadTemperature(float* const Temperature, int* const Status);
 };

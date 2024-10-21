@@ -13,12 +13,12 @@
 // INCLUDES
 // ==============================================================================
 #include "eeprom.hpp"
-#include "../libcrc/checksum.h"
 #include "../../Drivers/Devices/M95256/M95256.hpp"
+#include "../libcrc/checksum.h"
 
 #include <iostream>
-#include <stdexcept>
 #include <math.h>
+#include <stdexcept>
 
 // ==============================================================================
 // CONSTANTS
@@ -60,8 +60,8 @@ constexpr int PROFILES[] = {
  *        This enable to the file user to interract with the configuration file easily, without handling complex data.
  *
  */
-extern uint8_t *_binary_build_bin_config_bin_start[];
-extern uint8_t *_binary_build_bin_config_bin_end[];
+extern uint8_t* _binary_build_bin_config_bin_start[];
+extern uint8_t* _binary_build_bin_config_bin_end[];
 
 /*
  * This extern statement include data that is used as default values for the config struct.
@@ -80,8 +80,8 @@ extern uint8_t *_binary_build_bin_config_bin_end[];
  *        This enable to the file user to interract with the configuration file easily, without handling complex data.
  *
  */
-extern uint8_t *_binary_build_bin_header_bin_start[];
-extern uint8_t *_binary_build_bin_header_bin_end[];
+extern uint8_t* _binary_build_bin_header_bin_start[];
+extern uint8_t* _binary_build_bin_header_bin_end[];
 
 // ==============================================================================
 // CONSTRUCTORS
@@ -91,30 +91,36 @@ EEPROM::EEPROM(bool ForceWrite)
 {
     // Open a new SPI device
     this->SPI = SPI_GetInfos();
-    if (this->SPI == nullptr)
-        throw std::runtime_error("[ M95256 ][ CONSTRUCTOR ] : Failed to allocate memory for the SPI obect");
+    if(this->SPI == nullptr)
+        throw std::runtime_error(
+            "[ M95256 ][ CONSTRUCTOR ] : Failed to allocate memory for the SPI obect");
 
     // Open a new slave
     this->Slave = M95256(this->SPI);
 
     this->Header = new EEPROM_HEADER_V1;
-    if (this->Header == nullptr)
-        throw std::runtime_error("[ EEPROM ][ CONSTRUCTOR ] : Failed to allocate memory for the HEADER obect");
+    if(this->Header == nullptr)
+        throw std::runtime_error(
+            "[ EEPROM ][ CONSTRUCTOR ] : Failed to allocate memory for the HEADER obect");
 
     int ret = this->ReadHeaderV1();
-    if (ret != 0)
+    if(ret != 0)
     {
-        if (ForceWrite == true)
+        if(ForceWrite == true)
         {
-            if (_binary_build_bin_header_bin_end - _binary_build_bin_header_bin_start != 16)
-                throw std::runtime_error("[ EEPROM ][ CONSTRUCTOR ] : Provided default file has an incorrect size");
+            if(_binary_build_bin_header_bin_end - _binary_build_bin_header_bin_start != 16)
+                throw std::runtime_error(
+                    "[ EEPROM ][ CONSTRUCTOR ] : Provided default file has an incorrect size");
 
             memcpy(this->Header, _binary_build_bin_header_bin_start, HEADER_SIZE);
             this->WriteHeaderV1();
-            std::clog << "[ EEPROM ][ CONSTRUCTOR ] : Failed to read the header. Default one was wrote. Error code was : " << ret << std::endl;
+            std::clog << "[ EEPROM ][ CONSTRUCTOR ] : Failed to read the header. Default one was "
+                         "wrote. Error code was : "
+                      << ret << std::endl;
         }
         else
-            throw std::runtime_error("[ EEPROM ][ CONSTRUCTOR ] : Failed to read header from the EEPROM");
+            throw std::runtime_error(
+                "[ EEPROM ][ CONSTRUCTOR ] : Failed to read header from the EEPROM");
     }
 
     return;
@@ -138,7 +144,7 @@ EEPROM::~EEPROM() // OK
 
 int CheckProfileValue(int Profile) // OK
 {
-    if ((0 > Profile) | (Profile > 8))
+    if((0 > Profile) | (Profile > 8))
         return -1;
     return 0;
 }
@@ -150,8 +156,8 @@ int CheckProfileValue(int Profile) // OK
 int EEPROM::ReadHeaderV1() // OK
 {
     // Alocate the data
-    uint8_t *buf = (uint8_t *)malloc(HEADER_SIZE);
-    if (buf == nullptr)
+    uint8_t* buf = (uint8_t*)malloc(HEADER_SIZE);
+    if(buf == nullptr)
         return -1;
 
     // Copy the data
@@ -159,13 +165,14 @@ int EEPROM::ReadHeaderV1() // OK
 
     // Read the data and put it on the structure
     int res = this->Slave.Read(HEADER_ADDRESS, buf, HEADER_SIZE);
-    if (res < 0)
+    if(res < 0)
         return -2;
     memcpy(this->Header, buf, HEADER_SIZE);
 
     // CRC Check
     uint16_t read_CRC = Header->HeaderCRC16;
-    this->Header->HeaderCRC16 = 0xAAAA; // Set the dummy value to ensure integrity of the computation.
+    this->Header->HeaderCRC16 =
+        0xAAAA; // Set the dummy value to ensure integrity of the computation.
 
     memcpy(buf, this->Header, HEADER_SIZE);
     uint16_t calc_CRC = crc_16(buf, HEADER_SIZE);
@@ -173,7 +180,7 @@ int EEPROM::ReadHeaderV1() // OK
     // Free memory
     free(buf);
 
-    if (read_CRC != calc_CRC)
+    if(read_CRC != calc_CRC)
         return -3;
     return 0;
 }
@@ -181,8 +188,8 @@ int EEPROM::ReadHeaderV1() // OK
 int EEPROM::WriteHeaderV1() // OK
 {
     // Creating a buffer value
-    uint8_t *buf = (uint8_t *)malloc(HEADER_SIZE);
-    if (buf == nullptr)
+    uint8_t* buf = (uint8_t*)malloc(HEADER_SIZE);
+    if(buf == nullptr)
         return -1;
     memset(buf, 0x00, HEADER_SIZE);
 
@@ -204,7 +211,7 @@ int EEPROM::WriteHeaderV1() // OK
     free(buf);
 
     // Returns
-    if (ret < 0)
+    if(ret < 0)
         return -2;
     return 0;
 }
@@ -213,7 +220,7 @@ int EEPROM::SetConfigCRC(const uint16_t CRC) // OK
     this->Header->ConfigCRC16 = CRC;
     return 0;
 }
-int EEPROM::GetConfigCRC(uint16_t *const CRC) // OK
+int EEPROM::GetConfigCRC(uint16_t* const CRC) // OK
 {
     *CRC = this->Header->ConfigCRC16;
     return 0;
@@ -223,17 +230,19 @@ int EEPROM::GetConfigCRC(uint16_t *const CRC) // OK
 // GLOBAL MANAGEMENT
 // ==============================================================================
 
-int EEPROM::GetHeaderV1(EEPROM_HEADER_V1 *const Header) // OK
+int EEPROM::GetHeaderV1(EEPROM_HEADER_V1* const Header) // OK
 {
-    memcpy(Header, this->Header, HEADER_SIZE); // The header was cached, thus we don't bother reading it over SPI.
+    memcpy(Header,
+           this->Header,
+           HEADER_SIZE); // The header was cached, thus we don't bother reading it over SPI.
     return 0;
 }
 
-int EEPROM::WriteConfigV1(CONFIG_V1 *const Data) // OK
+int EEPROM::WriteConfigV1(CONFIG_V1* const Data) // OK
 {
     // Creating a buffer value and cop
-    uint8_t *buf = (uint8_t *)malloc(CONFIG_SIZE);
-    if (buf == nullptr)
+    uint8_t* buf = (uint8_t*)malloc(CONFIG_SIZE);
+    if(buf == nullptr)
         return -1;
     memcpy(buf, Data, CONFIG_SIZE);
 
@@ -244,28 +253,28 @@ int EEPROM::WriteConfigV1(CONFIG_V1 *const Data) // OK
 
     // Write the data (one write per 64 bytes, per page !) and free the buffer.
     int ret = 0;
-    for (int i = 0; i < CONFIG_SIZE; i += PAGE_SIZE)
+    for(int i = 0; i < CONFIG_SIZE; i += PAGE_SIZE)
         ret += this->Slave.Write((CONFIG_ADDRESS + i), &buf[i], PAGE_SIZE);
     free(buf);
 
     // Returns
-    if (ret < 0)
+    if(ret < 0)
         return -2;
     return 0;
 }
 
-int EEPROM::ReadConfigV1(CONFIG_V1 *const Data) // OK
+int EEPROM::ReadConfigV1(CONFIG_V1* const Data) // OK
 {
     // Alocate the data
-    uint8_t *buf = (uint8_t *)malloc(CONFIG_SIZE);
-    if (buf == nullptr)
+    uint8_t* buf = (uint8_t*)malloc(CONFIG_SIZE);
+    if(buf == nullptr)
         return -1;
     // Copy the data
     memset(buf, 0x00, CONFIG_SIZE);
 
     // Read the data and put it on the structure
     int res = this->Slave.Read(CONFIG_ADDRESS, buf, CONFIG_SIZE);
-    if (res < 0)
+    if(res < 0)
         return -2;
     memcpy(Data, buf, CONFIG_SIZE);
 
@@ -277,19 +286,19 @@ int EEPROM::ReadConfigV1(CONFIG_V1 *const Data) // OK
     // Free memory
     free(buf);
 
-    if (read_CRC != calc_CRC)
+    if(read_CRC != calc_CRC)
         return -3;
     return 0;
 }
 
 int EEPROM::LoadDefaultConfigV1() // OK
 {
-    if (_binary_build_bin_config_bin_end - _binary_build_bin_config_bin_start != 32)
+    if(_binary_build_bin_config_bin_end - _binary_build_bin_config_bin_start != 32)
         return -1;
 
     // Creating a buffer value and cop
-    uint8_t *buf = (uint8_t *)malloc(CONFIG_SIZE);
-    if (buf == nullptr)
+    uint8_t* buf = (uint8_t*)malloc(CONFIG_SIZE);
+    if(buf == nullptr)
         return -1;
     memcpy(buf, _binary_build_bin_config_bin_start, CONFIG_SIZE);
 
@@ -300,12 +309,12 @@ int EEPROM::LoadDefaultConfigV1() // OK
 
     // Write the data (one write per 64 bytes, per page !) and free the buffer.
     int ret = 0;
-    for (int i = 0; i < CONFIG_SIZE; i += PAGE_SIZE)
+    for(int i = 0; i < CONFIG_SIZE; i += PAGE_SIZE)
         ret += this->Slave.Write((CONFIG_ADDRESS + i), &buf[i], PAGE_SIZE);
     free(buf);
 
     // Returns
-    if (ret < 0)
+    if(ret < 0)
         return -2;
     return 0;
 }
@@ -314,10 +323,10 @@ int EEPROM::LoadDefaultConfigV1() // OK
 // DSP PROFILE FUNCTIONS
 // ==============================================================================
 
-int EEPROM::CheckForDSPProfileSpace(DSP_PROFILE *const Profile, int *const PossibleProfileID) // OK
+int EEPROM::CheckForDSPProfileSpace(DSP_PROFILE* const Profile, int* const PossibleProfileID) // OK
 {
     // Check if at least a profile is available.
-    if (this->Header->DSP_PROFILE_NUMBER == 0xFF) // All profiles are used.
+    if(this->Header->DSP_PROFILE_NUMBER == 0xFF) // All profiles are used.
         return -1;
 
     // Variables for after.
@@ -330,17 +339,17 @@ int EEPROM::CheckForDSPProfileSpace(DSP_PROFILE *const Profile, int *const Possi
     ProfileSize = Profile->size;
 
     // Iterate over the profiles
-    for (int i = 0; i < 8; i++)
+    for(int i = 0; i < 8; i++)
     {
         // If possible, we compute the available size. In case of match, the first will be choosen.
-        if ((this->Header->DSP_PROFILE_NUMBER & PROFILES[i]) == 0)
+        if((this->Header->DSP_PROFILE_NUMBER & PROFILES[i]) == 0)
         {
             // Fetch some parameters
             ActualAddress = this->Header->Profile[i].Address;
             FutureAddress = this->Header->Profile[i + 1].Address;
 
             // If 0x0000 (default value), then use the max value
-            if (FutureAddress == 0x0000)
+            if(FutureAddress == 0x0000)
             {
                 FutureAddress = EEPROM_MAX_ADDRESS;
             }
@@ -349,7 +358,7 @@ int EEPROM::CheckForDSPProfileSpace(DSP_PROFILE *const Profile, int *const Possi
             PredictedAddress = ActualAddress + ProfileSize;
 
             // If size can be stored here, use it.
-            if (PredictedAddress < FutureAddress)
+            if(PredictedAddress < FutureAddress)
             {
                 *PossibleProfileID = i;
                 return 0;
@@ -359,14 +368,16 @@ int EEPROM::CheckForDSPProfileSpace(DSP_PROFILE *const Profile, int *const Possi
     return -1;
 }
 
-int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
+int EEPROM::AddDSPProfile(DSP_PROFILE* const Profile, int* const ProfileNumber)
 {
-    std::cout << "[ EEPROM ][ AddDSPProfile ] : This function has not be fully tested yet... Waiting for real data." << std::endl;
+    std::cout << "[ EEPROM ][ AddDSPProfile ] : This function has not be fully tested yet... "
+                 "Waiting for real data."
+              << std::endl;
 
     int ret = 0;
 
     // Get Profile parameters
-    if (this->CheckForDSPProfileSpace(Profile, ProfileNumber) != 0)
+    if(this->CheckForDSPProfileSpace(Profile, ProfileNumber) != 0)
         return -1;
     int Address = this->Header->Profile[*ProfileNumber].Address;
 
@@ -374,8 +385,8 @@ int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
     int Pages = ceil(Profile->size / 64) + 1;
 
     // Malloc
-    uint8_t *buf = (uint8_t *)malloc(Pages * 64);
-    if (buf == nullptr)
+    uint8_t* buf = (uint8_t*)malloc(Pages * 64);
+    if(buf == nullptr)
         return -2;
     memset(buf, 0x00, (Pages * 64));
 
@@ -386,14 +397,14 @@ int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
     Profile->ReadBuffers(buf, &size);
 
     // Write data per 64 bytes pages
-    for (int i = 0; i < Pages; i++)
+    for(int i = 0; i < Pages; i++)
     {
         ret += this->Slave.Write((Address + (i * PAGE_SIZE)), &buf[i * PAGE_SIZE], PAGE_SIZE);
     }
 
     free(buf);
 
-    if (ret != 0)
+    if(ret != 0)
         return -3;
 
     // Update the header
@@ -409,25 +420,29 @@ int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
 
 int EEPROM::RemoveDSPProfile(const int ProfileNumber) // OK
 {
-    if (CheckProfileValue(ProfileNumber) != 0)
+    if(CheckProfileValue(ProfileNumber) != 0)
         return -1;
 
-    this->Header->DSP_PROFILE_NUMBER &= ~PROFILES[ProfileNumber - 1]; // Clear the corresponding bit.
-    this->Header->Profile[ProfileNumber].CRC = 0x0000;                // Reset the CRC to invalidate any read to it.
+    this->Header->DSP_PROFILE_NUMBER &=
+        ~PROFILES[ProfileNumber - 1]; // Clear the corresponding bit.
+    this->Header->Profile[ProfileNumber].CRC =
+        0x0000; // Reset the CRC to invalidate any read to it.
 
     // Update the header.
     int ret = this->WriteHeaderV1();
 
-    if (ret != 0)
+    if(ret != 0)
         return -2;
     return 0;
 }
 
 int EEPROM::GetDSPProfileName(const int ProfileNumber, char ProfileName[MAX_PROFILE_CHAR])
 {
-    std::cout << "[ EEPROM ][ GetDSPProfileName ] : This function has not be fully tested yet... Waiting for real data." << std::endl;
+    std::cout << "[ EEPROM ][ GetDSPProfileName ] : This function has not be fully tested yet... "
+                 "Waiting for real data."
+              << std::endl;
 
-    if (CheckProfileValue(ProfileNumber) != 0)
+    if(CheckProfileValue(ProfileNumber) != 0)
         return -1;
 
     // First, get the address
@@ -435,19 +450,19 @@ int EEPROM::GetDSPProfileName(const int ProfileNumber, char ProfileName[MAX_PROF
     std::cout << "Profile address " << (int)Address << std::endl;
 
     // Then, read
-    uint8_t *buf = (uint8_t *)malloc(MAX_PROFILE_CHAR);
-    if (buf == nullptr)
+    uint8_t* buf = (uint8_t*)malloc(MAX_PROFILE_CHAR);
+    if(buf == nullptr)
         return -1;
 
     int ret = this->Slave.Read(Address, buf, MAX_PROFILE_CHAR);
-    if (ret != 0)
+    if(ret != 0)
     {
         free(buf);
         return -2;
     }
 
     std::cout << "Speaker name : ";
-    for (int i = 0; i < MAX_PROFILE_CHAR; i++)
+    for(int i = 0; i < MAX_PROFILE_CHAR; i++)
         std::cout << buf[i];
     std::cout << std::endl;
 
@@ -457,11 +472,13 @@ int EEPROM::GetDSPProfileName(const int ProfileNumber, char ProfileName[MAX_PROF
     return 0;
 }
 
-int EEPROM::GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile)
+int EEPROM::GetDSPProfile(const int ProfileNumber, DSP_PROFILE* const Profile)
 {
-    std::cout << "[ EEPROM ][ GetDSPProfile ] : This function has not be fully tested yet... Waiting for real data." << std::endl;
+    std::cout << "[ EEPROM ][ GetDSPProfile ] : This function has not be fully tested yet... "
+                 "Waiting for real data."
+              << std::endl;
 
-    if (CheckProfileValue(ProfileNumber) != 0)
+    if(CheckProfileValue(ProfileNumber) != 0)
         return -1;
 
     // Get Profile parameters
@@ -471,8 +488,8 @@ int EEPROM::GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile)
     int Pages = ceil(Profile->size / 64) + 1;
 
     // Malloc
-    uint8_t *buf = (uint8_t *)malloc(Pages * 64);
-    if (buf == nullptr)
+    uint8_t* buf = (uint8_t*)malloc(Pages * 64);
+    if(buf == nullptr)
         return -2;
     memset(buf, 0x00, (Pages * 64));
 
@@ -485,20 +502,20 @@ int EEPROM::GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile)
     return 0;
 }
 
-int EEPROM::GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE_SIZE *const Profile) // OK
+int EEPROM::GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE_SIZE* const Profile) // OK
 {
-    if (CheckProfileValue(ProfileNumber) != 0)
+    if(CheckProfileValue(ProfileNumber) != 0)
         return -1;
 
-    switch (this->Header->Profile[ProfileNumber].Len)
+    switch(this->Header->Profile[ProfileNumber].Len)
     {
-    case (int)DSP_PROFILE_SIZE::LARGE:
+    case(int)DSP_PROFILE_SIZE::LARGE:
         *Profile = DSP_PROFILE_SIZE::LARGE;
 
-    case (int)DSP_PROFILE_SIZE::MEDIUM:
+    case(int)DSP_PROFILE_SIZE::MEDIUM:
         *Profile = DSP_PROFILE_SIZE::MEDIUM;
 
-    case (int)DSP_PROFILE_SIZE::SMALL:
+    case(int)DSP_PROFILE_SIZE::SMALL:
         *Profile = DSP_PROFILE_SIZE::SMALL;
     }
 

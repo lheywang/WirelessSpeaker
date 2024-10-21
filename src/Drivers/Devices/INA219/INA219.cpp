@@ -13,10 +13,10 @@
 #include "INA219.hpp"
 
 // Cpp modules
-#include <cstdint>
-#include <stdio.h>
-#include <math.h>
 #include "../../I2C/I2C.hpp"
+#include <cstdint>
+#include <math.h>
+#include <stdio.h>
 
 // =====================
 // REGISTERS
@@ -32,7 +32,7 @@ constexpr int CALIBRATION = 0x05;
 // CONSTRUCTORS
 // =====================
 
-INA219::INA219(const I2C_Bus *I2C, const CURRENT_MONITOR address)
+INA219::INA219(const I2C_Bus* I2C, const CURRENT_MONITOR address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;
@@ -58,7 +58,7 @@ float INA219::ConvertIntToFloat(const int Value)
     int Sign;
     int ToFloat;
 
-    switch (this->PGASetting)
+    switch(this->PGASetting)
     {
     case 1:
         Sign = Value & 0x8000;
@@ -78,8 +78,9 @@ float INA219::ConvertIntToFloat(const int Value)
         break;
     }
 
-    if (Sign == 1)
-        ToFloat = !ToFloat + 1; // Auto cast isn't properlyconstexpr intd here, thus we apply it by hand.
+    if(Sign == 1)
+        ToFloat =
+            !ToFloat + 1; // Auto cast isn't properlyconstexpr intd here, thus we apply it by hand.
 
     return Value / 100;
 }
@@ -90,7 +91,7 @@ int INA219::ConvertFloatToInt(const float Value)
     int buf = -((int)intermediate);
     int Sign = (buf < 0) ? 1 : 0;
 
-    switch (this->PGASetting)
+    switch(this->PGASetting)
     {
     case 1:
         return (Sign << 15) | (buf && 0x7FFFF);
@@ -112,15 +113,20 @@ int INA219::ConvertFloatToInt(const float Value)
 // FUNCTIONS
 // =====================
 
-int INA219::Configure(const int Reset, const int BusVoltageRange, const int SetPGAGain, const int BusVoltageADCResolution, const int BusCurrentADCResolution, const int OperatingMode)
+int INA219::Configure(const int Reset,
+                      const int BusVoltageRange,
+                      const int SetPGAGain,
+                      const int BusVoltageADCResolution,
+                      const int BusCurrentADCResolution,
+                      const int OperatingMode)
 {
-    if ((0 > SetPGAGain) | (SetPGAGain > 0x03))
+    if((0 > SetPGAGain) | (SetPGAGain > 0x03))
         return -1;
-    if ((0 > BusVoltageADCResolution) | (BusVoltageADCResolution > 0x0F))
+    if((0 > BusVoltageADCResolution) | (BusVoltageADCResolution > 0x0F))
         return -2;
-    if ((0 > BusCurrentADCResolution) | (BusCurrentADCResolution > 0x0F))
+    if((0 > BusCurrentADCResolution) | (BusCurrentADCResolution > 0x0F))
         return -3;
-    if ((0 > OperatingMode) | (OperatingMode > 0x07))
+    if((0 > OperatingMode) | (OperatingMode > 0x07))
         return -4;
 
     int res = 0;
@@ -135,21 +141,21 @@ int INA219::Configure(const int Reset, const int BusVoltageRange, const int SetP
 
     res += I2C_Write(&this->I2C, this->address, CONFIG, &buf, 1, 2);
 
-    if (res != 0)
+    if(res != 0)
         return -5;
 
     this->PGASetting = 4 - SetPGAGain;
     return 0;
 }
 
-int INA219::ReadShuntVoltage(float *const Value)
+int INA219::ReadShuntVoltage(float* const Value)
 {
     int res = 0;
     int buf = 0;
 
     res += I2C_Read(&this->I2C, this->address, SHUNTVOLTAGE, &buf, 1, 2);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     *Value = this->ConvertIntToFloat(buf);
@@ -157,14 +163,14 @@ int INA219::ReadShuntVoltage(float *const Value)
     return 0;
 }
 
-int INA219::ReadPower(float *const Value)
+int INA219::ReadPower(float* const Value)
 {
     int res = 0;
     int buf = 0;
 
     res += I2C_Read(&this->I2C, this->address, POWER, &buf, 1, 2);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     *Value = this->ConvertIntToFloat(buf);
@@ -172,14 +178,14 @@ int INA219::ReadPower(float *const Value)
     return 0;
 }
 
-int INA219::ReadCurrent(float *const Value)
+int INA219::ReadCurrent(float* const Value)
 {
     int res = 0;
     int buf = 0;
 
     res += I2C_Read(&this->I2C, this->address, BUSCURRENT, &buf, 1, 2);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     *Value = this->ConvertIntToFloat(buf);
@@ -194,24 +200,24 @@ int INA219::SetCalibration(const float Value)
 
     buf = this->ConvertFloatToInt(Value);
 
-    if (buf == -1)
+    if(buf == -1)
         return -1;
 
     res += I2C_Write(&this->I2C, this->address, CALIBRATION, &buf, 1, 2);
 
-    if (res != 0)
+    if(res != 0)
         return -2;
     return 0;
 }
 
-int INA219::ReadBusVoltage(float *const Value)
+int INA219::ReadBusVoltage(float* const Value)
 {
     int res = 0;
     int buf = 0;
 
     res += I2C_Read(&this->I2C, this->address, BUSVOLTAGE, &buf, 1, 2);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     *Value = this->ConvertIntToFloat(buf);

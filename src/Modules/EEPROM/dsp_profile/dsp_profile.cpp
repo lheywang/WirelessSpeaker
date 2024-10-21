@@ -14,16 +14,17 @@
 // ==============================================================================
 #include "dsp_profile.hpp"
 
-#include <iostream>
-#include <stdexcept>
-#include <math.h>
-#include <stdlib.h>
 #include <cstring>
+#include <iostream>
+#include <math.h>
+#include <stdexcept>
+#include <stdlib.h>
 
 // ==============================================================================
 // CONSTANTS
 // ==============================================================================
-constexpr int FixedPointFloatToIntPart = 1'048'576; // Constant equal 2^(20) to shift the farthest decimal to a integer.
+constexpr int FixedPointFloatToIntPart =
+    1'048'576; // Constant equal 2^(20) to shift the farthest decimal to a integer.
 
 // ==============================================================================
 // CONSTRUCTORS
@@ -32,20 +33,24 @@ constexpr int FixedPointFloatToIntPart = 1'048'576; // Constant equal 2^(20) to 
 DSP_PROFILE::DSP_PROFILE(char name[MAX_PROFILE_CHAR])
 {
     // Handle the name
-    this->Name = (char *)malloc(MAX_PROFILE_CHAR);
-    if (this->Name == nullptr)
-        throw std::runtime_error("[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the name.");
+    this->Name = (char*)malloc(MAX_PROFILE_CHAR);
+    if(this->Name == nullptr)
+        throw std::runtime_error(
+            "[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the name.");
 
     // Open buffers for instruction or coefficients.
-    this->bufferA = (uint8_t *)malloc(MAX_COEFF * 3);
-    this->bufferB = (uint8_t *)malloc(MAX_COEFF * 3);
-    this->instr = (uint8_t *)malloc(MAX_INSTR * 4);
-    if (this->bufferA == nullptr)
-        throw std::runtime_error("[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the buffer A.");
-    if (this->bufferB == nullptr)
-        throw std::runtime_error("[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the buffer B.");
-    if (this->instr == nullptr)
-        throw std::runtime_error("[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the instruction buffer.");
+    this->bufferA = (uint8_t*)malloc(MAX_COEFF * 3);
+    this->bufferB = (uint8_t*)malloc(MAX_COEFF * 3);
+    this->instr = (uint8_t*)malloc(MAX_INSTR * 4);
+    if(this->bufferA == nullptr)
+        throw std::runtime_error(
+            "[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the buffer A.");
+    if(this->bufferB == nullptr)
+        throw std::runtime_error(
+            "[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the buffer B.");
+    if(this->instr == nullptr)
+        throw std::runtime_error("[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for "
+                                 "the instruction buffer.");
 
     // Make sure data is cleaned
     memset(this->bufferA, 0x00, MAX_COEFF * 3);
@@ -67,14 +72,15 @@ DSP_PROFILE::DSP_PROFILE(char name[MAX_PROFILE_CHAR])
 DSP_PROFILE::DSP_PROFILE(char name[MAX_PROFILE_CHAR], const DSP_PROFILE_SIZE len)
 {
     // Handle the name
-    this->Name = (char *)malloc(MAX_PROFILE_CHAR);
-    if (this->Name == nullptr)
-        throw std::runtime_error("[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the name.");
+    this->Name = (char*)malloc(MAX_PROFILE_CHAR);
+    if(this->Name == nullptr)
+        throw std::runtime_error(
+            "[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the name.");
 
     // Open buffers for instruction or coefficients.
     int coeff = 0;
     int instr = 0;
-    switch (len)
+    switch(len)
     {
     case DSP_PROFILE_SIZE::LARGE:
         coeff = MAX_COEFF;
@@ -92,15 +98,18 @@ DSP_PROFILE::DSP_PROFILE(char name[MAX_PROFILE_CHAR], const DSP_PROFILE_SIZE len
         break;
     }
 
-    this->bufferA = (uint8_t *)malloc(coeff * 3);
-    this->bufferB = (uint8_t *)malloc(coeff * 3);
-    this->instr = (uint8_t *)malloc(instr * 4);
-    if (this->bufferA == nullptr)
-        throw std::runtime_error("[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the buffer A.");
-    if (this->bufferB == nullptr)
-        throw std::runtime_error("[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the buffer B.");
-    if (this->instr == nullptr)
-        throw std::runtime_error("[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the instruction buffer.");
+    this->bufferA = (uint8_t*)malloc(coeff * 3);
+    this->bufferB = (uint8_t*)malloc(coeff * 3);
+    this->instr = (uint8_t*)malloc(instr * 4);
+    if(this->bufferA == nullptr)
+        throw std::runtime_error(
+            "[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the buffer A.");
+    if(this->bufferB == nullptr)
+        throw std::runtime_error(
+            "[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for the buffer B.");
+    if(this->instr == nullptr)
+        throw std::runtime_error("[ DSP PROFILE ][ CONSTRUCTOR ] : Failed to allocate memory for "
+                                 "the instruction buffer.");
 
     // Make sure data is cleaned
     memset(this->bufferA, 0x00, coeff * 3);
@@ -125,28 +134,28 @@ DSP_PROFILE::DSP_PROFILE(char name[MAX_PROFILE_CHAR], const DSP_PROFILE_SIZE len
 DSP_PROFILE::~DSP_PROFILE()
 {
     // Buffer A
-    if (this->bufferA != nullptr)
+    if(this->bufferA != nullptr)
     {
         free(this->bufferA);
         this->bufferA = nullptr;
     }
 
     // Buffer B
-    if (this->bufferB != nullptr)
+    if(this->bufferB != nullptr)
     {
         free(this->bufferB);
         this->bufferB = nullptr;
     }
 
     // Buffer instr
-    if (this->instr != nullptr)
+    if(this->instr != nullptr)
     {
         free(this->instr);
         this->instr = nullptr;
     }
 
     // Buffer Name
-    if (this->Name != nullptr)
+    if(this->Name != nullptr)
     {
         free(this->Name);
         this->Name = nullptr;
@@ -159,7 +168,7 @@ DSP_PROFILE::~DSP_PROFILE()
 // PRIVATE UTILITIES FUNCTIONS
 // ==============================================================================
 
-int ConvertFloatToFixedPoint4dot20(const float In, int *const Out)
+int ConvertFloatToFixedPoint4dot20(const float In, int* const Out)
 {
     // The number in the the function will be expressed as :
     // SA.B where
@@ -171,19 +180,19 @@ int ConvertFloatToFixedPoint4dot20(const float In, int *const Out)
     int B = 0;
 
     // Check for capability on the DSP buffer
-    if (In < 0)
+    if(In < 0)
     {
         A = round(In);
         S = 1;
 
-        if (A > 7)
+        if(A > 7)
             return -1;
     }
     else
     {
         A = round(In);
         S = 0;
-        if (A < -7)
+        if(A < -7)
             return -1;
     }
 
@@ -202,10 +211,10 @@ int ConvertFloatToFixedPoint4dot20(const float In, int *const Out)
 // PRIVATE
 // ==============================================================================
 
-int DSP_PROFILE::ReadBuffers(uint8_t *const buf, int *const Len)
+int DSP_PROFILE::ReadBuffers(uint8_t* const buf, int* const Len)
 {
     // Safety checks
-    if (*Len < this->size)
+    if(*Len < this->size)
         return -1;
 
     // Copy the differents data as the memory layout define it !
@@ -213,16 +222,18 @@ int DSP_PROFILE::ReadBuffers(uint8_t *const buf, int *const Len)
     memcpy(&buf[0], this->Name, MAX_PROFILE_CHAR);
     memcpy(&buf[MAX_PROFILE_CHAR], this->bufferA, this->sizebufferA);
     memcpy(&buf[MAX_PROFILE_CHAR + this->sizebufferA], this->bufferA, this->sizebufferB);
-    memcpy(&buf[MAX_PROFILE_CHAR + this->sizebufferA + this->sizebufferB], this->bufferA, this->sizeinstr);
+    memcpy(&buf[MAX_PROFILE_CHAR + this->sizebufferA + this->sizebufferB],
+           this->bufferA,
+           this->sizeinstr);
 
     *Len = MAX_PROFILE_CHAR + this->sizebufferA + this->sizebufferB + this->sizeinstr;
     return 0;
 }
 
-int DSP_PROFILE::WriteBuffers(uint8_t *const buf, int *const Len)
+int DSP_PROFILE::WriteBuffers(uint8_t* const buf, int* const Len)
 {
     // Safety checks
-    if (*Len > this->size)
+    if(*Len > this->size)
         return -1;
 
     // Copy the differents data as the memory layout define it !
@@ -230,7 +241,9 @@ int DSP_PROFILE::WriteBuffers(uint8_t *const buf, int *const Len)
     memcpy(this->Name, &buf[0], MAX_PROFILE_CHAR);
     memcpy(this->bufferA, &buf[MAX_PROFILE_CHAR], this->sizebufferA);
     memcpy(this->bufferB, &buf[MAX_PROFILE_CHAR + this->sizebufferA], this->sizebufferB);
-    memcpy(this->instr, &buf[MAX_PROFILE_CHAR + this->sizebufferA + this->sizebufferB], this->sizeinstr);
+    memcpy(this->instr,
+           &buf[MAX_PROFILE_CHAR + this->sizebufferA + this->sizebufferB],
+           this->sizeinstr);
 
     *Len = MAX_PROFILE_CHAR + this->sizebufferA + this->sizebufferB + this->sizeinstr;
     return 0;
@@ -245,14 +258,14 @@ int DSP_PROFILE::LoadDefaultProfile(const int Profile)
     return 0;
 }
 
-int DSP_PROFILE::WriteInstructions(int *const Instructions, const int bufLen)
+int DSP_PROFILE::WriteInstructions(int* const Instructions, const int bufLen)
 {
-    if (bufLen > this->sizeinstr)
+    if(bufLen > this->sizeinstr)
         return -1;
 
     int bufaddr = 0;
 
-    for (int i = 0; i < bufLen; i++)
+    for(int i = 0; i < bufLen; i++)
     {
         bufaddr = i * 4;
         this->instr[bufaddr] = (Instructions[i] & 0xFF000000) >> 24;
@@ -263,17 +276,17 @@ int DSP_PROFILE::WriteInstructions(int *const Instructions, const int bufLen)
     return 0;
 }
 
-int DSP_PROFILE::WriteBufferB(float *const buf, const int bufLen)
+int DSP_PROFILE::WriteBufferB(float* const buf, const int bufLen)
 {
-    if (bufLen > this->sizeinstr)
+    if(bufLen > this->sizeinstr)
         return -1;
 
     int bufaddr = 0;
     int t = 0;
 
-    for (int i = 0; i < bufLen; i++)
+    for(int i = 0; i < bufLen; i++)
     {
-        if (ConvertFloatToFixedPoint4dot20(buf[i], &t) != 0)
+        if(ConvertFloatToFixedPoint4dot20(buf[i], &t) != 0)
             return -2;
 
         bufaddr = i * 3;
@@ -284,17 +297,17 @@ int DSP_PROFILE::WriteBufferB(float *const buf, const int bufLen)
     return 0;
 }
 
-int DSP_PROFILE::WriteBufferA(float *const buf, const int bufLen)
+int DSP_PROFILE::WriteBufferA(float* const buf, const int bufLen)
 {
-    if (bufLen > this->sizeinstr)
+    if(bufLen > this->sizeinstr)
         return -1;
 
     int bufaddr = 0;
     int t = 0;
 
-    for (int i = 0; i < bufLen; i++)
+    for(int i = 0; i < bufLen; i++)
     {
-        if (ConvertFloatToFixedPoint4dot20(buf[i], &t) != 0)
+        if(ConvertFloatToFixedPoint4dot20(buf[i], &t) != 0)
             return -2;
 
         bufaddr = i * 3;
@@ -305,19 +318,19 @@ int DSP_PROFILE::WriteBufferA(float *const buf, const int bufLen)
     return 0;
 }
 
-int DSP_PROFILE::ReturnBufferAValues(uint8_t *const buf)
+int DSP_PROFILE::ReturnBufferAValues(uint8_t* const buf)
 {
     memcpy(buf, this->bufferA, this->sizebufferA);
     return 0;
 }
 
-int DSP_PROFILE::ReturnBufferBValues(uint8_t *const buf)
+int DSP_PROFILE::ReturnBufferBValues(uint8_t* const buf)
 {
     memcpy(buf, this->bufferB, this->sizebufferB);
     return 0;
 }
 
-int DSP_PROFILE::ReturnInstrBufferValues(uint8_t *const buf)
+int DSP_PROFILE::ReturnInstrBufferValues(uint8_t* const buf)
 {
     memcpy(buf, this->instr, this->sizeinstr);
     return 0;

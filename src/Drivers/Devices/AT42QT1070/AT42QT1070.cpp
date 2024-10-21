@@ -15,8 +15,8 @@
 #include "AT42QT1070.hpp"
 
 // Cpp modules
-#include <cstdint>
 #include "../../I2C/I2C.hpp"
+#include <cstdint>
 
 // ==============================================================================
 // IC REGISTER ADDRESSES
@@ -81,7 +81,7 @@ constexpr int DETECTION_INTEGRATOR_COUNTER_KEY_6 = 0x34;
 // CONSTRUCTORS
 // =====================
 
-AT42QT1070::AT42QT1070(const I2C_Bus *I2C)
+AT42QT1070::AT42QT1070(const I2C_Bus* I2C)
 {
     this->address = (uint8_t)TOUCHSENSOR::TOUCH_0;
     this->I2C = *I2C;
@@ -101,7 +101,7 @@ AT42QT1070::~AT42QT1070()
 // FUNCTIONS
 // =====================
 
-int AT42QT1070::GetIDs(int *const ID, int *const FirmwareRevision)
+int AT42QT1070::GetIDs(int* const ID, int* const FirmwareRevision)
 {
     int buf[2] = {0};
     int res = 0;
@@ -112,12 +112,15 @@ int AT42QT1070::GetIDs(int *const ID, int *const FirmwareRevision)
     *ID = buf[0];
     *FirmwareRevision = buf[1];
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
 
-int AT42QT1070::GetKeysStatus(int *const Calibration, int *const Overflow, int *const Touch, int *const Keys)
+int AT42QT1070::GetKeysStatus(int* const Calibration,
+                              int* const Overflow,
+                              int* const Touch,
+                              int* const Keys)
 {
     int buf[2] = {0};
     int res = 0;
@@ -131,12 +134,12 @@ int AT42QT1070::GetKeysStatus(int *const Calibration, int *const Overflow, int *
     *Touch = (buf[0] & 0x01);
     *Keys = buf[1];
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
 
-int AT42QT1070::GetKeySignals(const TOUCH_KEYS Key, int *const Value)
+int AT42QT1070::GetKeySignals(const TOUCH_KEYS Key, int* const Value)
 {
     int buf[2] = {0};
     int res = 0;
@@ -147,12 +150,12 @@ int AT42QT1070::GetKeySignals(const TOUCH_KEYS Key, int *const Value)
 
     *Value = (buf[0] << 8) | buf[1];
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
 
-int AT42QT1070::GetKeyReferenceSignal(const TOUCH_KEYS Key, int *const Value)
+int AT42QT1070::GetKeyReferenceSignal(const TOUCH_KEYS Key, int* const Value)
 {
     int buf[2] = {0};
     int res = 0;
@@ -163,7 +166,7 @@ int AT42QT1070::GetKeyReferenceSignal(const TOUCH_KEYS Key, int *const Value)
 
     *Value = (buf[0] << 8) | buf[1];
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
@@ -176,12 +179,12 @@ int AT42QT1070::SetReferenceThreshold(const TOUCH_KEYS Key, const int Value)
     // Offset from key to make the call easier.
     res = I2C_Write(&this->I2C, this->address, ((int)Key + NEGATIVE_THRESHOLD_KEY_0), &buf);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
 
-int AT42QT1070::GetReferenceThreshold(const TOUCH_KEYS Key, int *const Value)
+int AT42QT1070::GetReferenceThreshold(const TOUCH_KEYS Key, int* const Value)
 {
     int res = 0;
     int buf = 0;
@@ -191,7 +194,7 @@ int AT42QT1070::GetReferenceThreshold(const TOUCH_KEYS Key, int *const Value)
 
     *Value = buf;
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
@@ -204,12 +207,12 @@ int AT42QT1070::SetAdjacentKeySuppresion(const TOUCH_KEYS Key, const int Value)
     // Offset from key to make the call easier.
     res = I2C_Write(&this->I2C, this->address, ((int)Key + ADJACENT_SUPPRESSION_LEVEL_KEY_0), &buf);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
 
-int AT42QT1070::GetAdjacentKeySuppresion(const TOUCH_KEYS Key, int *const Value)
+int AT42QT1070::GetAdjacentKeySuppresion(const TOUCH_KEYS Key, int* const Value)
 {
     int res = 0;
     int buf = 0;
@@ -219,7 +222,7 @@ int AT42QT1070::GetAdjacentKeySuppresion(const TOUCH_KEYS Key, int *const Value)
 
     *Value = buf;
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
@@ -230,24 +233,26 @@ int AT42QT1070::SetDetectionIntegrator(const TOUCH_KEYS Key, const int Value)
     int res = 0;
 
     // Offset from key to make the call easier.
-    res = I2C_Write(&this->I2C, this->address, ((int)Key + DETECTION_INTEGRATOR_COUNTER_KEY_0), &buf);
+    res =
+        I2C_Write(&this->I2C, this->address, ((int)Key + DETECTION_INTEGRATOR_COUNTER_KEY_0), &buf);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
 
-int AT42QT1070::GetDetectionIntegrator(const TOUCH_KEYS Key, int *const Value)
+int AT42QT1070::GetDetectionIntegrator(const TOUCH_KEYS Key, int* const Value)
 {
     int res = 0;
     int buf = 0;
 
     // Offset from key to make the call easier.
-    res = I2C_Read(&this->I2C, this->address, ((int)Key + DETECTION_INTEGRATOR_COUNTER_KEY_0), &buf);
+    res =
+        I2C_Read(&this->I2C, this->address, ((int)Key + DETECTION_INTEGRATOR_COUNTER_KEY_0), &buf);
 
     *Value = buf;
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
@@ -261,11 +266,11 @@ int AT42QT1070::ConfigureCapacitiveSensor(const int FastOut,
                                           const int nRESET)
 {
 
-    if ((GuardChannel < 0) | (GuardChannel > 0x0F))
+    if((GuardChannel < 0) | (GuardChannel > 0x0F))
         return -1;
-    if ((LowPower < 0) | (LowPower > 0xFF))
+    if((LowPower < 0) | (LowPower > 0xFF))
         return -2;
-    if ((MaxOnDuration < 0) | (MaxOnDuration > 0xFF))
+    if((MaxOnDuration < 0) | (MaxOnDuration > 0xFF))
         return -3;
 
     int buf = 0;
@@ -289,7 +294,7 @@ int AT42QT1070::ConfigureCapacitiveSensor(const int FastOut,
     buf = nRESET;
     res += I2C_Write(&this->I2C, this->address, FASTOUT_MAXCAL_GUARD, &buf);
 
-    if (res != 0)
+    if(res != 0)
         return -4;
     return 0;
 }

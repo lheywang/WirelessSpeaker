@@ -15,8 +15,8 @@
 #pragma once
 
 // type include
-#include <cstdint>
 #include "../../I2C/I2C.hpp"
+#include <cstdint>
 
 // ==============================================================================
 // PUBLIC DEFINES
@@ -55,7 +55,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      *
      */
-    AT42QT1070(const I2C_Bus *I2C);
+    AT42QT1070(const I2C_Bus* I2C);
 
     /**
      * @brief Destroy the AT42QT1070 object
@@ -73,7 +73,7 @@ public:
      * @return -1 : IOCTL error.
      *
      */
-    int GetIDs(int *const ID, int *const FirmwareRevision);
+    int GetIDs(int* const ID, int* const FirmwareRevision);
 
     /**
      * @brief Get the Keys Status (ALL Channels + Others Infos)
@@ -87,7 +87,8 @@ public:
      * @return -1 : IOCTL error.
      *
      */
-    int GetKeysStatus(int *const Calibration, int *const Overflow, int *const Touch, int *const Keys);
+    int
+    GetKeysStatus(int* const Calibration, int* const Overflow, int* const Touch, int* const Keys);
 
     /**
      * @brief Get the Key Signals for a channel.
@@ -99,7 +100,7 @@ public:
      * @return -1 : IOCTL error.
      *
      */
-    int GetKeySignals(const TOUCH_KEYS Key, int *const Value);
+    int GetKeySignals(const TOUCH_KEYS Key, int* const Value);
 
     /**
      * @brief Get the Key Reference Signal for a channel.
@@ -111,7 +112,7 @@ public:
      * @return -1 : IOCTL error.
      *
      */
-    int GetKeyReferenceSignal(const TOUCH_KEYS Key, int *const Value);
+    int GetKeyReferenceSignal(const TOUCH_KEYS Key, int* const Value);
 
     /**
      * @brief Configure the reference threshold value for a channel.
@@ -136,7 +137,7 @@ public:
      * @return -1 : IOCTL error.
      *
      */
-    int GetReferenceThreshold(const TOUCH_KEYS Key, int *const Value);
+    int GetReferenceThreshold(const TOUCH_KEYS Key, int* const Value);
 
     /**
      * @brief Set the Adjacent Key Suppresion object for a channel.
@@ -160,7 +161,7 @@ public:
      * @return -1 : IOCTL error.
      *
      */
-    int GetAdjacentKeySuppresion(const TOUCH_KEYS Key, int *const Value);
+    int GetAdjacentKeySuppresion(const TOUCH_KEYS Key, int* const Value);
 
     /**
      * @brief Set the Detection Integrator value for a channel.
@@ -184,7 +185,7 @@ public:
      * @return -1 : IOCTL error.
      *
      */
-    int GetDetectionIntegrator(const TOUCH_KEYS Key, int *const Value);
+    int GetDetectionIntegrator(const TOUCH_KEYS Key, int* const Value);
 
     /**
      * @brief Configure the behavior of the IC

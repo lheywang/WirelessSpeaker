@@ -12,8 +12,8 @@
 #pragma once
 
 // type include
-#include <cstdint>
 #include "../../I2C/I2C.hpp"
+#include <cstdint>
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -36,7 +36,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    MCP45HV51(const I2C_Bus *I2C, const LIN_POTI address);
+    MCP45HV51(const I2C_Bus* I2C, const LIN_POTI address);
 
     /**
      * @brief Destroy the MCP45HV51 object
@@ -85,7 +85,7 @@ public:
      *
      * @test Function to test !
      */
-    int ReadWiper(int *const Value);
+    int ReadWiper(int* const Value);
 
     /**
      * @brief Increment the wiper value

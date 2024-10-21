@@ -14,118 +14,104 @@
 // ==============================================================================
 #include "SPI.hpp"
 
-#include <sys/ioctl.h>
+#include <cstdint>
+#include <errno.h>
+#include <fcntl.h>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
-#include <cstdint>
 #include <string.h>
-#include <iostream>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 // ==============================================================================
 // FUNCTIONS
 // ==============================================================================
 
-SPI_Bus *SPI_GetInfos()
+SPI_Bus* SPI_GetInfos()
 {
-    SPI_Bus *SPI = new SPI_Bus;
+    SPI_Bus* SPI = new SPI_Bus;
 
     // Set up variables
     SPI->CS_number = (int)SPI_SETTINGS::BUS_MAX_CS - 1;
     SPI->SPI_Bus = (int)SPI_SETTINGS::BUS_NUMBER;
 
-    snprintf(SPI->SPI_Filename, sizeof(SPI->SPI_Filename), "/dev/spidev%d.%d", SPI->SPI_Bus, SPI->CS_number);
+    snprintf(SPI->SPI_Filename,
+             sizeof(SPI->SPI_Filename),
+             "/dev/spidev%d.%d",
+             SPI->SPI_Bus,
+             SPI->CS_number);
     SPI->SPI_Filename[sizeof(SPI->SPI_Filename) - 1] = '\0';
 
     // Open the file
     SPI->SPI_file = open(SPI->SPI_Filename, O_RDWR);
 
-    if (SPI->SPI_file < 0)
+    if(SPI->SPI_file < 0)
     {
         std::cerr << "[ SPI ][ GetInfos ] : Could not open the requested SPI bus : "
-                  << strerror(errno)
-                  << std::endl;
+                  << strerror(errno) << std::endl;
         SPI->SPI_file = (int)NULL;
     }
 
     return SPI;
 }
 
-int SPI_Close(SPI_Bus *SPI)
+int SPI_Close(SPI_Bus* SPI)
 {
     close(SPI->SPI_file);
     delete SPI;
     return 0;
 }
 
-int SPI_Configure(SPI_Bus *SPI, int Mode, int WordSize, int Speed)
+int SPI_Configure(SPI_Bus* SPI, int Mode, int WordSize, int Speed)
 {
     int res = 0;
 
     // Configure the modes
     res = ioctl(SPI->SPI_file, SPI_IOC_WR_MODE, &Mode);
-    if (res < 0)
+    if(res < 0)
     {
-        std::cerr << "[ SPI ][ ConfigureBUS ] : Could not set the write mode on "
-                  << SPI->SPI_Bus
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+        std::cerr << "[ SPI ][ ConfigureBUS ] : Could not set the write mode on " << SPI->SPI_Bus
+                  << " : " << strerror(errno) << std::endl;
         return -1;
     }
     res = ioctl(SPI->SPI_file, SPI_IOC_RD_MODE, &Mode);
-    if (res < 0)
+    if(res < 0)
     {
-        std::cerr << "[ SPI ][ ConfigureBUS ] : Could not set the read mode on "
-                  << SPI->SPI_Bus
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+        std::cerr << "[ SPI ][ ConfigureBUS ] : Could not set the read mode on " << SPI->SPI_Bus
+                  << " : " << strerror(errno) << std::endl;
         return -1;
     }
 
     // Configure the word lengh
     res = ioctl(SPI->SPI_file, SPI_IOC_WR_BITS_PER_WORD, &WordSize);
-    if (res < 0)
+    if(res < 0)
     {
         std::cerr << "[ SPI ][ ConfigureBUS ] : Could not set the write word lengh on "
-                  << SPI->SPI_Bus
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+                  << SPI->SPI_Bus << " : " << strerror(errno) << std::endl;
         return -2;
     }
     res = ioctl(SPI->SPI_file, SPI_IOC_RD_BITS_PER_WORD, &WordSize);
-    if (res < 0)
+    if(res < 0)
     {
         std::cerr << "[ SPI ][ ConfigureBUS ] : Could not set the read word lengh  on "
-                  << SPI->SPI_Bus << " : "
-                  << strerror(errno)
-                  << std::endl;
+                  << SPI->SPI_Bus << " : " << strerror(errno) << std::endl;
         return -2;
     }
 
     // Configure SPI Speeds
     res = ioctl(SPI->SPI_file, SPI_IOC_WR_MAX_SPEED_HZ, &Speed);
-    if (res < 0)
+    if(res < 0)
     {
-        std::cerr << "[ SPI ][ ConfigureBUS ] : Could not set the write speed on"
-                  << SPI->SPI_Bus
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+        std::cerr << "[ SPI ][ ConfigureBUS ] : Could not set the write speed on" << SPI->SPI_Bus
+                  << " : " << strerror(errno) << std::endl;
         return -3;
     }
     res = ioctl(SPI->SPI_file, SPI_IOC_RD_MAX_SPEED_HZ, &Speed);
-    if (res < 0)
+    if(res < 0)
     {
-        std::cerr << "[ SPI ][ ConfigureBUS ] : Could not set the read speed on "
-                  << SPI->SPI_Bus
-                  << " : "
-                  << strerror(errno)
-                  << std::endl;
+        std::cerr << "[ SPI ][ ConfigureBUS ] : Could not set the read speed on " << SPI->SPI_Bus
+                  << " : " << strerror(errno) << std::endl;
         return -3;
     }
 

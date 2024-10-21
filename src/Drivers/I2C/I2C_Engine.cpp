@@ -16,16 +16,16 @@
 // ==============================================================================
 #include "I2C.hpp"
 
+#include <cstdint>
+#include <errno.h>
+#include <fcntl.h>
+#include <iostream>
 #include <linux/i2c-dev.h>
-#include <sys/ioctl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
-#include <cstdint>
 #include <string.h>
-#include <iostream>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 // Custom builded smbus.h file, from the original repo : https://github.com/Sensirion/i2c-tools/tree/master
 // Only includes path were modified.
@@ -35,7 +35,7 @@
 // ==============================================================================
 // PRIVATE FUNCTIONS
 // ==============================================================================
-int I2C_ConfigureAddress(I2C_Bus *I2C, int Address);
+int I2C_ConfigureAddress(I2C_Bus* I2C, int Address);
 int I2C_CheckRegister(int Register);
 int I2C_CheckAddress(int Address);
 
@@ -44,10 +44,10 @@ int I2C_CheckAddress(int Address);
 // ==============================================================================
 
 // ------------------------------------------------------------------------------
-I2C_Bus *I2C_GetInfos()
+I2C_Bus* I2C_GetInfos()
 {
     // Create struct
-    I2C_Bus *I2C = new I2C_Bus;
+    I2C_Bus* I2C = new I2C_Bus;
 
     I2C->I2C_bus = I2C_BUS_NUMBER;
 
@@ -58,11 +58,10 @@ I2C_Bus *I2C_GetInfos()
     // Open the file
     I2C->I2C_file = open(I2C->I2C_filename, O_RDWR);
 
-    if (I2C->I2C_file < 0)
+    if(I2C->I2C_file < 0)
     {
         std::cerr << "[ I2C ][ GetInfos ] : Could not open the requested I2C bus : "
-                  << strerror(errno)
-                  << std::endl;
+                  << strerror(errno) << std::endl;
         I2C->I2C_file = (int)NULL;
     }
 
@@ -70,7 +69,7 @@ I2C_Bus *I2C_GetInfos()
 }
 
 // ------------------------------------------------------------------------------
-int I2C_Close(I2C_Bus *I2C)
+int I2C_Close(I2C_Bus* I2C)
 {
     close(I2C->I2C_file);
     delete I2C;
@@ -78,12 +77,12 @@ int I2C_Close(I2C_Bus *I2C)
 }
 
 // ------------------------------------------------------------------------------
-int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, int DataSize)
+int I2C_Write(I2C_Bus* I2C, int Address, int Register, int* Payload, int Size, int DataSize)
 {
     // basics checks
-    if (I2C_CheckAddress(Address) != 0)
+    if(I2C_CheckAddress(Address) != 0)
         return -1;
-    if (I2C_CheckRegister(Register) != 0)
+    if(I2C_CheckRegister(Register) != 0)
         return -2;
 
     int res = 0;
@@ -91,28 +90,28 @@ int I2C_Write(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, i
     // address conf to the driver
     I2C_ConfigureAddress(I2C, (uint8_t)Address);
 
-    for (int i = 0; i < Size; i++)
+    for(int i = 0; i < Size; i++)
     {
-        if (DataSize == 1)
+        if(DataSize == 1)
             res = i2c_smbus_write_byte_data(I2C->I2C_file, Register + i, (uint8_t)Payload[i]);
         else
             res = i2c_smbus_write_word_data(I2C->I2C_file, Register + i, (uint16_t)Payload[i]);
     }
 
-    if (res != 0)
+    if(res != 0)
         return -4;
     return 0;
 }
 
 // ------------------------------------------------------------------------------
-int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, int DataSize)
+int I2C_Read(I2C_Bus* I2C, int Address, int Register, int* Payload, int Size, int DataSize)
 {
     // basics checks
-    if (I2C_CheckAddress(Address) != 0)
+    if(I2C_CheckAddress(Address) != 0)
         return -1;
-    if (I2C_CheckRegister(Register) != 0)
+    if(I2C_CheckRegister(Register) != 0)
         return -2;
-    if (Size > 0xFF)
+    if(Size > 0xFF)
         return -3;
 
     int res = 0;
@@ -121,11 +120,11 @@ int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, in
     I2C_ConfigureAddress(I2C, Address);
 
     // If data == 0 (We send only a command !)
-    for (int i = 0; i < Size; i++)
+    for(int i = 0; i < Size; i++)
     {
-        if (DataSize == 1)
+        if(DataSize == 1)
             res = i2c_smbus_read_byte_data(I2C->I2C_file, Register + i);
-        else if (DataSize == 2)
+        else if(DataSize == 2)
             res = i2c_smbus_read_word_data(I2C->I2C_file, Register + i);
         Payload[i] = res;
     }
@@ -133,12 +132,11 @@ int I2C_Read(I2C_Bus *I2C, int Address, int Register, int *Payload, int Size, in
 }
 
 // ------------------------------------------------------------------------------
-int I2C_ConfigureAddress(I2C_Bus *I2C, int Address)
+int I2C_ConfigureAddress(I2C_Bus* I2C, int Address)
 {
-    if (ioctl(I2C->I2C_file, I2C_SLAVE, Address) < 0)
+    if(ioctl(I2C->I2C_file, I2C_SLAVE, Address) < 0)
     {
-        std::cerr << "[ I2C ][ ConfigureAddress ] : Could not set address : "
-                  << strerror(errno)
+        std::cerr << "[ I2C ][ ConfigureAddress ] : Could not set address : " << strerror(errno)
                   << std::endl;
         return -errno;
     }
@@ -147,7 +145,7 @@ int I2C_ConfigureAddress(I2C_Bus *I2C, int Address)
 // ------------------------------------------------------------------------------
 int I2C_CheckAddress(int Address)
 {
-    if (Address < 0x08 or Address > 0x77)
+    if(Address < 0x08 or Address > 0x77)
         return -1;
     return 0;
 }
@@ -155,7 +153,7 @@ int I2C_CheckAddress(int Address)
 // ------------------------------------------------------------------------------
 int I2C_CheckRegister(int Register)
 {
-    if (Register > 0xFF)
+    if(Register > 0xFF)
         return -1;
     return 0;
 }

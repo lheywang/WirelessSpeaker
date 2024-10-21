@@ -14,8 +14,8 @@
 #pragma once
 
 // type include
-#include <cstdint>
 #include "../../I2C/I2C.hpp"
+#include <cstdint>
 
 // ==============================================================================
 // PUBLIC ENUMS
@@ -24,10 +24,10 @@
 /*! Define LED operating modes */
 enum class LED_MODES
 {
-    OFF = 0x00,      /*!< Drivers at low state (thus LED ON !) */
-    ON = 0x01,       /*!< Drivers at high state (thus LED OFF !) */
-    IN = 0x02,       /*!< Drivers at high-Z */
-    PWM = 0x02,      /*!< Driver managed by PWM */
+    OFF = 0x00, /*!< Drivers at low state (thus LED ON !) */
+    ON = 0x01, /*!< Drivers at high state (thus LED OFF !) */
+    IN = 0x02, /*!< Drivers at high-Z */
+    PWM = 0x02, /*!< Driver managed by PWM */
     PWM_GLOB = 0x03, /*!< Driver managed by PWM + global Dimming */
 };
 
@@ -43,9 +43,9 @@ enum class LED_CHANNELS
 /*! Define PCA9633 I2C Subaddresses*/
 enum class LED_ADDRESS
 {
-    ADDRESS1 = 0x09,    /*!< First Address */
-    ADDRESS2 = 0x0A,    /*!< Second Address */
-    ADDRESS3 = 0x0B,    /*!< Third Address */
+    ADDRESS1 = 0x09, /*!< First Address */
+    ADDRESS2 = 0x0A, /*!< Second Address */
+    ADDRESS3 = 0x0B, /*!< Third Address */
     ALL_ADDRESS = 0x0C, /*!< Adress for all response*/
 };
 
@@ -70,7 +70,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    PCA9633(const I2C_Bus *I2C, const LED_DRIVERS address);
+    PCA9633(const I2C_Bus* I2C, const LED_DRIVERS address);
 
     /**
      * @brief Destroy the PCA9633 object
@@ -121,7 +121,9 @@ public:
      * @return -1 : Invalid AutoIncrement value (Too big or 0).
      * @return -2 : IOCTL error.
      */
-    int ConfigureDutyCycle(const LED_CHANNELS FirstChannel, int *const Value, const int AutoIncrement = 1);
+    int ConfigureDutyCycle(const LED_CHANNELS FirstChannel,
+                           int* const Value,
+                           const int AutoIncrement = 1);
 
     /**
      * @brief Configure the global dimming circuitry on the chip.
@@ -164,7 +166,10 @@ public:
      * @return  0 : OK
      * @return -1 : IOCTL error.
      */
-    int SetLedStatus(const LED_CHANNELS LED1, const LED_CHANNELS LED2, const LED_CHANNELS LED3, const LED_CHANNELS LED4);
+    int SetLedStatus(const LED_CHANNELS LED1,
+                     const LED_CHANNELS LED2,
+                     const LED_CHANNELS LED3,
+                     const LED_CHANNELS LED4);
 
     /**
      * @brief Configure a Subaddress of the IC.

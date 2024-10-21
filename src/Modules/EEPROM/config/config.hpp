@@ -17,10 +17,11 @@
 
 // Sub Structs
 #include "audio/struct_audio.hpp"
-#include "interfaces/struct_user_interfaces.hpp"
 #include "interfaces/struct_automated_interfaces.hpp"
+#include "interfaces/struct_user_interfaces.hpp"
 
-constexpr int MAX_CHAR_SPEAKER_NAME = 32; /*!< Define the maximal lengh allowed for the Speaker friendly name*/
+constexpr int MAX_CHAR_SPEAKER_NAME =
+    32; /*!< Define the maximal lengh allowed for the Speaker friendly name*/
 
 /*! Define values that are stored on the EEPROM for the overall speaker configuration */
 struct CONFIG_V1
@@ -41,7 +42,8 @@ struct CONFIG_V1
 
     // End of first page
 
-    char SpeakerName[MAX_CHAR_SPEAKER_NAME * 2] = {0x00}; /*!< Configure the speaker friendly name. UTF16 Accepted !*/
+    char SpeakerName[MAX_CHAR_SPEAKER_NAME * 2] = {
+        0x00}; /*!< Configure the speaker friendly name. UTF16 Accepted !*/
 
     // End of second page
 

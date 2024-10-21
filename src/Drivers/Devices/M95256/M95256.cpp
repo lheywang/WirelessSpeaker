@@ -11,22 +11,22 @@
  *
  */
 
-#include "../../SPI/SPI.hpp"
 #include "M95256.hpp"
-#include <cstdlib>
-#include <iostream>
+#include "../../SPI/SPI.hpp"
 #include <cerrno>
+#include <cstdlib>
 #include <cstring>
+#include <iostream>
 #include <unistd.h>
 
 // ==============================================================================
 // PRIVATE DEFINES
 // ==============================================================================
-constexpr int WREN = 0x06;  // No following data
-constexpr int WRDI = 0x04;  // No following data
-constexpr int RDSR = 0x05;  // No following data
-constexpr int WRSR = 0x01;  // 8 bit data
-constexpr int READ = 0x03;  // 2 bytes address page
+constexpr int WREN = 0x06; // No following data
+constexpr int WRDI = 0x04; // No following data
+constexpr int RDSR = 0x05; // No following data
+constexpr int WRSR = 0x01; // 8 bit data
+constexpr int READ = 0x03; // 2 bytes address page
 constexpr int WRITE = 0x02; // 2 bytes address page
 
 constexpr int MAX_ADDRESS = 0x7FFF;
@@ -35,7 +35,7 @@ constexpr int MAX_ADDRESS = 0x7FFF;
 // FUNCTIONS
 // ==============================================================================
 
-M95256::M95256(const SPI_Bus *SPI)
+M95256::M95256(const SPI_Bus* SPI)
 {
     this->SPI = *SPI;
     this->Openned = 0x00;
@@ -45,9 +45,10 @@ M95256::M95256(const SPI_Bus *SPI)
 M95256::M95256()
 {
     // Open a new SPI device
-    SPI_Bus *ptr = SPI_GetInfos();
-    if (ptr == nullptr)
-        throw std::runtime_error("[ M95256 ][ CONSTRUCTOR ] : Failed to allocate memory for the SPI obect");
+    SPI_Bus* ptr = SPI_GetInfos();
+    if(ptr == nullptr)
+        throw std::runtime_error(
+            "[ M95256 ][ CONSTRUCTOR ] : Failed to allocate memory for the SPI obect");
 
     // copy the SPI Device
     this->SPI = *ptr;
@@ -72,7 +73,7 @@ int M95256::WriteEnable()
 
     res = SPI_Transfer(&this->SPI, buf, buf, 1);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
@@ -86,15 +87,15 @@ int M95256::WriteDisable()
 
     res = SPI_Transfer(&this->SPI, buf, buf, 1);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
     return 0;
 }
 
-int M95256::ReadStatus(int *const WriteProtectStatus,
-                       EEPROM_WP *const ProtectedBlock,
-                       int *const WriteEnable,
-                       int *const WriteInProgress)
+int M95256::ReadStatus(int* const WriteProtectStatus,
+                       EEPROM_WP* const ProtectedBlock,
+                       int* const WriteEnable,
+                       int* const WriteInProgress)
 {
     int buf[4] = {0};
     int res = 0;
@@ -103,7 +104,7 @@ int M95256::ReadStatus(int *const WriteProtectStatus,
 
     res = SPI_Transfer(&this->SPI, &buf[0], &buf[2], 2);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     *WriteProtectStatus = (buf[3] & 0x80) >> 7;
@@ -114,8 +115,7 @@ int M95256::ReadStatus(int *const WriteProtectStatus,
     return 0;
 }
 
-int M95256::WriteStatus(const int WriteProtectStatus,
-                        const EEPROM_WP ProtectedBlock)
+int M95256::WriteStatus(const int WriteProtectStatus, const EEPROM_WP ProtectedBlock)
 {
     int buf[2] = {0};
     int res = 0;
@@ -129,7 +129,7 @@ int M95256::WriteStatus(const int WriteProtectStatus,
 
     res = SPI_Transfer(&this->SPI, buf, buf, 2);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     usleep(7000); // 7 ms of delay, to ensure correct write.
@@ -137,20 +137,19 @@ int M95256::WriteStatus(const int WriteProtectStatus,
     return 0;
 }
 
-int M95256::Read(const int Address, uint8_t *const Data, const int Len)
+int M95256::Read(const int Address, uint8_t* const Data, const int Len)
 {
-    if ((0 > Address) | (Address > MAX_ADDRESS))
+    if((0 > Address) | (Address > MAX_ADDRESS))
         return -1;
-    if ((Address + Len) > MAX_ADDRESS)
+    if((Address + Len) > MAX_ADDRESS)
         return -2;
 
     int res = 0;
-    uint8_t *buf = (uint8_t *)malloc(Len + 3);
-    if (buf == 0)
+    uint8_t* buf = (uint8_t*)malloc(Len + 3);
+    if(buf == 0)
     {
         std::cerr << "[ M95256 ][ Read ] Could not allocate memory for read operation "
-                  << strerror(errno)
-                  << std::endl;
+                  << strerror(errno) << std::endl;
         return -1;
     }
 
@@ -161,10 +160,10 @@ int M95256::Read(const int Address, uint8_t *const Data, const int Len)
 
     res = SPI_Transfer(&this->SPI, buf, buf, (Len + 3));
 
-    for (int i = 0; i < Len; i++)
+    for(int i = 0; i < Len; i++)
         Data[i] = buf[i + 3];
 
-    if (res != 0)
+    if(res != 0)
     {
         free(buf);
         return -3;
@@ -174,20 +173,19 @@ int M95256::Read(const int Address, uint8_t *const Data, const int Len)
     return 0;
 }
 
-int M95256::Write(const int Address, uint8_t *const Data, const int Len)
+int M95256::Write(const int Address, uint8_t* const Data, const int Len)
 {
-    if ((0 > Address) | (Address > MAX_ADDRESS))
+    if((0 > Address) | (Address > MAX_ADDRESS))
         return -1;
-    if ((Address + Len) > MAX_ADDRESS)
+    if((Address + Len) > MAX_ADDRESS)
         return -2;
 
     int res = 0;
-    uint8_t *buf = (uint8_t *)malloc(Len + 3);
-    if (buf == 0)
+    uint8_t* buf = (uint8_t*)malloc(Len + 3);
+    if(buf == 0)
     {
         std::cerr << "[ M95256 ][ Write ] Could not allocate memory for read operation "
-                  << strerror(errno)
-                  << std::endl;
+                  << strerror(errno) << std::endl;
         return -1;
     }
 
@@ -202,7 +200,7 @@ int M95256::Write(const int Address, uint8_t *const Data, const int Len)
     res = SPI_Transfer(&this->SPI, buf, buf, (Len + 3));
     free(buf);
 
-    if (res != 0)
+    if(res != 0)
         return -2;
 
     usleep(7000); // 7 ms of delay, to ensure page write.

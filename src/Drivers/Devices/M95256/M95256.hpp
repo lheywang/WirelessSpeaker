@@ -22,10 +22,10 @@
 /*! Define values protection bits of the EEPROM */
 enum class EEPROM_WP
 {
-    SOFT_WP_DISABLED = 0x00,      /*!< No protected sector*/
+    SOFT_WP_DISABLED = 0x00, /*!< No protected sector*/
     SOFT_WP_UPPER_QUARTER = 0x01, /*!< Upper quarter protected*/
-    SOFT_WP_UPPER_HALF = 0x02,    /*!< Upper half protected*/
-    SOFT_WP_FULL = 0x03,          /*!< Full memory protected*/
+    SOFT_WP_UPPER_HALF = 0x02, /*!< Upper half protected*/
+    SOFT_WP_FULL = 0x03, /*!< Full memory protected*/
 };
 
 constexpr int PAGE_SIZE = 64; /*!< Define EEPROM page size*/
@@ -49,7 +49,7 @@ public:
      *
      * @param SPI An SPI object to be used as base
      */
-    M95256(const SPI_Bus *SPI);
+    M95256(const SPI_Bus* SPI);
 
     /**
      * @brief Constructor for the M95256 class.
@@ -90,10 +90,10 @@ public:
      * @return  0 : OK
      * @return -1 : IOCT error.
      */
-    int ReadStatus(int *const WriteProtectStatus,
-                   EEPROM_WP *const ProtectedBlock,
-                   int *const WriteEnable,
-                   int *const WriteInProgress);
+    int ReadStatus(int* const WriteProtectStatus,
+                   EEPROM_WP* const ProtectedBlock,
+                   int* const WriteEnable,
+                   int* const WriteInProgress);
 
     /**
      * @brief Write the status register
@@ -104,8 +104,7 @@ public:
      * @return 0 : OK
      * @return -1 : IOCTL error.
      */
-    int WriteStatus(const int WriteProtectStatus,
-                    const EEPROM_WP ProtectedBlock);
+    int WriteStatus(const int WriteProtectStatus, const EEPROM_WP ProtectedBlock);
 
     /**
      * @brief Read data of the EEPROM
@@ -119,7 +118,7 @@ public:
      * @return -2 : Invalid Len (May be triggered if Address + Len > MAX_ADDRESS)
      * @return -3 : IOCTL error.
      */
-    int Read(const int Address, uint8_t *const Data, const int Len);
+    int Read(const int Address, uint8_t* const Data, const int Len);
 
     /**
      * @brief Write content to EEPROM. Only possible if write has been enabled !
@@ -133,5 +132,5 @@ public:
      * @return -2 : Invalid Len (May be triggered if Address + Len > MAX_ADDRESS)
      * @return -3 : IOCTL error.
      */
-    int Write(const int Address, uint8_t *const Data, const int Len);
+    int Write(const int Address, uint8_t* const Data, const int Len);
 };

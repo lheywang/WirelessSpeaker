@@ -13,9 +13,9 @@
 #include "DS1882.hpp"
 
 // Cpp modules
+#include "../../I2C/I2C.hpp"
 #include <cstdint>
 #include <stdio.h>
-#include "../../I2C/I2C.hpp"
 
 // ==============================================================================
 // IC REGISTER ADDRESSES
@@ -26,7 +26,7 @@ constexpr int CONFIG = 0x80;
 // CONSTRUCTORS
 // =====================
 
-DS1882::DS1882(const I2C_Bus *I2C, const LOG_POTI address)
+DS1882::DS1882(const I2C_Bus* I2C, const LOG_POTI address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;
@@ -48,7 +48,7 @@ DS1882::~DS1882()
 // =====================
 int DS1882::WriteWiper(const LOG_WIPER wiper, const int value)
 {
-    if (value > (this->b_PotiConfig ? 0x3F : 0x1F))
+    if(value > (this->b_PotiConfig ? 0x3F : 0x1F))
         return -2;
 
     // Cast and AND the last to bits to write the wiper settings.
@@ -59,13 +59,13 @@ int DS1882::WriteWiper(const LOG_WIPER wiper, const int value)
     int buf = 0;
     int res = I2C_Write(&this->I2C, this->address, Register, &buf, 0);
 
-    if (res != 0)
+    if(res != 0)
         return -3;
 
     return 0;
 }
 
-int DS1882::ReadWipers(LOG_WIPER *const wiper0, LOG_WIPER *const wiper1)
+int DS1882::ReadWipers(LOG_WIPER* const wiper0, LOG_WIPER* const wiper1)
 {
     // init a memory buffer
     int buf[3] = {0};
@@ -77,7 +77,7 @@ int DS1882::ReadWipers(LOG_WIPER *const wiper0, LOG_WIPER *const wiper1)
     *wiper0 = LOG_WIPER{buf[0]};
     *wiper1 = LOG_WIPER{buf[1]};
 
-    if (res < 0)
+    if(res < 0)
         return -1;
 
     return 0;
@@ -102,7 +102,7 @@ int DS1882::ConfigurePoti(const int Volatile, const int ZeroCrossing, const int 
     int buf = 0;
     int res = I2C_Write(&this->I2C, this->address, TempRegister, &buf, 0);
 
-    if (res < 0)
+    if(res < 0)
         return -1;
 
     return 0;

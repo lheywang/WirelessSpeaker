@@ -13,8 +13,8 @@
 #pragma once
 
 // type include
-#include <cstdint>
 #include "../../I2C/I2C.hpp"
+#include <cstdint>
 
 // ==============================================================================
 // IC REGISTER ADDRESSES
@@ -49,7 +49,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    DS1882(const I2C_Bus *I2C, const LOG_POTI address);
+    DS1882(const I2C_Bus* I2C, const LOG_POTI address);
 
     /**
      * @brief Destroy the DS1882 object
@@ -84,7 +84,7 @@ public:
      * @test This function need to be tested ! since a command byte (0x00) is sent, I don't know of the DS1882 will accept it !
      *
      */
-    int ReadWipers(LOG_WIPER *const wiper0, LOG_WIPER *const wiper1);
+    int ReadWipers(LOG_WIPER* const wiper0, LOG_WIPER* const wiper1);
 
     /**
      * @brief Configure the potentiometer.

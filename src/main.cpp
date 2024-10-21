@@ -14,10 +14,10 @@
 #include <iostream>
 #include <unistd.h>
 
-#include "Drivers/I2C/I2C.hpp"
 #include "Drivers/Devices/Devices.hpp"
-#include "Drivers/SPI/SPI.hpp"
 #include "Drivers/GPIO/GPIO.hpp"
+#include "Drivers/I2C/I2C.hpp"
+#include "Drivers/SPI/SPI.hpp"
 #include "Drivers/UART/UART.hpp"
 
 #include "Modules/EEPROM/eeprom.hpp"

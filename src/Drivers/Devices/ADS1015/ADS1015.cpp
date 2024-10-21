@@ -15,8 +15,8 @@
 
 // Cpp modules
 #include <cstdint>
-#include <unistd.h>
 #include <math.h>
+#include <unistd.h>
 
 #include <iostream>
 
@@ -35,7 +35,7 @@ constexpr int HIGH_THRESHOLD_REGISTER = 0x03;
 
 static constexpr float GetMutliplier(ADC_RANGE Input)
 {
-    switch (Input)
+    switch(Input)
     {
     case ADC_RANGE::FS0V25:
         return 0.256000;
@@ -57,7 +57,7 @@ static constexpr float GetMutliplier(ADC_RANGE Input)
 // CONSTRUCTORS
 // =====================
 
-ADS1015::ADS1015(const I2C_Bus *I2C, const VOLTAGE_MONITOR address)
+ADS1015::ADS1015(const I2C_Bus* I2C, const VOLTAGE_MONITOR address)
 {
     this->address = (uint8_t)address;
     this->I2C = *I2C;
@@ -87,7 +87,7 @@ ADS1015::~ADS1015()
 // FUNCTIONS
 // =====================
 
-int ADS1015::Read_Voltage(const ADC_CHANNELS channel, float *const value)
+int ADS1015::Read_Voltage(const ADC_CHANNELS channel, float* const value)
 {
     int buf = 0;
     int res = 0;
@@ -115,7 +115,7 @@ int ADS1015::Read_Voltage(const ADC_CHANNELS channel, float *const value)
     The base setting assume of at least 2* margin from the minimal time reported to the waited time.
     */
     int microseconds = 15625;
-    for (int i = 0; i < (int)this->ActualSampling; i++)
+    for(int i = 0; i < (int)this->ActualSampling; i++)
     {
         microseconds = round(microseconds / 1.7);
     }
@@ -124,7 +124,7 @@ int ADS1015::Read_Voltage(const ADC_CHANNELS channel, float *const value)
     res += I2C_Read(&this->I2C, this->address, CONVERSION_REGISTER, &buf, 1, 2);
     buf = SWAP_BYTES(buf);
 
-    if (res != 0)
+    if(res != 0)
         return -1;
 
     float multiplier = GetMutliplier(this->ActualGain);
@@ -145,7 +145,7 @@ int ADS1015::Configure_ADC(const int OS,
                            const int comparator_latching,
                            const int comparator_queue)
 {
-    if ((comparator_queue < 0x00) | (comparator_queue > 0x03))
+    if((comparator_queue < 0x00) | (comparator_queue > 0x03))
         return -1;
 
     // Copying the value for futures internals calls.
@@ -177,16 +177,16 @@ int ADS1015::Configure_ADC(const int OS,
     buf = SWAP_BYTES(buf);
     res = I2C_Write(&this->I2C, this->address, CONFIG_REGISTER, &buf, 1, 2);
 
-    if (res != 0)
+    if(res != 0)
         return -2;
     return 0;
 }
 
 int ADS1015::ConfigureLowThreshold(const float Value)
 {
-    if ((Value < 0.0) | (Value > 3.300))
+    if((Value < 0.0) | (Value > 3.300))
         return -1;
-    if (Value > this->HighThreshold)
+    if(Value > this->HighThreshold)
         return -1;
 
     this->LowThreshold = Value;
@@ -202,15 +202,15 @@ int ADS1015::ConfigureLowThreshold(const float Value)
     buf = SWAP_BYTES(buf);
     res = I2C_Write(&this->I2C, this->address, LOW_TRESHOLD_REGISTER, &buf, 1, 2);
 
-    if (res != 0)
+    if(res != 0)
         return -2;
     return 0;
 }
 int ADS1015::ConfigureHighThreshold(const float Value)
 {
-    if ((Value < 0.0) | (Value > 3.300))
+    if((Value < 0.0) | (Value > 3.300))
         return -1;
-    if (Value < this->LowThreshold)
+    if(Value < this->LowThreshold)
         return -1;
 
     this->HighThreshold = Value;
@@ -226,7 +226,7 @@ int ADS1015::ConfigureHighThreshold(const float Value)
     buf = SWAP_BYTES(buf);
     res = I2C_Write(&this->I2C, this->address, HIGH_THRESHOLD_REGISTER, &buf, 1, 2);
 
-    if (res != 0)
+    if(res != 0)
         return -2;
     return 0;
 }

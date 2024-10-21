@@ -15,8 +15,8 @@
 #pragma once
 
 // type include
-#include <cstdint>
 #include "../../I2C/I2C.hpp"
+#include <cstdint>
 
 // ==============================================================================
 // IC CLASS FUNCTIONS
@@ -39,7 +39,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    MCP23009(const I2C_Bus *I2C, const GPIO_EXPANDER address);
+    MCP23009(const I2C_Bus* I2C, const GPIO_EXPANDER address);
 
     /**
      * @brief Destroy the MCP23009 object
@@ -66,7 +66,12 @@ public:
      * @return -6 : Invalid default value
      * @return -7 : IOCTL error.
      */
-    int ConfigureGPIO(const int Direction, const int Polarity, const int EnablePullUps, const int EnableInterrupts, const int IOC, const int DefaultValue);
+    int ConfigureGPIO(const int Direction,
+                      const int Polarity,
+                      const int EnablePullUps,
+                      const int EnableInterrupts,
+                      const int IOC,
+                      const int DefaultValue);
 
     /**
      * @brief Configure the IC
@@ -99,7 +104,7 @@ public:
      * @return  0 : OK
      * @return -1 : IOCTL error.
      */
-    int ReadInputs(int *const Status);
+    int ReadInputs(int* const Status);
 
     /**
      * @brief Read back the Interrupts status
@@ -110,5 +115,5 @@ public:
      * @return  0 : OK
      * @return -1 : IOCTL error.
      */
-    int ReadInterrupts(int *const INTFlags, int *const PortValue);
+    int ReadInterrupts(int* const INTFlags, int* const PortValue);
 };

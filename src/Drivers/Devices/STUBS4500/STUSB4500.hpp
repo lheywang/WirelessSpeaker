@@ -13,8 +13,8 @@
 #pragma once
 
 // type include
-#include <cstdint>
 #include "../../I2C/I2C.hpp"
+#include <cstdint>
 
 // =====================
 // PUBLIC
@@ -55,29 +55,29 @@ enum class USB_PSU_MODE
 /*! Define values that are member of a PDO object */
 struct PDO
 {
-    int FixedSupply = (int)USB_PSU_MODE::FIXED;       /*!< Select the working mode of the IC.*/
-    bool DualRole = false;                            /*!< Can the IC source current ?*/
-    bool HighCapability = false;                      /*!< Enable 5A profile.*/
-    bool UnconstrainedPower = false;                  /*!< Remove any constraints for the POWER*/
-    bool USBCommCapable = true;                       /*!< Enable USB Communication*/
-    bool DualRoleData = false;                        /*!< Enable DFP or UFP Data mode.*/
+    int FixedSupply = (int)USB_PSU_MODE::FIXED; /*!< Select the working mode of the IC.*/
+    bool DualRole = false; /*!< Can the IC source current ?*/
+    bool HighCapability = false; /*!< Enable 5A profile.*/
+    bool UnconstrainedPower = false; /*!< Remove any constraints for the POWER*/
+    bool USBCommCapable = true; /*!< Enable USB Communication*/
+    bool DualRoleData = false; /*!< Enable DFP or UFP Data mode.*/
     int FastSwap = (int)USB_SWAP::FAST_SWAP_DISABLED; /*!< Enable fast swap on defined profile.*/
-    float Voltage;                                    /*!< Requested voltage, in float*/
-    float Current;                                    /*!< Requested current, in float*/
+    float Voltage; /*!< Requested voltage, in float*/
+    float Current; /*!< Requested current, in float*/
 };
 
 /*! Define values that are member of a RDO object */
 struct RDO
 {
-    int RequestedPDOID;      /*!< The number of the currently requested PDO.*/
-    PDO RequestedPDO;        /*!< A struct of the currently requested PDO.*/
-    bool GiveBackFlag;       /*!< Set to 1 in case of a mismatch and fallback on the 5V profile*/
+    int RequestedPDOID; /*!< The number of the currently requested PDO.*/
+    PDO RequestedPDO; /*!< A struct of the currently requested PDO.*/
+    bool GiveBackFlag; /*!< Set to 1 in case of a mismatch and fallback on the 5V profile*/
     bool CapabilityMismatch; /*!< Set to 1 in case of a mismatch for this request*/
-    bool USBCommCapable;     /*!< Set to 1 if both devices are able to handle USB communication*/
-    bool USBSuspend;         /*!< Set to 1 is both devices are able to suspend USB comm*/
-    bool UnchunkedMessages;  /*!< Set to 1 if both devices support unchunked messages*/
-    float MinimalCurrent;    /*!< Contain the value of the minimal current that shall be used*/
-    float NominalCurrent;    /*!< Contain the value of the nominal current to be used.*/
+    bool USBCommCapable; /*!< Set to 1 if both devices are able to handle USB communication*/
+    bool USBSuspend; /*!< Set to 1 is both devices are able to suspend USB comm*/
+    bool UnchunkedMessages; /*!< Set to 1 if both devices support unchunked messages*/
+    float MinimalCurrent; /*!< Contain the value of the minimal current that shall be used*/
+    float NominalCurrent; /*!< Contain the value of the nominal current to be used.*/
 };
 
 // ==============================================================================
@@ -101,7 +101,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus.
      */
-    STUSB4500(const I2C_Bus *I2C, const USB_PD address);
+    STUSB4500(const I2C_Bus* I2C, const USB_PD address);
 
     /**
      * @brief Destroy the STUSB4500 object
@@ -120,7 +120,7 @@ public:
      *
      * @test Function to test !
      */
-    int GetNormsRevision(int *const PD, int *const TYPEC);
+    int GetNormsRevision(int* const PD, int* const TYPEC);
 
     /**
      * @brief Get the Port Status
@@ -147,12 +147,12 @@ public:
      *
      * @test Function to test !
      */
-    int GetPortStatus(int *const Transition,
-                      int *const AttachedDeviceStatus,
-                      int *const LowPowerStatus,
-                      int *const PowerMode,
-                      int *const DataMode,
-                      int *const AttachStatus);
+    int GetPortStatus(int* const Transition,
+                      int* const AttachedDeviceStatus,
+                      int* const LowPowerStatus,
+                      int* const PowerMode,
+                      int* const DataMode,
+                      int* const AttachStatus);
 
     /**
      * @brief Get the Power Delivery 3 Protocol status
@@ -168,11 +168,11 @@ public:
      *
      * @test Function to test !
      */
-    int GetPD3Status(int *const VBUSHigh,
-                     int *const VBUSLow,
-                     int *const VBUSReady,
-                     int *const VBUSSafe,
-                     int *const VBUSValid);
+    int GetPD3Status(int* const VBUSHigh,
+                     int* const VBUSLow,
+                     int* const VBUSReady,
+                     int* const VBUSSafe,
+                     int* const VBUSValid);
 
     /**
      * @brief Get the Hardware status
@@ -190,13 +190,13 @@ public:
      *
      * @test Function to test !
      */
-    int GetHardwareFault(int *const OVPTrans,
-                         int *const VPUValidTrans,
-                         int *const VbusDischFaultTrans,
-                         int *const OVPFault,
-                         int *const VPUValid,
-                         int *const VbusDischFault,
-                         int *const VsrcDischFault);
+    int GetHardwareFault(int* const OVPTrans,
+                         int* const VPUValidTrans,
+                         int* const VbusDischFaultTrans,
+                         int* const OVPFault,
+                         int* const VPUValid,
+                         int* const VbusDischFault,
+                         int* const VsrcDischFault);
 
     /**
      * @brief Get the Type C Connection Status
@@ -253,7 +253,8 @@ public:
      *
      * @test Function to test !
      */
-    int GetTypeCStatus(int *const TypeCStatus, int *const ConnectionOrientation, int *const FSMStatus);
+    int
+    GetTypeCStatus(int* const TypeCStatus, int* const ConnectionOrientation, int* const FSMStatus);
 
     /**
      * @brief Configure the VBUS Monitoring Status
@@ -318,7 +319,7 @@ public:
      *
      * @test Function to test !
      */
-    int GetRXHeader(int *const Header);
+    int GetRXHeader(int* const Header);
 
     /**
      * @brief Return a PDO
@@ -332,7 +333,7 @@ public:
      *
      * @test Function to test !
      */
-    int GetPDO(const int PDONumber, PDO *const PDO);
+    int GetPDO(const int PDONumber, PDO* const PDO);
 
     /**
      * @brief Define a PDO
@@ -358,5 +359,5 @@ public:
      *
      * @test Function to test !
      */
-    int GetRDO(RDO *const RDO);
+    int GetRDO(RDO* const RDO);
 };

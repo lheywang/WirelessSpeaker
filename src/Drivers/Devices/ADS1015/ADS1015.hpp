@@ -15,8 +15,8 @@
 #pragma once
 
 // type include
-#include <cstdint>
 #include "../../I2C/I2C.hpp"
+#include <cstdint>
 
 // ==============================================================================
 // IC VARIOUS DEFINE
@@ -45,10 +45,10 @@ enum class ADC_RANGE
 /*! Define values for the ADC sampling frequency*/
 enum class ADC_SAMPLES
 {
-    SPS_128 = 0x00,  /*!< 128  samples per second*/
-    SPS_250 = 0x01,  /*!< 250  samples per second*/
-    SPS_490 = 0x02,  /*!< 490  samples per second*/
-    SPS_920 = 0x03,  /*!< 920  samples per second*/
+    SPS_128 = 0x00, /*!< 128  samples per second*/
+    SPS_250 = 0x01, /*!< 250  samples per second*/
+    SPS_490 = 0x02, /*!< 490  samples per second*/
+    SPS_920 = 0x03, /*!< 920  samples per second*/
     SPS_1600 = 0x04, /*!< 1600 samples per second*/
     SPS_2400 = 0x05, /*!< 2400 samples per second*/
     SPS_3300 = 0x06, /*!< 3300 samples per second*/
@@ -87,7 +87,7 @@ public:
      * @param[in] I2C A pointer to the I2C struct that is used to handle IO operation on this bus.
      * @param[in] address The address of the IC on the I2C bus
      */
-    ADS1015(const I2C_Bus *I2C, const VOLTAGE_MONITOR address);
+    ADS1015(const I2C_Bus* I2C, const VOLTAGE_MONITOR address);
 
     /**
      * @brief Destroy the ADS1015 object
@@ -106,7 +106,7 @@ public:
      * @return  0 : OK
      * @return -1 : IOCTL error.
      */
-    int Read_Voltage(const ADC_CHANNELS channel, float *const value);
+    int Read_Voltage(const ADC_CHANNELS channel, float* const value);
 
     /**
      * @brief Configure the operation mode of the ADC.
