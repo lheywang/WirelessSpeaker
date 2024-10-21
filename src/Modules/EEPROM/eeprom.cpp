@@ -106,7 +106,7 @@ EEPROM::EEPROM(bool ForceWrite)
     {
         if (ForceWrite == true)
         {
-            if (_binary_build_bin_header_bin_start - _binary_build_bin_header_bin_end != 16)
+            if (_binary_build_bin_header_bin_end - _binary_build_bin_header_bin_start != 16)
                 throw std::runtime_error("[ EEPROM ][ CONSTRUCTOR ] : Provided default file has an incorrect size");
 
             memcpy(this->Header, _binary_build_bin_header_bin_start, HEADER_SIZE);
@@ -124,7 +124,7 @@ EEPROM::EEPROM(bool ForceWrite)
 // DESTRUCTORS
 // ==============================================================================
 
-EEPROM::~EEPROM()
+EEPROM::~EEPROM() // OK
 {
     delete this->Header;
     this->Slave.~M95256(); // Call the destructor.
@@ -136,9 +136,9 @@ EEPROM::~EEPROM()
 // PRIVATE UTILITIES FUNCTIONS
 // ==============================================================================
 
-int CheckProfileValue(int Profile)
+int CheckProfileValue(int Profile) // OK
 {
-    if ((1 > Profile) | (Profile > 8))
+    if ((0 > Profile) | (Profile > 8))
         return -1;
     return 0;
 }
@@ -282,9 +282,9 @@ int EEPROM::ReadConfigV1(CONFIG_V1 *const Data) // OK
     return 0;
 }
 
-int EEPROM::LoadDefaultConfigV1()
+int EEPROM::LoadDefaultConfigV1() // OK
 {
-    if (_binary_build_bin_config_bin_start - _binary_build_bin_config_bin_end != 32)
+    if (_binary_build_bin_config_bin_end - _binary_build_bin_config_bin_start != 32)
         return -1;
 
     // Creating a buffer value and cop
@@ -314,7 +314,7 @@ int EEPROM::LoadDefaultConfigV1()
 // DSP PROFILE FUNCTIONS
 // ==============================================================================
 
-int EEPROM::CheckForDSPProfileSpace(DSP_PROFILE *const Profile, int *const PossibleProfileID)
+int EEPROM::CheckForDSPProfileSpace(DSP_PROFILE *const Profile, int *const PossibleProfileID) // OK
 {
     // Check if at least a profile is available.
     if (this->Header->DSP_PROFILE_NUMBER == 0xFF) // All profiles are used.
@@ -337,14 +337,7 @@ int EEPROM::CheckForDSPProfileSpace(DSP_PROFILE *const Profile, int *const Possi
         {
             // Fetch some parameters
             ActualAddress = this->Header->Profile[i].Address;
-
-            // Get the end address.
-            if (i != 7)
-            {
-                FutureAddress = this->Header->Profile[i + 1].Address;
-            }
-            else
-                FutureAddress = EEPROM_MAX_ADDRESS;
+            FutureAddress = this->Header->Profile[i + 1].Address;
 
             // If 0x0000 (default value), then use the max value
             if (FutureAddress == 0x0000)
@@ -368,10 +361,13 @@ int EEPROM::CheckForDSPProfileSpace(DSP_PROFILE *const Profile, int *const Possi
 
 int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
 {
+    std::cout << "[ EEPROM ][ AddDSPProfile ] : This function has not be fully tested yet... Waiting for real data." << std::endl;
+
     int ret = 0;
 
     // Get Profile parameters
-    this->CheckForDSPProfileSpace(Profile, ProfileNumber);
+    if (this->CheckForDSPProfileSpace(Profile, ProfileNumber) != 0)
+        return -1;
     int Address = this->Header->Profile[*ProfileNumber].Address;
 
     // Get the number of pages
@@ -385,7 +381,9 @@ int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
 
     // Prepare data
     int size = Profile->size;
-    Profile->WriteBuffers(buf, &size);
+
+    std::cout << Profile->Name << std::endl;
+    Profile->ReadBuffers(buf, &size);
 
     // Write data per 64 bytes pages
     for (int i = 0; i < Pages; i++)
@@ -400,22 +398,25 @@ int EEPROM::AddDSPProfile(DSP_PROFILE *const Profile, int *const ProfileNumber)
 
     // Update the header
     this->Header->DSP_PROFILE_NUMBER |= PROFILES[*ProfileNumber];
+    this->Header->Profile[*ProfileNumber].Len = (Pages * 64);
+    this->Header->Profile[*ProfileNumber].CRC = crc_32(buf, (Pages * 64));
+    this->Header->Profile[*ProfileNumber + 1].Address = (Address + (Pages * 64));
+
     this->WriteHeaderV1();
 
     return 0;
 }
 
-int EEPROM::RemoveDSPProfile(const int ProfileNumber)
+int EEPROM::RemoveDSPProfile(const int ProfileNumber) // OK
 {
     if (CheckProfileValue(ProfileNumber) != 0)
         return -1;
 
     this->Header->DSP_PROFILE_NUMBER &= ~PROFILES[ProfileNumber - 1]; // Clear the corresponding bit.
-    this->Header->Profile[ProfileNumber - 1].CRC = 0x0000;            // Reset the CRC to invalidate any read to it.
+    this->Header->Profile[ProfileNumber].CRC = 0x0000;                // Reset the CRC to invalidate any read to it.
 
     // Update the header.
     int ret = this->WriteHeaderV1();
-    std::cout << std::hex << "header : " << (int)this->Header->DSP_PROFILE_NUMBER << " mask : " << (~PROFILES[ProfileNumber - 1] & 0xFF);
 
     if (ret != 0)
         return -2;
@@ -424,11 +425,14 @@ int EEPROM::RemoveDSPProfile(const int ProfileNumber)
 
 int EEPROM::GetDSPProfileName(const int ProfileNumber, char ProfileName[MAX_PROFILE_CHAR])
 {
+    std::cout << "[ EEPROM ][ GetDSPProfileName ] : This function has not be fully tested yet... Waiting for real data." << std::endl;
+
     if (CheckProfileValue(ProfileNumber) != 0)
         return -1;
 
     // First, get the address
-    int Address = this->Header->Profile[ProfileNumber - 1].Address;
+    int Address = this->Header->Profile[ProfileNumber].Address;
+    std::cout << "Profile address " << (int)Address << std::endl;
 
     // Then, read
     uint8_t *buf = (uint8_t *)malloc(MAX_PROFILE_CHAR);
@@ -442,8 +446,9 @@ int EEPROM::GetDSPProfileName(const int ProfileNumber, char ProfileName[MAX_PROF
         return -2;
     }
 
-    for (int i = 0; i < MAX_PROFILE_CHAR - 1; i++)
-        std::cout << std::hex << (int)buf[i];
+    std::cout << "Speaker name : ";
+    for (int i = 0; i < MAX_PROFILE_CHAR; i++)
+        std::cout << buf[i];
     std::cout << std::endl;
 
     // Copy the data
@@ -454,12 +459,14 @@ int EEPROM::GetDSPProfileName(const int ProfileNumber, char ProfileName[MAX_PROF
 
 int EEPROM::GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile)
 {
+    std::cout << "[ EEPROM ][ GetDSPProfile ] : This function has not be fully tested yet... Waiting for real data." << std::endl;
+
     if (CheckProfileValue(ProfileNumber) != 0)
         return -1;
 
     // Get Profile parameters
-    int Address = this->Header->Profile[ProfileNumber - 1].Address;
-    int Len = this->Header->Profile[ProfileNumber - 1].Len;
+    int Address = this->Header->Profile[ProfileNumber].Address;
+    int Len = this->Header->Profile[ProfileNumber].Len;
 
     int Pages = ceil(Profile->size / 64) + 1;
 
@@ -478,11 +485,22 @@ int EEPROM::GetDSPProfile(const int ProfileNumber, DSP_PROFILE *const Profile)
     return 0;
 }
 
-int EEPROM::GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE *const Profile)
+int EEPROM::GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE_SIZE *const Profile) // OK
 {
     if (CheckProfileValue(ProfileNumber) != 0)
         return -1;
 
-    Profile->size = this->Header->Profile[ProfileNumber - 1].Len;
+    switch (this->Header->Profile[ProfileNumber].Len)
+    {
+    case (int)DSP_PROFILE_SIZE::LARGE:
+        *Profile = DSP_PROFILE_SIZE::LARGE;
+
+    case (int)DSP_PROFILE_SIZE::MEDIUM:
+        *Profile = DSP_PROFILE_SIZE::MEDIUM;
+
+    case (int)DSP_PROFILE_SIZE::SMALL:
+        *Profile = DSP_PROFILE_SIZE::SMALL;
+    }
+
     return 0;
 }

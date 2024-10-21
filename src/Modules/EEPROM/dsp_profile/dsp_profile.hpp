@@ -113,31 +113,47 @@ public:
     // FUNCTIONS
     // ==============================================================================
     /**
-     * @brief
+     * @brief Write the coefficients to buffer A
      *
-     * @param buf
-     * @return int
+     * @param[in] buf Float values to be wrote in the buffer A. Must be within +-7 range.
+     * @param[in] bufLen Number of values to be wrote.
+     *
+     * @return  0 : OK
+     * @return -1 : Incorrect buffer length (too big)
+     * @return -2 : Buffer contain at least an incorrect value that cannot be converted to binary format.
      */
     int WriteBufferA(float *const buf, const int bufLen);
 
     /**
-     * @brief
-     * @param buf
-     * @return
+     * @brief Write the coefficients to buffer B
+     *
+     * @param[in] buf Float values to be wrote in the buffer A. Must be within +-7 range.
+     * @param[in] bufLen Number of values to be wrote.
+     *
+     * @return  0 : OK
+     * @return -1 : Incorrect buffer length (too big)
+     * @return -2 : Buffer contain at least an incorrect value that cannot be converted to binary format.
      */
     int WriteBufferB(float *const buf, const int bufLen);
 
     /**
-     * @brief
-     * @param Instructions
-     * @return
+     * @brief Write the instructions
+     *
+     * @param[in] Instructions Int values used as instructions to be wrote.
+     * @param[in] bufLen Number of values to be wrote.
+     *
+     * @return  0 : OK
+     * @return -1 : Incorrect buffer length (too big)
      */
     int WriteInstructions(int *const Instructions, const int bufLen);
 
     /**
-     * @brief
-     * @param Profile
-     * @return
+     * @brief Ask the class to load a default profile. Shall be included in the executable package when compiled.
+     *
+     * @param[in] Profile Profile ID to be loaded. Check correspondance table to be defined.
+     *
+     * @return  0 : OK
+     * @return -1 : Incorrect buffer length (too big)
      */
     int LoadDefaultProfile(const int Profile);
 };

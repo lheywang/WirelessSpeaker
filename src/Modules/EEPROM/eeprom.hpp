@@ -165,6 +165,8 @@ public:
      * @param[in] ProfileNumber An integer to select a profile number.
      * @param[out] ProfileName A char array of MAX_PROFILE_CHAR length to be filled.
      *
+     * @test To test with real data to ensure correct working...
+     *
      * @return  0 : OK
      * @return -1 : Invalid profile number value.
      * @return -2 : IOCTL error.
@@ -176,6 +178,8 @@ public:
      *
      * @param[in] ProfileNumber An integer to select a profile number
      * @param[out] Profile A DSP_PROFILE object filled with the right size.
+     *
+     * @test To test with real data to ensure correct working...
      *
      * @return  0 : OK
      * @return -1 : Invalid profile number value.
@@ -190,8 +194,10 @@ public:
      * @param[in] ProfileNumber An integer to select a profile number
      * @param[out] Profile A member of the DSP_PROFILE_TYPE enum that evalute the size.
      *
+     * @test To test with real data to ensure correct working...
+     *
      * @return  0 : OK
      * @return -1 : Invalid profile number value.
      */
-    int GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE *const Profile);
+    int GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE_SIZE *const Profile);
 };

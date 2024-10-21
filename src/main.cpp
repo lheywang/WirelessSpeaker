@@ -46,7 +46,7 @@ int main()
 
     std::cout << "Hello World !" << std::endl;
 
-    EEPROM Mem = EEPROM(true);
+    EEPROM Mem = EEPROM();
 
     char Name[MAX_PROFILE_CHAR] = {0};
     Name[0] = 'T';
@@ -99,37 +99,32 @@ int main()
     // Profile.WriteBufferB(buf, 5);
     // Profile.WriteInstructions(instr, 5);
 
-    int ID;
-
-    for (int i = 0; i < MAX_PROFILE_CHAR; i++)
-        std::cout << Name[i];
-    std::cout << std::endl;
-
-    for (int i = 0; i < 8; i++)
-    {
-        int ret = Mem.RemoveDSPProfile(i + 1);
-        std::cout << " - func : " << ret << std::endl;
-    }
+    int ID = 0;
 
     int ret = Mem.AddDSPProfile(&Profile, &ID);
-    std::cout << " - func : " << ret << std::endl;
+    std::cout << "AddDSPProfile - func : " << ret << std::endl;
 
-    char t[MAX_PROFILE_CHAR] = {0};
-    std::cout << Mem.GetDSPProfileName(ID, t);
+    DSP_PROFILE_SIZE Profile2;
+    Mem.GetDSPProfileSize(ID, &Profile2);
 
-    for (int i = 0; i < MAX_PROFILE_CHAR; i++)
-        std::cout << std::hex << (int)t[i];
-    std::cout << std::endl;
+    std::cout << (int)Profile2 << std::endl;
+
+    if (ret < 0)
+    {
+        for (int i = 0; i < 8; i++)
+            Mem.RemoveDSPProfile(i);
+    }
+
+    // char t[MAX_PROFILE_CHAR] = {0};
+    // int ret = Mem.GetDSPProfileName(ID, t);
+    // std::cout << "GetDSPProfileName - func : " << ret << std::endl;
+
+    // for (int i = 0; i < MAX_PROFILE_CHAR; i++)
+    //     std::cout << t[i];
+    // std::cout << std::endl;
 
     // for (int i = 0; i < 8; i++)
-    // {
-    //     int ret = Mem.RemoveDSPProfile(i + 1);
-    //     std::cout << " - func : " << ret << std::endl;
-    // }
-
-    std::cout
-        << "Profile "
-        << std::endl;
+    //     Mem.RemoveDSPProfile(i);
 
     // std::cout << Mem.WriteConfigV1(&Config) << std::endl;
     // usleep(10000);

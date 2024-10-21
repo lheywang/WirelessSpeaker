@@ -106,7 +106,7 @@ DSP_PROFILE::DSP_PROFILE(char name[MAX_PROFILE_CHAR], const DSP_PROFILE_SIZE len
     memset(this->bufferA, 0x00, coeff * 3);
     memset(this->bufferB, 0x00, coeff * 3);
     memset(this->instr, 0x00, instr * 4);
-    memset(this->Name, 0x00, MAX_PROFILE_CHAR);
+    memset(this->Name, 0x2E, MAX_PROFILE_CHAR);
 
     // Copy the data
     memcpy(this->Name, name, MAX_PROFILE_CHAR);
