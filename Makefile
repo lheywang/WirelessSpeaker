@@ -66,7 +66,7 @@ build/bin/config.o: default/config/config.toml
 	@echo "Preparing config default binary data..."
 	@echo "------------------------------------------------------------------------------------------------------------"
 
-	python3 tools/default-generator/config/config-generator.py $< build/bin/config.bin
+	python3.11 tools/default-generator/config/config-generator.py $< build/bin/config.bin
 	aarch64-linux-gnu-ld -r -b binary -o  $@ build/bin/config.bin
 
 	@echo "Generated $@"
@@ -77,7 +77,7 @@ build/bin/header.o: default/header/header.toml
 	@echo "Preparing header default binary data..."
 	@echo "------------------------------------------------------------------------------------------------------------"
 	
-	python3 tools/default-generator/header/header-generator.py $< build/bin/header.bin 
+	python3.11 tools/default-generator/header/header-generator.py $< build/bin/header.bin 
 	aarch64-linux-gnu-ld -r -b binary -o  $@ build/bin/header.bin
 
 	@echo "Generated $@"
