@@ -2,7 +2,7 @@ name: C/C++ CI
 on:
   push:
     branches: [main]
-  pull_requests:
+  pull_request:
     branches: [main]
     types: [opened, synchronize]
 
