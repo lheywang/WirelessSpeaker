@@ -15,7 +15,7 @@ jobs:
     - name: Install clang-format
       run: sudo apt-get update && sudo apt-get install clang-format
     - name: Check code formatting
-      run: find src/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*hpp' | xargs clang-format -i -style=file -dry-run -Werror | grep -v 'clang-format:'
+      run: find src/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*hpp' | xargs clang-format -i -style=file -dry-run -Werror
 
   build:
     runs-on: ubuntu-latest
