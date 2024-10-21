@@ -9,10 +9,13 @@
  *
  */
 
+#pragma once
+#include <cstdint>
+
 /*! Define values that are stored on the EEPROM for the USB-C PD3 Interface*/
 struct BasicPDO
 {
-    bool EnablePPS; /*!< Enable PPS (Programmable Power Supply)*/
-    float Voltage;  /*!< Voltage requested for this PDO*/
-    float Current;  /*!< Current requested for this PDO*/
+    uint8_t Voltage[2]; /*!< Voltage requested for this PDO. Form is Int.Float, with float a number of 20 mV steps.*/
+    uint8_t Current[2]; /*!< Current requested for this PDO. Form is Int.Float, with float a number of 50 mA steps.*/
+    uint8_t EnablePPS;  /*!< Enable PPS (Programmable Power Supply)*/
 };

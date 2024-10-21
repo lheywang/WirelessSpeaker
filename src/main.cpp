@@ -20,7 +20,9 @@
 #include "Drivers/GPIO/GPIO.hpp"
 #include "Drivers/UART/UART.hpp"
 
-#include <libudev.h>
+#include "Modules/EEPROM/eeprom.hpp"
+
+#include <ctime>
 
 // entry point
 int main()
@@ -41,11 +43,85 @@ int main()
             - Audio playback
             - ...
      */
+
     std::cout << "Hello World !" << std::endl;
 
-    // SPI_Bus *SPI = SPI_GetInfos();
-    // SPI_Configure(SPI, SPI_MODE_0, 8, 500'000);
-    // M95256 EEPROM = M95256(SPI);
+    // EEPROM Mem = EEPROM();
+
+    // char Name[MAX_PROFILE_CHAR] = {0};
+    // Name[0] = 'T';
+    // Name[1] = 'H';
+    // Name[2] = 'I';
+    // Name[3] = 'S';
+    // Name[4] = ' ';
+    // Name[5] = 'I';
+    // Name[6] = 'S';
+    // Name[7] = ' ';
+    // Name[8] = 'A';
+    // Name[9] = ' ';
+    // Name[10] = 'T';
+    // Name[11] = 'E';
+    // Name[12] = 'S';
+    // Name[13] = 'T';
+    // Name[14] = ' ';
+    // Name[15] = 'F';
+    // Name[16] = 'O';
+    // Name[17] = 'R';
+    // Name[18] = ' ';
+    // Name[20] = 'W';
+    // Name[21] = 'I';
+    // Name[22] = 'R';
+    // Name[23] = 'E';
+    // Name[24] = 'L';
+    // Name[25] = 'E';
+    // Name[26] = 'S';
+    // Name[27] = 'S';
+    // Name[28] = ' ';
+    // Name[29] = 'Y';
+    // DSP_PROFILE Profile = DSP_PROFILE(Name, DSP_PROFILE_SIZE::LARGE);
+    // float buf[256] = {0};
+    // for (int i = 0; i < 256; i++)
+    //     buf[i] = std::rand() % 3;
+    // int instr[1024] = {0};
+    // for (int i = 0; i < 1024; i++)
+    //     buf[i] = std::rand();
+    // Profile.WriteBufferA(buf, 256);
+    // Profile.WriteBufferB(buf, 256);
+    // Profile.WriteInstructions(instr, 1024);
+
+    // uint8_t t[256 * 3] = {0};
+    // int ret = Profile.ReturnBufferAValues(t);
+    // std::cout << "ReturnName - func : " << ret << std::endl;
+    // for (int i = 0; i < 256 * 3; i++)
+    //     std::cout << std::hex << (int)t[i];
+    // std::cout << std::endl;
+
+    // int ID = 0;
+
+    // ret = Mem.AddDSPProfile(&Profile, &ID);
+    // std::cout << "AddDSPProfile - func : " << ret << std::endl;
+
+    // DSP_PROFILE_SIZE Profile2;
+    // Mem.GetDSPProfileSize(ID, &Profile2);
+
+    // std::cout << (int)Profile2 << std::endl;
+
+    // if (ret < 0)
+    // {
+    //     for (int i = 0; i < 8; i++)
+    //         Mem.RemoveDSPProfile(i);
+    // }
+
+    // for (int i = 0; i < MAX_PROFILE_CHAR; i++)
+    //     std::cout << t[i];
+    // std::cout << std::endl;
+
+    // for (int i = 0; i < 8; i++)
+    //     Mem.RemoveDSPProfile(i);
+
+    // std::cout << Mem.WriteConfigV1(&Config) << std::endl;
+    // usleep(10000);
+    // std::cout << Mem.ReadConfigV1(&Config) << std::endl;
 
     // int TX[100] = {0};
     // int RX[100] = {0};

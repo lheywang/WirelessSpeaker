@@ -14,6 +14,7 @@
 
 // type include
 #include "../../SPI/SPI.hpp"
+#include <cstdint>
 
 // ==============================================================================
 // PUBLIC DEFINES
@@ -27,6 +28,8 @@ enum class EEPROM_WP
     SOFT_WP_FULL = 0x03,          /*!< Full memory protected*/
 };
 
+constexpr int PAGE_SIZE = 64; /*!< Define EEPROM page size*/
+
 // ==============================================================================
 // IC CLASS FUNCTIONS
 // ==============================================================================
@@ -38,6 +41,7 @@ class M95256
 {
 private:
     SPI_Bus SPI;
+    uint8_t Openned;
 
 public:
     /**
@@ -46,6 +50,12 @@ public:
      * @param SPI An SPI object to be used as base
      */
     M95256(const SPI_Bus *SPI);
+
+    /**
+     * @brief Constructor for the M95256 class.
+     *
+     */
+    M95256();
 
     /**
      * @brief Destructor for the M95256 class.
@@ -109,7 +119,7 @@ public:
      * @return -2 : Invalid Len (May be triggered if Address + Len > MAX_ADDRESS)
      * @return -3 : IOCTL error.
      */
-    int Read(const int Address, int *const Data, const int Len);
+    int Read(const int Address, uint8_t *const Data, const int Len);
 
     /**
      * @brief Write content to EEPROM. Only possible if write has been enabled !
@@ -123,5 +133,5 @@ public:
      * @return -2 : Invalid Len (May be triggered if Address + Len > MAX_ADDRESS)
      * @return -3 : IOCTL error.
      */
-    int Write(const int Address, int *const Data, const int Len);
+    int Write(const int Address, uint8_t *const Data, const int Len);
 };

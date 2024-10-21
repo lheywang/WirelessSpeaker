@@ -12,7 +12,6 @@
 #pragma once
 
 #include "SPI_Engine.hpp"
-#include "structs/Struct.hpp"
 #include "linux/spi/spidev.h"
 
 // ==============================================================================

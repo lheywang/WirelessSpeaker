@@ -1,0 +1,59 @@
+# Set the default config file
+# Theses values correspond to electrical settings applied on the analog section
+# Any changes here may reflect in a performance loss
+
+[EQ]
+# A value of 0x80 set the mid point
+Bass = 0x80
+MediumR = 0x80
+MediumL = 0x80
+HighR = 0x80
+HighL = 0x80
+
+# A value of 0x20 set the mid point of the potentiometer.
+LPValL = 0x20
+LPValR = 0x20
+HPValL = 0x20
+HPValR = 0x20
+RL = 0x20
+
+[DAC]
+MuteDelay = 0x04
+Volume = 0x30
+VolumeL = 0x30
+VolumeR = 0x30
+DataL = 0x01
+DataR = 0x01
+AnalogAttenL = 0x00
+AnalogAttenR = 0x00
+
+[AMP]
+PLBas = 0xFF
+PLLeft = 0xFF
+PLLRight = 0xFF
+
+[LEDS]
+BrightnessTOP = 0xC0
+BrightnessMAXTOP = 0xFF
+BrightnessBACK1 = 0xC0
+BrightnessMAXBACK1 = 0xFF
+BrightnessBACK2 = 0xC0
+BrightnessMAXBACK2 = 0xFF
+BrightnessBACK3 = 0xC0
+BrightnessMAXBACK3 = 0xFF
+
+[TOUCH_SENSOR]
+Threshold = 0x04
+Sensivity = 0x03
+
+[PDO]
+Profile1Volt = [20, 0]
+Profile1Curr = [5, 0]
+Profile1PPS = 0x00
+
+Profile2Volt = [20, 0]
+Profile2Curr = [3, 6]
+Profile2PPS = 0x00
+
+[NAME]
+Name = "Wireless Speaker !"

@@ -21,16 +21,6 @@ struct LEDS
 {
     uint8_t Brightness;        /*!< Define brightness value*/
     uint8_t MaximalBrightness; /*!< Define the maximal brightness value*/
-
-    uint8_t Address1; /*!< Configure it's subaddress 1*/
-    uint8_t Address2; /*!< Configure it's subaddress 2*/
-    uint8_t Address3; /*!< Configure it's subaddress 3*/
-    uint8_t Global;   /*!< Configure it's subaddress 4 (global)*/
-
-    bool Address1Response; /*!< Enable the sub-address 1 response*/
-    bool Address2Response; /*!< Enable the sub-address 2 response*/
-    bool Address3Response; /*!< Enable the sub-address 3 response*/
-    bool GlobalResponse;   /*!< Enable the sub-address 4 (global) response*/
 };
 
 /*! Define values that are stored on the EEPROM for the capacitive touch sensor*/

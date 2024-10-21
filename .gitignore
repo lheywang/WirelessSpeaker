@@ -40,15 +40,14 @@
 
 # EEPROM files
 *.eep
+*.bin
 
 # VSCODE artifacts
 .vscode/
 
-# Doxygen output
-doc/
-
 # Build outputs
 build/
+doc/
 
 # Cmakes artifacts
 CMakeFiles/

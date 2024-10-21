@@ -34,11 +34,23 @@ set(PeripheralDrivers   ${CMAKE_SOURCE_DIR}/Drivers/I2C/I2C_Engine.cpp\\
 
 # External libraries includes                       
 set(ExternalIncludes    ${CMAKE_SOURCE_DIR}/Drivers/GPIO/includes/clk.cpp\\
-                        ${CMAKE_SOURCE_DIR}/Drivers/I2C/includes/smbus.cpp)
+                        ${CMAKE_SOURCE_DIR}/Drivers/I2C/includes/smbus.cpp\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crc8.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crc16.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crc32.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crc64.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crcccitt.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crckrmit.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/crcsick.c\\
+                        ${CMAKE_SOURCE_DIR}/Modules/libcrc/nmea-chk.c)
 
 # Modules 
-set(Modules ${CMAKE_SOURCE_DIR}/Modules/Leds/Leds.cpp\\
-            ${CMAKE_SOURCE_DIR}/Modules/Temperature/Temperature.cpp)
+set(Modules ${CMAKE_SOURCE_DIR}/Modules/EEPROM/eeprom.cpp\\
+            ${CMAKE_SOURCE_DIR}/Modules/EEPROM/dsp_profile/dsp_profile.cpp)
+
+# Internal libraries
+set(LIBS    ${CMAKE_BINARY_DIR}/bin/config.o\\
+            ${CMAKE_BINARY_DIR}/bin/header.o)
 
 # ========================================================================================
 # CMAKES SETTINGS
@@ -55,19 +67,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcpu=cortex-a53 -O3 -std=c++20 -MMD -Wa
 
 # Comment to disable debug
 add_compile_options(-g)
+# set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # ========================================================================================
 # EXECUTABLES
 # ========================================================================================
-add_executable(${AppName} main.cpp ${DeviceDrivers} ${PeripheralDrivers} ${Modules} ${ExternalIncludes})
-
-# ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/sync.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/strerror.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/io.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/hotplug.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/descriptor.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/core.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/os/linux_netlink.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/os/linux_udev.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/os/linux_usbfs.c\\
-#                         ${CMAKE_SOURCE_DIR}/Drivers/USB/includes/os/threads_posix.c
+add_executable(${AppName} main.cpp ${DeviceDrivers} ${PeripheralDrivers} ${Modules} ${ExternalIncludes} ${LIBS})

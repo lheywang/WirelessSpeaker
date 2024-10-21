@@ -38,6 +38,23 @@ constexpr int MAX_ADDRESS = 0x7FFF;
 M95256::M95256(const SPI_Bus *SPI)
 {
     this->SPI = *SPI;
+    this->Openned = 0x00;
+    return;
+}
+
+M95256::M95256()
+{
+    // Open a new SPI device
+    SPI_Bus *ptr = SPI_GetInfos();
+    if (ptr == nullptr)
+        throw std::runtime_error("[ M95256 ][ CONSTRUCTOR ] : Failed to allocate memory for the SPI obect");
+
+    // copy the SPI Device
+    this->SPI = *ptr;
+
+    // Load default settings of the SPI Bus.
+    SPI_Configure(&this->SPI, SPI_MODE_0, SPI_DEFAULT_WORDSIZE, SPI_DEFAULT_SPEED);
+
     return;
 }
 
@@ -120,7 +137,7 @@ int M95256::WriteStatus(const int WriteProtectStatus,
     return 0;
 }
 
-int M95256::Read(const int Address, int *const Data, const int Len)
+int M95256::Read(const int Address, uint8_t *const Data, const int Len)
 {
     if ((0 > Address) | (Address > MAX_ADDRESS))
         return -1;
@@ -128,7 +145,7 @@ int M95256::Read(const int Address, int *const Data, const int Len)
         return -2;
 
     int res = 0;
-    int *buf = (int *)malloc((sizeof(int) * (Len + 3)));
+    uint8_t *buf = (uint8_t *)malloc(Len + 3);
     if (buf == 0)
     {
         std::cerr << "[ M95256 ][ Read ] Could not allocate memory for read operation "
@@ -137,7 +154,7 @@ int M95256::Read(const int Address, int *const Data, const int Len)
         return -1;
     }
 
-    memset(buf, 0x00, (sizeof(int) * (Len + 3)));
+    memset(buf, 0x00, Len + 3);
     buf[0] = READ;
     buf[1] = Address & 0xFF00;
     buf[2] = Address & 0x00FF;
@@ -157,7 +174,7 @@ int M95256::Read(const int Address, int *const Data, const int Len)
     return 0;
 }
 
-int M95256::Write(const int Address, int *const Data, const int Len)
+int M95256::Write(const int Address, uint8_t *const Data, const int Len)
 {
     if ((0 > Address) | (Address > MAX_ADDRESS))
         return -1;
@@ -165,7 +182,7 @@ int M95256::Write(const int Address, int *const Data, const int Len)
         return -2;
 
     int res = 0;
-    int *buf = (int *)malloc((sizeof(int) * (Len + 3)));
+    uint8_t *buf = (uint8_t *)malloc(Len + 3);
     if (buf == 0)
     {
         std::cerr << "[ M95256 ][ Write ] Could not allocate memory for read operation "
@@ -174,22 +191,21 @@ int M95256::Write(const int Address, int *const Data, const int Len)
         return -1;
     }
 
+    memset(buf, 0x00, Len + 3);
+    buf[0] = WRITE;
+    buf[1] = (uint8_t)((Address & 0xFF00) >> 8);
+    buf[2] = (uint8_t)(Address & 0x00FF);
+    memcpy(&buf[3], Data, Len);
+
     this->WriteEnable();
 
-    buf[0] = WRITE;
-    buf[1] = Address & 0xFF00;
-    buf[2] = Address & 0x00FF;
-    memcpy(&buf[3], Data, Len * sizeof(int));
-
     res = SPI_Transfer(&this->SPI, buf, buf, (Len + 3));
-    if (res != 0)
-    {
-        free(buf);
-        return -2;
-    }
-
-    usleep(7000); // 7 ms of delay, to ensure correct write.
-
     free(buf);
+
+    if (res != 0)
+        return -2;
+
+    usleep(7000); // 7 ms of delay, to ensure page write.
+
     return 0;
 }

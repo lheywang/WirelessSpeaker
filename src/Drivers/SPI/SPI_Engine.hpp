@@ -40,6 +40,9 @@ struct SPI_Bus
     unsigned char rx_nbits; /*!< Defined automatically. Store the SPI Bus rx bits per cycle.*/
 };
 
+constexpr int SPI_DEFAULT_WORDSIZE = 8;      /*!< Default value for SPI wordsize*/
+constexpr int SPI_DEFAULT_SPEED = 5'000'000; /*!< Default value for SPI speed*/
+
 // ==============================================================================
 // PROTOTYPES
 // ==============================================================================
