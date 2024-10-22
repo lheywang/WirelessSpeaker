@@ -1,0 +1,23 @@
+name: Python CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  check-formatting:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install python black formatter
+      run: sudo apt-get update && sudo apt-get install black
+    - name: Check code formatting
+      run: black . --check
+    - name: Check for errors now...
+      run: if [ $? -ne 0 ]; then
+            echo "Formatting errors detected. Aborting."
+            exit 1
+          fi
