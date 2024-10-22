@@ -17,7 +17,4 @@ jobs:
     - name: Check code formatting
       run: black . --check
     - name: Check for errors now...
-      run: if [ $? -ne 0 ]; then
-            echo "Formatting errors detected. Aborting."
-            exit 1
-          fi
+      run: '[ $? -eq 0 ] && exit 0 || exit 1'
