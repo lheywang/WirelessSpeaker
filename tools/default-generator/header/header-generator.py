@@ -1,4 +1,8 @@
-# Generator config default files !
+# ===============================================================================
+# header-generator.py
+# Tool to generate default configuration binaries for the header file.
+# Wrote by lheywang on october 2024.
+# ===============================================================================
 import tomllib
 import argparse
 import datetime
