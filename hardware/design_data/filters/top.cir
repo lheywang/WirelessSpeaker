@@ -1,0 +1,108 @@
+* C:\Users\leona\Documents\.Nextcloud\Leonard\3. Projets\Enceinte\Simulations\QSPICE\top.qsch
+V1 -7V 0 -7
+V2 +7V 0 7
+V3 R+ 0 AC=1 SIN 0 3.3 5000
+X´Reconstruction_filter R+ R+FHP +7V -7V Reconstruction_filter
+X´Input_High_Pass R+FHP R+IN +7V -7V RC_7Hz_HP
+X´Bass_Filter R+IN R+Bass +7V -7V MFB_Bass
+X´Medium_Filter R+IN R+Mediums +7V -7V MFB_Mediums
+X´Trebbles_Filter R+IN R+High +7V -7V MFB_High
+
+.subckt MFB_Bass IN OUT + -
+R3 N04 N01 390 * {R_tol}
+C3 N01 0 400n * {C_tol}
+Ã1 + - OUT OUT N01 ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ RRopAmp Avol={RC4558_AVOL} GBW={RC4558_GBW} Slew={RC4558_SR} Rload=2K Phi=60
+C4 N02 0 680n * {C_tol}
+C5 N04 N03 100n * {C_tol}
+R5 IN N02 2.2k * {R_tol}
+R6 N02 N03 820 * {R_tol}
+R7 N02 N04 2.2k * {R_tol}
+Ã2 + - N04 N03 0 ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ RRopAmp Avol={RC4558_AVOL} GBW={RC4558_GBW} Slew={RC4558_SR} Rload=2K Phi=60
+.ends MFB_Bass
+
+
+.subckt MFB_High IN OUT + -
+Ã2 + - N03 N02 0 ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ RRopAmp Avol={RC4558_AVOL} GBW={RC4558_GBW} Slew={RC4558_SR} Rload=2K Phi=60
+C1 N01 N02 22n * {C_tol}
+C2 IN N01 22n * {C_tol}
+C3 N01 N03 22n * {C_tol}
+R1 N02 N03 4.7K * {R_tol}
+R2 0 N01 2K * {R_tol}
+Ã1 + - N06 N05 0 ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ RRopAmp Avol={RC4558_AVOL} GBW={RC4558_GBW} Slew={RC4558_SR} Rload=2K Phi=60
+C4 N04 N05 33n * {C_tol}
+C5 N03 N04 33n * {C_tol}
+C6 N04 N06 33n * {C_tol}
+R3 N05 N06 4.7K * {R_tol}
+R4 0 N04 2K * {R_tol}
+C7 N06 N07 33n * {C_tol}
+R5 N07 0 3.9K * {R_tol}
+Ã3 + - OUT N07 N08 ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ RRopAmp Avol={RC4558_AVOL} GBW={RC4558_GBW} Slew={RC4558_SR} Rload=2K Phi=60
+R6 N08 OUT 2.2K * {R_tol}
+R7 0 N08 10K * {R_tol}
+.ends MFB_High
+
+
+.subckt MFB_Mediums IN OUT + -
+Ã2 + - N04 N03 0 ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ RRopAmp Avol={RC4558_AVOL} GBW={RC4558_GBW} Slew={RC4558_SR} Rload=2K Phi=60
+C1 IN N01 220n * {C_tol}
+R1 N01 0 680 * {R_tol}
+C2 N01 N02 68n * {C_tol}
+R2 N02 0 2K * {R_tol}
+C3 N02 N03 47n * {C_tol}
+C4 N02 N04 47n * {C_tol}
+R3 N03 N04 20K * {R_tol}
+R4 N04 N05 240 * {R_tol}
+R5 N05 N06 1.3K * {R_tol}
+R6 N06 N07 3.3K * {R_tol}
+Ã1 + - N08 N07 0 ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ RRopAmp Avol={RC4558_AVOL} GBW={RC4558_GBW} Slew={RC4558_SR} Rload=2K Phi=60
+C5 N05 0 220n * {C_tol}
+C6 N06 0 68n * {C_tol}
+C7 N07 N08 4.7n * {C_tol}
+R7 N06 N08 1.5K * {R_tol}
+R8 N08 N09 910 * {R_tol}
+R9 N09 N10 910 * {R_tol}
+Ã4 + - N11 N10 0 ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ RRopAmp Avol={RC4558_AVOL} GBW={RC4558_GBW} Slew={RC4558_SR} Rload=2K Phi=60
+C8 N09 0 100n * {C_tol}
+C9 N10 N11 47n * {C_tol}
+R10 N09 N11 910 * {R_tol}
+Ã3 + - OUT N12 0 ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ RRopAmp Avol={RC4558_AVOL} GBW={RC4558_GBW} Slew={RC4558_SR} Rload=2K Phi=60
+R11 N12 OUT 1.1K * {R_tol}
+R12 N11 N12 1K * {R_tol}
+.ends MFB_Mediums
+
+
+.subckt RC_7Hz_HP IN OUT + -
+Ã4 + - OUT N02 N01 ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ RRopAmp Avol={RC4558_AVOL} GBW={RC4558_GBW} Slew={RC4558_SR} Rload=2K Phi=60
+C1 IN N01 22u * {C_tol}
+R1 N01 0 2.2k * {R_tol}
+R2 0 N02 4.6k * {R_tol}
+R3 N02 OUT 220 *{R_tol}
+.ends RC_7Hz_HP
+
+
+.subckt Reconstruction_filter IN OUT + -
+R1 IN N01 170 * {R_tol}
+C1 N01 0 27n * {C_tol}
+C2 N02 0 3.6n * {C_tol}
+C3 N04 N03 330p * {C_tol}
+R2 N01 N02 1.85k * {R_tol}
+R3 N02 N03 4.25k * {R_tol}
+R4 N02 N04 1.85k * {R_tol}
+Ã4 + - N04 N03 0 ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ RRopAmp Avol={RC4558_AVOL} GBW={RC4558_GBW} Slew={RC4558_SR} Rload=2K Phi=60
+C4 N05 0 3.6n * {C_tol}
+C5 OUT N06 330p * {C_tol}
+R5 N04 N05 1.5k * {R_tol}
+R6 N05 N06 3.3k * {R_tol}
+R7 N05 OUT 1.5k * {R_tol}
+Ã1 + - OUT N06 0 ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ ¥ RRopAmp Avol={RC4558_AVOL} GBW={RC4558_GBW} Slew={RC4558_SR} Rload=2K Phi=60
+.ends Reconstruction_filter
+
+.PARAM RC4558_SR 2200000
+.PARAM RC4558_GBW 4000000
+.PARAM RC4558_AVOL 10000
+.AC oct 10000 1 400000
+.PARAM R_tol 1
+.PARAM C_tol 1
+.PLOT V(R+High), V(R+Bass), V(R+Mediums)
+.PLOT V(R+High) + V(R+Bass) + V(R+Mediums)
+.end
