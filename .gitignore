@@ -57,3 +57,6 @@ src/Makefile
 
 # Installation sub projects
 tools/utils
+
+# QSPICE simulations (too big...)
+*.qraw*
