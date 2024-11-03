@@ -32,7 +32,7 @@ all: build/bin/config.o build/bin/header.o
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@echo "Compiling C/C++ sources files..."
 	@echo "------------------------------------------------------------------------------------------------------------"
-	@cd build/ && cmake ../src/CMakeLists.txt
+	@cmake -S src/ -B build/
 	@cd build/ && make all -j$(MAX_CORES)
 
 	@echo "------------------------------------------------------------------------------------------------------------"
@@ -69,7 +69,7 @@ build/bin/config.o: default/config/config.toml
 	@echo "Preparing config default binary data..."
 	@echo "------------------------------------------------------------------------------------------------------------"
 
-	python3.11 tools/default-generator/config/config-generator.py $< build/bin/config.bin
+	python tools/default-generator/config/config-generator.py $< build/bin/config.bin
 	aarch64-linux-gnu-ld -r -b binary -o  $@ build/bin/config.bin
 
 	@echo "Generated $@"
@@ -80,7 +80,7 @@ build/bin/header.o: default/header/header.toml
 	@echo "Preparing header default binary data..."
 	@echo "------------------------------------------------------------------------------------------------------------"
 	
-	python3.11 tools/default-generator/header/header-generator.py $< build/bin/header.bin 
+	python tools/default-generator/header/header-generator.py $< build/bin/header.bin 
 	aarch64-linux-gnu-ld -r -b binary -o  $@ build/bin/header.bin
 
 	@echo "Generated $@"
