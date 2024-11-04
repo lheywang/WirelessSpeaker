@@ -3,6 +3,9 @@
 # Tool to analyse QSPICE simulated data easier than with the integrated tool,
 # by providing multiples graphes where a single parameter change for them.
 # Wrote by lheywang on october 2024.
+#
+# This tool use extensively Nvidia CUDF to speed up packages on such larges datasets !
+#
 # ===============================================================================
 
 import os
@@ -41,17 +44,22 @@ df = cudf.read_csv(f"temp/{files[0]}", sep=",")
 for file in tqdm(files[1:]):
     df = cudf.concat([df, cudf.read_csv(f"temp/{file}", sep=",")], axis=0)
 
-# Convert all columns to their Amplititude and Phase
+# Convert all columns to their Amplititude and Phase. 
 MagPhi = cudf.DataFrame()
+MagPhi["Frequency"] = df["Frequency"]
 col = ["outr+high","outr-high","outr+mediums","outr-mediums","outl+high","outl-high","outl+mediums","outl-mediums","out+bass","out-bass"]
 for column in col:
     MagPhi[f"V({column})"] = 20 * np.log10(np.abs(np.sqrt(np.power(df[f"V({column})"], 2) + np.power(df[f"iV({column})"], 2))))
     MagPhi[f"P({column})"] =  np.arctan2(df[f"iV({column})"], df[f"V({column})"]) * 180 / np.pi
 
-# Processing data (number of lines per step. Multiples steps are pushed at the end of the previous)
+# Processing data. 
 chunk_size = 3822
-
-print(MagPhi)
+# Then we process the data, per chunk. Each chunk correspond a step with all studies frequencies.
+MMM = cudf.DataFrame()
+for i in tqdm(range(0, len(MagPhi), chunk_size)):
+    chunk = MagPhi.iloc[i:i+chunk_size].copy()
+    MMM["Frequency"] = chunk["Frequency"]
+    MMM["Median"] += chunk[""]
 
 cutf = time.time()
 input("Press enter to exit...")
