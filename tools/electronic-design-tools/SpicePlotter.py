@@ -8,7 +8,6 @@
 import os
 
 # from PyQSPICE import clsQSPICE as pqs # type: ignore
-from qspice import clsQSPICE as pqs
 from pick import pick  # type: ignore
 import cudf
 import numpy as np
