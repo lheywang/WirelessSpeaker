@@ -6,68 +6,40 @@
 # ===============================================================================
 
 import os
-if os.name != "nt":
-    print("Due to QSPICE availability on Windows only, please run this script for a Windows device.")
-    exit()
-from PyQSPICE import clsQSPICE as pqs # type: ignore
-from pick import pick # type: ignore
-import os # type: ignore
-import math # type: ignore
-import pandas as pd # type: ignore
-import matplotlib as mpl # type: ignore
-import matplotlib.pyplot as plt # type: ignore
 
-# Create an instance of PyQSPICE
-run = pqs("top")
+# from PyQSPICE import clsQSPICE as pqs # type: ignore
+from qspice import clsQSPICE as pqs
+from pick import pick  # type: ignore
+import cudf
+import numpy as np
+import time
+cuts = time.time()
 
-title = "What do you want to do ?"
-options = ["Load a QRAW", "Simulate a netlist", "Simulate a qsch circuit"]
+# First, we need to replace every \t with a ,
+# This will make the parsing of data easier
+with open("data/Components.csv", "r") as f:
+    data = f.read()
+data = data.replace("\t", ",")
+with open("temp/Components.csv", "w") as f:
+    f.write("Frequency,V(outr+high),iV(outr+high),V(outr-high),iV(outr-high),V(outr+mediums),iV(outr+mediums),V(outr-mediums),iV(outr-mediums),V(outl+high),iV(outl+high),V(outl-high),iV(outl-high),V(outl+mediums),iV(outl+mediums),V(outl-mediums),iV(outl-mediums),V(out+bass),iV(out+bass),V(out-bass),iV(out-bass)\n")
+    for line in data.splitlines(True)[1:]:
+        f.write(line)
 
-job, index = pick(options, title)
+# Load the CSV file
+# 21 columns !
+# The order shall be defined by the user when exporting ...
+df = cudf.read_csv("temp/Components.csv", sep=",")
 
-if (index == 2):
-    run.qsch2cir()
-    run.cir2qraw()
-if (index == 1):
-    run.cir2qraw()
+# Convert all columns to their Amplititude and Phase
+MagPhi = cudf.DataFrame()
+col = ["outr+high","outr-high","outr+mediums","outr-mediums","outl+high","outl-high","outl+mediums","outl-mediums","out+bass","out-bass"]
+for column in col:
+    MagPhi[f"V({column})"] = 20 * np.log10(np.abs(np.sqrt(np.power(df[f"V({column})"], 2) + np.power(df[f"iV({column})"], 2))))
+    MagPhi[f"P({column})"] =  np.arctan2(df[f"iV({column})"], df[f"V({column})"]) * 180 / np.pi
 
-data = run.LoadQRAW(["V(R+High)"])
-print(data)
-print(data.sem)
+print(MagPhi)
 
-mpl.rcParams.update([['font.sans-serif', ["Arial Rounded MT Bold", 'Arial Unicode MS', 'Arial', 'sans-serif']], ["mathtext.default", "rm"], ["legend.labelspacing", 0.1], ["legend.columnspacing", 0.2], ["legend.handletextpad", 0.3], ['axes.formatter.useoffset', False], ['xtick.minor.visible', True], ['ytick.minor.visible', True], ['grid.linewidth', 1],["savefig.dpi", 300], ["axes.unicode_minus", False]])
-
-plt.close('all')
-
-#['Solarize_Light2', '_classic_test_patch', '_mpl-gallery', '_mpl-gallery-nogrid', 'bmh', 'classic', 'dark_background', 'fast', 'fivethirtyeight', 'ggplot', 'grayscale', 'seaborn-v0_8', 'seaborn-v0_8-bright', 'seaborn-v0_8-colorblind', 'seaborn-v0_8-dark', 'seaborn-v0_8-dark-palette', 'seaborn-v0_8-darkgrid', 'seaborn-v0_8-deep', 'seaborn-v0_8-muted', 'seaborn-v0_8-notebook', 'seaborn-v0_8-paper', 'seaborn-v0_8-pastel', 'seaborn-v0_8-poster', 'seaborn-v0_8-talk', 'seaborn-v0_8-ticks', 'seaborn-v0_8-white', 'seaborn-v0_8-whitegrid', 'tableau-colorblind10']
-
-for stl in ['ggplot', 'Solarize_Light2', 'classic', 'dark_background', 'grayscale']:
-    plt.style.use(stl)
-
-    fig, ax = plt.subplots(tight_layout=True)
-
-    for i in range(run.sim['Nstep']):
-        data[data.Step == i].plot(ax=ax, x=run.sim['Xlbl'],  y="V(R+High)", label="Step-" + str(i))
-
-    ax.set_xlim(run.sim['Xmin'],run.sim['Xmax'])
-    ax.set_ylim(-80,20)
-    ax.set_ylabel('Output amplitude (dB)', fontsize=14)
-    ax.set_xlabel('$V_{DS}$ (Hz)', fontsize=14)
-    ax.minorticks_on()
-
-    ax.grid(which='major', linewidth="0.5")
-    ax.grid(which='minor', linewidth="0.35")
-
-    ax.text(0.1, 70, run.sim['StepInfo'])
-    plt.legend(ncol=1, loc="center left",fancybox=True)
-
-    plt.show()
-
-    run.tstime(['png'])
-    plt.savefig(run.path['png'], format='png', bbox_inches='tight')
-    plt.close('all')
-
-
-
-
+cutf = time.time()
+input("Press enter to exit...")
+print(f"Time elapsed : {cutf - cuts}")
 
