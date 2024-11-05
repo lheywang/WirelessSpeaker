@@ -184,6 +184,7 @@ plt.plot(DATA['Frequency'], DATA['MinRVP'], color='#e72900', label='Absolute max
 plt.plot(DATA['Frequency'], DATA['MaxRVP'], color='#0031e7', label='Absolute minimums')
 plt.plot(DATA['Frequency'], DATA['MedianRVP'], color='#e7a500', label='Median')
 plt.xlabel("Frequency (Hz)")
+plt.xscale('log')
 plt.ylabel("Amplitude (dB)")
 plt.title("Right positive output response")
 plt.legend()
