@@ -15,6 +15,7 @@ from tqdm import tqdm
 import dask
 dask.config.set({"dataframe.backend": "cudf"})
 import dask.dataframe as dd
+import pandas as pd
 
 try:
     import cudf
@@ -95,6 +96,7 @@ Max = cudf.Series([])
 STD = cudf.Series([])
 
 for freq, group_df in tqdm(Gr):
+    print(freq)
     cudf.concat([Means, cudf.Series([group_df.mean()])])
     cudf.concat([Min, cudf.Series([group_df.min()])])
     cudf.concat([Max, cudf.Series([group_df.max()])])
