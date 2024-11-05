@@ -12,10 +12,6 @@ import os
 import numpy as np
 import time
 from tqdm import tqdm
-import dask
-dask.config.set({"dataframe.backend": "cudf"})
-import dask.dataframe as dd
-import pandas as pd
 
 try:
     import cudf
@@ -84,28 +80,25 @@ for column in tqdm(col):
         np.arctan2(df[f"iV({column})"], df[f"V({column})"]) * 180 / np.pi
     )
 
-# Too slow...
-# Idea : Group by frequencies, for example 1-1.5, 2.5 ...
-# We loss a bit of precision but we don't really care here since the goal is to prompt an idea of the data, not the exact value !
+def ComputeStats(Frame):
+    return Frame.mean(), Frame.min(), Frame.max(), Frame.std()
+
 
 print("Computing statistics per frequencies...")
-Gr = MagPhi.groupby("Frequency")
-Means = cudf.Series([])
-Min = cudf.Series([])
-Max = cudf.Series([])
-STD = cudf.Series([])
+MagPhi = MagPhi.sort_values("Frequency")
+RowNumber = MagPhi['Frequency'].value_counts().sort_index().max()
 
-for freq, group_df in tqdm(Gr):
-    print(freq)
-    cudf.concat([Means, cudf.Series([group_df.mean()])])
-    cudf.concat([Min, cudf.Series([group_df.min()])])
-    cudf.concat([Max, cudf.Series([group_df.max()])])
-    cudf.concat([STD, cudf.Series([group_df.std()])])
+Means = MagPhi.rolling(window=int(RowNumber), min_periods=1).mean()
+Max = MagPhi.rolling(window=int(RowNumber), min_periods=1).max()
+Min = MagPhi.rolling(window=int(RowNumber), min_periods=1).min()
+STD = MagPhi.rolling(window=int(RowNumber), min_periods=1).std()
 
-print(Means.head)
-print(Min.head)
-print(Max.head)
-print(STD.head)
+print(Means)
+print(Max)
+print(Min)
+print(STD)
+
+
 
 
 
