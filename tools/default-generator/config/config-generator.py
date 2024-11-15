@@ -1,4 +1,8 @@
-# Generator config default files !
+# ===============================================================================
+# config-generator.py
+# Tool to generate default configuration binaries for the config file.
+# Wrote by lheywang on october 2024.
+# ===============================================================================
 import tomllib
 import argparse
 

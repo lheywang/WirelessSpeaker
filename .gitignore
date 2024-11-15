@@ -48,6 +48,7 @@
 # Build outputs
 build/
 doc/
+*__pycache__/
 
 # Cmakes artifacts
 CMakeFiles/
@@ -57,3 +58,11 @@ src/Makefile
 
 # Installation sub projects
 tools/utils
+
+# QSPICE simulations (too big...)
+*.qraw*
+*.csv*
+
+# Log files
+*.log*
+*.txt*
