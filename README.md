@@ -54,14 +54,7 @@ First, install all of the tools :
 
 AND... That's all ! The script as managed everything for you !
 
-### For more advanced users !
-### Makefiles recipes, for more advanced users : 
-The project is based on a mix of makefiles, CmakeLists.txt and other builds tools.
-A main Makefile is available for you, and exports : 
-- clean : Remove artifacts of build
-- clean_all : Remove all files related to builds (incl. Cmakes caches)
-- all : Build the executable 
-- doc : Build the pdf + html documentation.
+
 
 **Notes** : 
 *If somes want's to add support to another Pi, you're welcome !*
