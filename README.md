@@ -65,3 +65,13 @@ A main Makefile is available for you, and exports :
 
 **Notes** : 
 *If somes want's to add support to another Pi, you're welcome !*
+
+## Supporting me ?
+If you found the project interessting / usefull, please consider supporting me !
+This can be done in multiple ways :
+
+- Star the project on github, to make it visible
+- Share to your friends / communities, to make this project a bit more known
+- Supporing the developpement team by donating money on the following link : [Paypal](https://paypal.me/heywangleonard?country.x=FR&locale.x=fr_FR).
+
+Any of theses actions is purely based on voluntarism, and will be warmly thank !
