@@ -45,7 +45,7 @@ M95256::M95256(const SPI_Bus* SPI)
 M95256::M95256()
 {
     // Open a new SPI device
-    SPI_Bus* ptr = SPI_GetInfos();
+    SPI_Bus* ptr = SPI_GetInfos(SPI_SLAVES::EEPROM);
     if(ptr == nullptr)
         throw std::runtime_error(
             "[ M95256 ][ CONSTRUCTOR ] : Failed to allocate memory for the SPI obect");

@@ -44,6 +44,13 @@ struct SPI_Bus
 constexpr int SPI_DEFAULT_WORDSIZE = 8; /*!< Default value for SPI wordsize*/
 constexpr int SPI_DEFAULT_SPEED = 5'000'000; /*!< Default value for SPI speed*/
 
+/*! Define parameters of the SPI bus */
+enum class SPI_SLAVES
+{
+    EEPROM, /*!< CS ID for the EEPROM*/
+    DAC, /*!< CS ID for the DAC*/
+};
+
 // ==============================================================================
 // PROTOTYPES
 // ==============================================================================
@@ -52,11 +59,10 @@ constexpr int SPI_DEFAULT_SPEED = 5'000'000; /*!< Default value for SPI speed*/
  * @brief Open the SPI Bus and return a structure linked to it.
  *
  * @param[in] CS The selected CS for this struct.
- * @param[in] Bus The bus number used
  *
  * @return A SPI struct
  */
-SPI_Bus* SPI_GetInfos();
+SPI_Bus* SPI_GetInfos(SPI_SLAVES CS);
 
 /**
  * @brief Close and delete an SPI Object

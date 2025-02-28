@@ -90,7 +90,7 @@ extern uint8_t* _binary_build_bin_header_bin_end[];
 EEPROM::EEPROM(bool ForceWrite)
 {
     // Open a new SPI device
-    this->SPI = SPI_GetInfos();
+    this->SPI = SPI_GetInfos(SPI_SLAVES::EEPROM);
     if(this->SPI == nullptr)
         throw std::runtime_error(
             "[ M95256 ][ CONSTRUCTOR ] : Failed to allocate memory for the SPI obect");
@@ -511,12 +511,15 @@ int EEPROM::GetDSPProfileSize(const int ProfileNumber, DSP_PROFILE_SIZE* const P
     {
     case(int)DSP_PROFILE_SIZE::LARGE:
         *Profile = DSP_PROFILE_SIZE::LARGE;
+        break;
 
     case(int)DSP_PROFILE_SIZE::MEDIUM:
         *Profile = DSP_PROFILE_SIZE::MEDIUM;
+        break;
 
     case(int)DSP_PROFILE_SIZE::SMALL:
         *Profile = DSP_PROFILE_SIZE::SMALL;
+        break;
     }
 
     return 0;

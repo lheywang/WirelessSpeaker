@@ -28,12 +28,12 @@
 // FUNCTIONS
 // ==============================================================================
 
-SPI_Bus* SPI_GetInfos()
+SPI_Bus* SPI_GetInfos(SPI_SLAVES CS)
 {
     SPI_Bus* SPI = new SPI_Bus;
 
     // Set up variables
-    SPI->CS_number = (int)SPI_SETTINGS::BUS_MAX_CS - 1;
+    SPI->CS_number = (int)CS;
     SPI->SPI_Bus = (int)SPI_SETTINGS::BUS_NUMBER;
 
     snprintf(SPI->SPI_Filename,
@@ -41,6 +41,7 @@ SPI_Bus* SPI_GetInfos()
              "/dev/spidev%d.%d",
              SPI->SPI_Bus,
              SPI->CS_number);
+
     SPI->SPI_Filename[sizeof(SPI->SPI_Filename) - 1] = '\0';
 
     // Open the file
