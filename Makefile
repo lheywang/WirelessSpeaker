@@ -1,11 +1,62 @@
+# ===========================================================================================================
+# MAKEFILE
+#
+# Handle all of the build process for the whole project.
+# May be runned on bare OS, but is generally called inside a docker
+# 
+# l.heywang <leonard.heywang@proton.me>
+# v1 on Nov 2024
+# v2 on Jun 2025
+# ===========================================================================================================
 
+# Load the number of system cores to fasten the build process
 MAX_CORES := $(shell nproc)
-EXECNAME := build/WirelessSpeaker.arm
+
+# Load shared variables among different build steps
+-include .config
+
+# Configuring PHONY
+.PHONY: clean deep_clean all format doc __clean __deep_clean __all __format __doc 
+
+# Configure some variables
+DOCKER_ARGS := --rm -it -v "$(shell pwd):/app"
 
 # ===========================================================================================================
-# GLOBAL RECIPES
+# USER ACCESSIBLE COMMANDS (invoke behind the scene docker)
 # ===========================================================================================================
 clean:
+	@docker run ${DOCKER_ARGS} \
+		${DOCKER_NAME} \
+		__clean
+
+deep_clean:
+	@docker run ${DOCKER_ARGS} \
+		${DOCKER_NAME} \
+		__deep_clean
+
+all:
+	@docker run ${DOCKER_ARGS} \
+		${DOCKER_NAME} \
+		-e NAME="${NAME}" \
+		-e APPNAME="${NAME}" \
+		__all
+
+format:
+	@docker run ${DOCKER_ARGS} \
+		${DOCKER_NAME} \
+		__format
+
+doc:
+	@docker run ${DOCKER_ARGS}\
+		${DOCKER_NAME} \
+		__doc
+
+
+# ===========================================================================================================
+# GLOBAL RECIPES (TO BE RUNNED UNDER DOCKER)
+# Theses shall not be runned under plain OS. 
+# ===========================================================================================================
+__clean:
 	@-cd build/ && make clean
 	@rm -f build/bin/*.bin build/bin/*.o
 
@@ -16,7 +67,7 @@ clean:
 	@echo "Cleaned build/ doc/ and tools/ and default/ binaries !"
 	@echo "------------------------------------------------------------------------------------------------------------"
 
-deep_clean:
+__deep_clean:
 	@echo "Removing caches..."
 
 	@-rm -r -f build/
@@ -27,31 +78,35 @@ deep_clean:
 	@echo "Deleted build/ doc/ default/ !"
 	@echo "------------------------------------------------------------------------------------------------------------"
 
-all: build/bin/config.o build/bin/header.o
+__all: build/bin/config.o build/bin/header.o
 	@mkdir -p build/
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@echo "Compiling C/C++ sources files..."
 	@echo "------------------------------------------------------------------------------------------------------------"
-	@cmake -S src/ -B build/
+	@cmake -S src/ -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/cmake/toolchain.cmake -B build/
 	@cd build/ && make all -j$(MAX_CORES)
 
 	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Compiled source on $(shell pwd)/build/WirelessSpeaker.arm"
+	@echo "Compiled source on $(shell pwd)/build/${APPNAME}"
 	@echo "You can now execute it on the target !"
 	@echo "------------------------------------------------------------------------------------------------------------"
 
-format:
-	find src/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*hpp' | xargs clang-format -i -style=file
+__format:
+	@find src/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*hpp' | xargs clang-format -i -style=file
+		
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "Formatted all of the source files ! (.c / .h / .hpp / .cpp)"
+	@echo "------------------------------------------------------------------------------------------------------------"
 
 # ===========================================================================================================
 # RECIPES FOR DOCUMENTATION
 # ===========================================================================================================
 
-# If Doxygen is installed, it will generate the doc and build the PDF from the TeX source for the whole project.
-doc:
+# If Doxygen is installed, it will generate the doc and build the HTML doc for the whole project
+__doc:
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@echo "Creating documentation... "
-	@echo "It may take a while !"
+	@echo "------------------------------------------------------------------------------------------------------------"
 
 	@doxygen Doxyfile
 
@@ -69,8 +124,8 @@ build/bin/config.o: default/config/config.toml
 	@echo "Preparing config default binary data..."
 	@echo "------------------------------------------------------------------------------------------------------------"
 
-	python3.11 tools/default-generator/config/config-generator.py $< build/bin/config.bin
-	aarch64-linux-gnu-ld -r -b binary -o  $@ build/bin/config.bin
+	@python3 tools/default-generator/config/config-generator.py $< build/bin/config.bin
+	@aarch64-linux-gnu-ld -r -b binary -o  $@ build/bin/config.bin
 
 	@echo "Generated $@"
 
@@ -80,7 +135,7 @@ build/bin/header.o: default/header/header.toml
 	@echo "Preparing header default binary data..."
 	@echo "------------------------------------------------------------------------------------------------------------"
 	
-	python3.11 tools/default-generator/header/header-generator.py $< build/bin/header.bin 
-	aarch64-linux-gnu-ld -r -b binary -o  $@ build/bin/header.bin
+	@python3 tools/default-generator/header/header-generator.py $< build/bin/header.bin 
+	@aarch64-linux-gnu-ld -r -b binary -o  $@ build/bin/header.bin
 
 	@echo "Generated $@"
