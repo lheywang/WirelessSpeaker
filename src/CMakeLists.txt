@@ -1,9 +1,11 @@
 # ========================================================================================
-# PROJECT OPTION
+# PROJECT OPTIONS
 # ========================================================================================
-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
-project("Wireless Speaker")
-set(AppName "WirelessSpeaker.arm")
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
+project($ENV{NAME})
+
+# Loading the toolchain file
+set(CMAKE_TOOLCHAIN_FILE "toolchain.cmake")
 
 # ========================================================================================
 # FILES LISTS
@@ -53,13 +55,6 @@ set(LIBS    ${CMAKE_BINARY_DIR}/bin/config.o\\
             ${CMAKE_BINARY_DIR}/bin/header.o)
 
 # ========================================================================================
-# CMAKES SETTINGS
-# ========================================================================================
-set(CMAKE_SYSTEM_PROCESSOR aarch64)
-set(CMAKE_C_COMPILER /usr/bin/aarch64-linux-gnu-gcc)
-set(CMAKE_CXX_COMPILER /usr/bin/aarch64-linux-gnu-g++)
-
-# ========================================================================================
 # COMPILERS SETTINGS
 # ========================================================================================
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=cortex-a53 -O3 -MMD -Wall -Wextra ")
@@ -72,4 +67,4 @@ add_compile_options(-g)
 # ========================================================================================
 # EXECUTABLES
 # ========================================================================================
-add_executable(${AppName} main.cpp ${DeviceDrivers} ${PeripheralDrivers} ${Modules} ${ExternalIncludes} ${LIBS})
+add_executable($ENV{APPNAME} main.cpp ${DeviceDrivers} ${PeripheralDrivers} ${Modules} ${ExternalIncludes} ${LIBS})

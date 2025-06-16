@@ -46,7 +46,7 @@ int main()
 
     std::cout << "Hello World !" << std::endl;
 
-    SPI_Bus *SPI = SPI_GetInfos(SPI_SLAVES::DAC);
+    SPI_Bus* SPI = SPI_GetInfos(SPI_SLAVES::DAC);
     SPI_Configure(SPI, SPI_MODE_0, SPI_DEFAULT_WORDSIZE, 1000000);
 
     int buf[4] = {0};
