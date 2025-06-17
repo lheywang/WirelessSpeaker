@@ -14,13 +14,12 @@
 #include <iostream>
 #include <unistd.h>
 
-#include "Drivers/Devices/Devices.hpp"
-#include "Drivers/GPIO/GPIO.hpp"
-#include "Drivers/I2C/I2C.hpp"
-#include "Drivers/SPI/SPI.hpp"
-#include "Drivers/UART/UART.hpp"
+#include "drivers/peripherals/gpio.hpp"
+#include "drivers/peripherals/i2c.hpp"
+#include "drivers/peripherals/spi.hpp"
+#include "drivers/peripherals/uart.hpp"
 
-#include "Modules/EEPROM/eeprom.hpp"
+#include "modules/eeprom/eeprom.hpp"
 
 #include <ctime>
 
@@ -44,24 +43,24 @@ int main()
             - ...
      */
 
-    std::cout << "Hello World !" << std::endl;
+    // std::cout << "Hello World !" << std::endl;
 
-    SPI_Bus* SPI = SPI_GetInfos(SPI_SLAVES::DAC);
-    SPI_Configure(SPI, SPI_MODE_0, SPI_DEFAULT_WORDSIZE, 1000000);
+    // SPI_Bus* SPI = SPI_GetInfos(SPI_SLAVES::DAC);
+    // SPI_Configure(SPI, SPI_MODE_0, SPI_DEFAULT_WORDSIZE, 1000000);
 
-    int buf[4] = {0};
-    int res = 0;
+    // int buf[4] = {0};
+    // int res = 0;
 
-    buf[0] = 0x2A << 1 | 0; // Read to register 0x2A --> Shall return 0x11
-    buf[1] = 0xAA;
-    res = SPI_Transfer(SPI, buf, buf, 2);
+    // buf[0] = 0x2A << 1 | 0; // Read to register 0x2A --> Shall return 0x11
+    // buf[1] = 0xAA;
+    // res = SPI_Transfer(SPI, buf, buf, 2);
 
-    buf[0] = 0x2A << 1 | 1; // Read to register 0x2A --> Shall return 0x11
-    buf[1] = 0;
-    res = SPI_Transfer(SPI, buf, buf, 4);
+    // buf[0] = 0x2A << 1 | 1; // Read to register 0x2A --> Shall return 0x11
+    // buf[1] = 0;
+    // res = SPI_Transfer(SPI, buf, buf, 4);
 
-    if(res != 0)
-        return -1;
+    // if(res != 0)
+    //     return -1;
 
     // EEPROM Mem = EEPROM();
 

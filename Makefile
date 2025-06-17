@@ -88,7 +88,7 @@ __all: build/bin/config.o build/bin/header.o
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@echo "Compiling C/C++ sources files..."
 	@echo "------------------------------------------------------------------------------------------------------------"
-	@cmake -S src/ -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/cmake/toolchain.cmake -B build/
+	@cmake -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/cmake/toolchain.cmake -B build/
 	@cd build/ && make all -j$(MAX_CORES)
 
 	@echo "------------------------------------------------------------------------------------------------------------"
