@@ -89,7 +89,7 @@ __all: build/bin/config.o build/bin/header.o
 	@echo "Compiling C/C++ sources files..."
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@cmake -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/cmake/toolchain.cmake -B build/
-	@cd build/ && make all -j$(MAX_CORES)
+	@cd build/ && make all -s -j$(MAX_CORES)
 
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@echo "Compiled source on $(shell pwd)/build/${APPNAME}"

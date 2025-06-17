@@ -41,6 +41,18 @@ enum class TEMP_HYSTERESIS
 };
 
 // ==============================================================================
+// IC CONVERSION FUNCTIONS
+// ==============================================================================
+
+/**
+ * @brief   Convert the values from and to the sensor to their adequate representation.
+ * 
+ * @warning Used internally, no need to use them after operation of the driver.
+ */
+int IntsToFloat(const int Input, float* const OutputBuf);
+int FloatToInts(const float Input, int* const OutputBuf);
+
+// ==============================================================================
 // IC CLASS FUNCTIONS
 // ==============================================================================
 
