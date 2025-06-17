@@ -21,6 +21,8 @@
 
 #include "modules/eeprom/eeprom.hpp"
 
+#include "drivers/devices/MCP9808.hpp"
+
 #include <ctime>
 
 // entry point

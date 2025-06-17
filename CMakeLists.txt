@@ -17,6 +17,9 @@ add_subdirectory(src/modules)
 set(LIBS    ${CMAKE_BINARY_DIR}/bin/config.o\\
             ${CMAKE_BINARY_DIR}/bin/header.o)
 
+# Prepare for storing all of the libs
+set(ALL_APP_LIBS "")
+
 # ========================================================================================
 # COMPILERS SETTINGS
 # ========================================================================================
@@ -31,6 +34,7 @@ add_executable($ENV{APPNAME} src/main.cpp ${LIBS})
 # Link the executable against the libraries it needs.
 target_link_libraries($ENV{APPNAME}
   PRIVATE
-    eeprom
-    devices
+  ads1015
+  mcp23009
+  ${ALL_APP_LIBS}
 )

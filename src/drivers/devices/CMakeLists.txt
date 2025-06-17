@@ -1,21 +1,19 @@
 # ========================================================================================
 # DEVICES
 # ========================================================================================
-# Add sources
-set(DEVICES_SOURCES     ${CMAKE_CURRENT_SOURCE_DIR}/ADS1015/ADS1015.cpp\\
-                        ${CMAKE_CURRENT_SOURCE_DIR}/AT42QT1070/AT42QT1070.cpp\\
-                        ${CMAKE_CURRENT_SOURCE_DIR}/DS1882/DS1882.cpp\\
-                        ${CMAKE_CURRENT_SOURCE_DIR}/INA219/INA219.cpp\\
-                        ${CMAKE_CURRENT_SOURCE_DIR}/MCP45HV51/MCP45HV51.cpp\\
-                        ${CMAKE_CURRENT_SOURCE_DIR}/MCP9808/MCP9808.cpp\\
-                        ${CMAKE_CURRENT_SOURCE_DIR}/MCP23009/MCP23009.cpp\\
-                        ${CMAKE_CURRENT_SOURCE_DIR}/PCA9633/PCA9633.cpp\\
-                        ${CMAKE_CURRENT_SOURCE_DIR}/PCM5252/PCM5252.cpp\\
-                        ${CMAKE_CURRENT_SOURCE_DIR}/STUBS4500/STUSB4500.cpp\\
-                        ${CMAKE_CURRENT_SOURCE_DIR}/M95256/M95256.cpp)
+# Bridging to sub sources
+add_subdirectory(ADS1015)
+add_subdirectory(AT42QT1070)
+add_subdirectory(DS1882)
+add_subdirectory(INA219)
+add_subdirectory(MCP45HV51)
+add_subdirectory(MCP9808)
+add_subdirectory(MCP23009)
+add_subdirectory(PCA9633)
+add_subdirectory(PCM5252)
+add_subdirectory(STUSB4500)
+add_subdirectory(M95256)
 
-# Create a library for all of theses sources (we may even split them in sub libraries ...)
-add_library(devices ${DEVICES_SOURCES})
-
-# Make the current directory and its 'includes' subdirectories available
-target_link_libraries(devices PUBLIC peripherals)
+# Update the shared variable for including libs and propagate to parent
+list(APPEND ALL_APP_LIBS ads1015 at42qt1070 ds1882 ina219 mcp45hv51 mcp9808 mcp23009 pca9633 pcm5252 stusb4500 m95256)
+set(ALL_APP_LIBS "${ALL_APP_LIBS}" PARENT_SCOPE)
