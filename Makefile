@@ -100,7 +100,7 @@ __all: build/bin/config.o build/bin/header.o
 	@cd build/ && make all -s -j$(MAX_CORES)
 
 	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Compiled source on $(shell pwd)/build/${APPNAME}"
+	@echo "Compiled source on ./build/${APPNAME}"
 	@echo "You can now execute it on the target !"
 	@echo "------------------------------------------------------------------------------------------------------------"
 
@@ -135,8 +135,8 @@ __tests:
 	@cd build_tests/ && make all -s -j$(MAX_CORES)
 
 	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Compiled source on $(shell pwd)/build/${APPNAME}"
-	@echo "You can now execute it on the target !"
+	@echo "Compiled tests on ./build_tests/UnitsTests"
+	@echo "You can now execute it to ensure the code quality!"
 	@echo "------------------------------------------------------------------------------------------------------------"
 
 # ===========================================================================================================
