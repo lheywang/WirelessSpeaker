@@ -1,0 +1,91 @@
+# ===========================================================================================================
+# docker/dockerfile
+# 
+# Handle the docker image configuration for the whole tool
+#
+# ===========================================================================================================
+
+# Load the base ubuntu image:
+FROM ubuntu:latest
+
+# Set environment variables for non-interactive apt operations
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
+
+# Update OS
+RUN apt update && apt install -y
+
+# Install build dependencies
+RUN apt-get -y install \
+    build-essential \
+    clang-format \
+    cmake \ 
+    make \
+    git \
+    device-tree-compiler \
+    libfdt-dev
+
+RUN apt-get -y install \
+    crossbuild-essential-arm64
+
+RUN apt-get -y install \
+    doxygen \
+    graphviz
+
+RUN apt-get -y install \
+    python3 \
+    python3-pip
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Define a toolchain file for CMake (recommended for robust cross-compilation)
+# This creates a file named 'toolchain.cmake' inside the container (and is going to be used for automated configuration of the compilers)
+RUN mkdir -p /usr/local/share/cmake/
+RUN echo "SET(CMAKE_SYSTEM_NAME Linux)" > /usr/local/share/cmake/toolchain.cmake && \
+    echo "SET(CMAKE_SYSTEM_PROCESSOR aarch64)" >> /usr/local/share/cmake/toolchain.cmake && \
+    echo "SET(CMAKE_C_COMPILER aarch64-linux-gnu-gcc)" >> /usr/local/share/cmake/toolchain.cmake && \
+    echo "SET(CMAKE_CXX_COMPILER aarch64-linux-gnu-g++)" >> /usr/local/share/cmake/toolchain.cmake && \
+    echo "SET(CMAKE_FIND_ROOT_PATH /usr/aarch64-linux-gnu)" >> /usr/local/share/cmake/toolchain.cmake && \
+    echo "SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)" >> /usr/local/share/cmake/toolchain.cmake && \
+    echo "SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)" >> /usr/local/share/cmake/toolchain.cmake && \
+    echo "SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)" >> /usr/local/share/cmake/toolchain.cmake
+
+# Make the entrypoint executable (file is copied INTO the docker)
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Testing the whole installation
+RUN mkdir -p /usr/local/share/infos/
+RUN echo "================================== COMPILERS ==================================" >   /usr/local/share/infos/versions.txt && \
+    echo "**C             compiler :**" >>   /usr/local/share/infos/versions.txt && \
+    gcc --version >>            /usr/local/share/infos/versions.txt && \
+    echo "**C++           compiler :**" >> /usr/local/share/infos/versions.txt && \
+    g++ --version >>            /usr/local/share/infos/versions.txt && \
+    echo "**aarch64 C     compiler :**" >>   /usr/local/share/infos/versions.txt && \
+    aarch64-linux-gnu-gcc --version >>            /usr/local/share/infos/versions.txt && \
+    echo "**aarch64 C++   compiler :**" >> /usr/local/share/infos/versions.txt && \
+    aarch64-linux-gnu-g++ --version >>            /usr/local/share/infos/versions.txt && \
+    echo "==================================== TOOLS ====================================" >>   /usr/local/share/infos/versions.txt && \
+    echo "**Make                   :**" >> /usr/local/share/infos/versions.txt && \
+    make --version >>            /usr/local/share/infos/versions.txt && \
+    echo "**Cmake                  :**" >> /usr/local/share/infos/versions.txt && \
+    cmake --version >>            /usr/local/share/infos/versions.txt && \
+    echo "**Git                    :**" >> /usr/local/share/infos/versions.txt && \
+    git --version >>            /usr/local/share/infos/versions.txt && \
+    echo "**clang-format           :**" >> /usr/local/share/infos/versions.txt && \
+    clang-format --version >>            /usr/local/share/infos/versions.txt && \
+    echo "**doxygen                :**" >> /usr/local/share/infos/versions.txt && \
+    doxygen --version >>            /usr/local/share/infos/versions.txt && \
+    echo "================================ INTERPRETERS =================================" >>   /usr/local/share/infos/versions.txt && \
+    echo "**python                 :**" >> /usr/local/share/infos/versions.txt && \
+    python3 --version >>            /usr/local/share/infos/versions.txt
+
+# Add, and build the developpers tools for the RPI
+RUN cd /tmp/ && git clone https://github.com/raspberrypi/utils.git
+RUN cd /tmp/utils/ && cmake . && make && make install
+
+
+# Entrypoint for interactive use and set a default arguments (we use the private )
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["__all"]

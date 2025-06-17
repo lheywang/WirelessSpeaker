@@ -16,7 +16,7 @@ MAX_CORES := $(shell nproc)
 -include .config
 
 # Configuring PHONY
-.PHONY: clean deep_clean all format doc __clean __deep_clean __all __format __doc 
+.PHONY: clean deep_clean all format doc tests __clean __deep_clean __all __format __doc __tests
 
 # Configure some variables
 DOCKER_ARGS := --rm -it -v "$(shell pwd):/app"
@@ -56,6 +56,13 @@ infos:
 		${DOCKER_NAME} \
 		__infos
 
+tests:
+	@docker run ${DOCKER_ARGS}\
+		${DOCKER_NAME} \
+		-e NAME="${NAME}" \
+		-e APPNAME="${NAME}" \
+		__tests
+
 
 # ===========================================================================================================
 # GLOBAL RECIPES (TO BE RUNNED UNDER DOCKER)
@@ -76,6 +83,7 @@ __deep_clean:
 	@echo "Removing caches..."
 
 	@-rm -r -f build/
+	@-rm -r -f build_tests
 	@-rm -r -f doc/
 	@-cd tools/device-tree && make dtc_clean
 
@@ -117,6 +125,19 @@ __infos:
 	@echo ""
 
 	cat /usr/local/share/infos/versions.txt
+
+__tests:
+	@mkdir -p build_tests/
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "Compiling C/C++ sources files..."
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@cmake -DBUILD_TESTS=ON -B build_tests/
+	@cd build_tests/ && make all -s -j$(MAX_CORES)
+
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "Compiled source on $(shell pwd)/build/${APPNAME}"
+	@echo "You can now execute it on the target !"
+	@echo "------------------------------------------------------------------------------------------------------------"
 
 # ===========================================================================================================
 # RECIPES FOR DOCUMENTATION

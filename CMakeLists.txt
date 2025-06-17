@@ -21,20 +21,51 @@ set(LIBS    ${CMAKE_BINARY_DIR}/bin/config.o\\
 set(ALL_APP_LIBS "")
 
 # ========================================================================================
-# COMPILERS SETTINGS
+# USER LOGIC
 # ========================================================================================
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=cortex-a53 -O3 -MMD -Wall -Wextra ")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcpu=cortex-a53 -O3 -std=c++20 -MMD -Wall -Wextra ")
+# Ask for the BUILD mode
+option(BUILD_TESTS "Build the unit test executable instead of the main application." OFF)
 
 # ========================================================================================
 # EXECUTABLES
 # ========================================================================================
-add_executable($ENV{APPNAME} src/main.cpp ${LIBS})
+if (BUILD_TESTS)
+    # User infos
+    message(STATUS "Configuring for Unit Test build (Host: x86_64)")
 
-# Link the executable against the libraries it needs.
-target_link_libraries($ENV{APPNAME}
-  PRIVATE
-  ads1015
-  mcp23009
-  ${ALL_APP_LIBS}
-)
+    # Add some headers search path
+    include_directories(tools/cpputest/include/)
+    include_directories(tools/cpputest/include/CppUTest/)
+
+    # Including the build of the CppUTest framework
+    add_subdirectory(tools/cpputest)
+
+    # Create an executable
+    add_executable(UnitsTests tests/tester.cpp)
+
+    # Link the executable against the libraries it needs.
+    target_link_libraries(UnitsTests
+        PRIVATE
+        ${ALL_APP_LIBS}
+        CppUTest
+        CppUTestExt
+    )
+
+else()
+    # User info
+    message(STATUS "Configuring for Main Application build (Target: AARCH64)")
+
+    # Add some compiler flags for the final usage
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=cortex-a53 -O3 -MMD -Wall -Wextra ")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcpu=cortex-a53 -O3 -std=c++20 -MMD -Wall -Wextra ")
+
+    # Add an executable
+    add_executable($ENV{APPNAME} src/main.cpp ${LIBS})
+
+    # Link the executable against the libraries it needs.
+    target_link_libraries($ENV{APPNAME}
+        PRIVATE
+        ${ALL_APP_LIBS}
+    )
+
+endif()
