@@ -65,11 +65,16 @@ MCP9808::~MCP9808()
 }
 
 // =====================
-// STATIC FUNCTIONS
+// CONVERSION FUNCTIONS
 // =====================
 
-static void FloatToInts(const float Input, int* const OutputBuf)
+int FloatToInts(const float Input, int* const OutputBuf)
 {
+    if(OutputBuf == nullptr)
+    {
+        return -1;
+    }
+
     int Sign = 0;
     if(Input < 0)
         Sign = 1; // We set to 1 the sign bit, since data is expressed as CPL2.
@@ -82,7 +87,25 @@ static void FloatToInts(const float Input, int* const OutputBuf)
     *OutputBuf = 0;
     *OutputBuf = (Sign << 12) | (IntegerPart << 4) | (FloatPart & 0x0F);
 
-    return;
+    return 0;
+}
+
+int IntsToFloat(const int Input, float* const OutputBuf)
+{
+    if(OutputBuf == nullptr)
+    {
+        return -1;
+    }
+
+    bool Sign = (bool)(Input & 0x1000);
+    int INT = (Input & 0x0FF0) >> 4;
+    int FLOAT = Input & 0x000F;
+
+    if(Sign)
+        *OutputBuf = -(INT + FLOAT / 16);
+    else
+        *OutputBuf = (INT + FLOAT / 16);
+    return 0;
 }
 
 // =====================
@@ -199,13 +222,12 @@ int MCP9808::ReadTemperature(float* const Temperature, int* const Status)
     // Fetching in temp variables the correct values.
     *Status = (buf & 0xE000) >> 13;
 
-    bool Sign = (bool)(buf & 0x1000);
-    int INT = (buf & 0x0FF0) >> 4;
-    int FLOAT = buf & 0x000F;
+    // Converting register to value
+    res = IntsToFloat(buf, Temperature);
 
-    if(Sign)
-        *Temperature = -(INT + FLOAT * 0.0625);
-    else
-        *Temperature = (INT + FLOAT * 0.0625);
+    if(res != 0)
+    {
+        return -1;
+    }
     return 0;
 }
