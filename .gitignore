@@ -48,6 +48,7 @@
 
 # Build outputs
 build/
+build_tests/
 doc/
 *__pycache__/
 
@@ -56,9 +57,6 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 src/Makefile
-
-# Installation sub projects
-tools/utils
 
 # QSPICE simulations (too big...)
 *.qraw*
