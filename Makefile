@@ -79,6 +79,13 @@ pdf:  doc
 		__pdf
 
 
+tests:
+	@docker run ${DOCKER_ARGS}\
+		${DOCKER_NAME} \
+		-e NAME="${NAME}" \
+		-e APPNAME="${NAME}" \
+		__tests
+
 
 # ===========================================================================================================
 # GLOBAL RECIPES (TO BE RUNNED UNDER DOCKER)
@@ -142,15 +149,23 @@ __infos:
 
 	cat /usr/local/share/infos/versions.txt
 
+<<<<<<< HEAD
 __tester:
 	@mkdir -p build_tests/
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@echo "Compiling C/C++ sources files for UnitTests ..."
+=======
+__tests:
+	@mkdir -p build_tests/
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "Compiling C/C++ sources files..."
+>>>>>>> af88353 (Added conditionnal build process to select between tests and prod)
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@cmake -DBUILD_TESTS=ON -B build_tests/
 	@cd build_tests/ && make all -s -j$(MAX_CORES)
 
 	@echo "------------------------------------------------------------------------------------------------------------"
+<<<<<<< HEAD
 	@echo "Compiled tests on ./build_tests/UnitsTests"
 	@echo "You can now execute it to ensure the code quality!"
 	@echo "------------------------------------------------------------------------------------------------------------"
@@ -162,6 +177,12 @@ __tests: __tester
 
 	@cd build_tests/ && ./UnitsTests -c -v
 
+=======
+	@echo "Compiled source on $(shell pwd)/build/${APPNAME}"
+	@echo "You can now execute it on the target !"
+	@echo "------------------------------------------------------------------------------------------------------------"
+
+>>>>>>> af88353 (Added conditionnal build process to select between tests and prod)
 # ===========================================================================================================
 # RECIPES FOR DOCUMENTATION
 # ===========================================================================================================
