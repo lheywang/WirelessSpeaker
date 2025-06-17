@@ -15,7 +15,7 @@ add_subdirectory(STUSB4500)
 add_subdirectory(M95256)
 
 # Link all the libraries into the all lib 
-target_link_libraries($ENV{NAME}::all_libs 
+target_link_libraries(MasterLibs
     INTERFACE 
     ads1015 
     at42qt1070 

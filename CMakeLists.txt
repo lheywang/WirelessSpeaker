@@ -8,7 +8,7 @@ project($ENV{NAME})
 # FILES INCLUDES
 # ========================================================================================
 # Prepare for storing all of the libs
-add_library($ENV{NAME}::all_libs INTERFACE)
+add_library(MasterLibs INTERFACE)
 
 # Adding headers files
 include_directories(inc/)
@@ -54,7 +54,7 @@ if (BUILD_TESTS)
     # Link the executable against the libraries it needs.
     target_link_libraries(UnitsTests
         PRIVATE
-        $ENV{NAME}::all_libs
+        MasterLibs
         CppUTest
         CppUTestExt
         mcp9808
@@ -74,7 +74,7 @@ else()
     # Link the executable against the libraries it needs.
     target_link_libraries($ENV{APPNAME}
         PRIVATE
-        $ENV{NAME}::all_libs
+        MasterLibs
     )
 
 endif()
