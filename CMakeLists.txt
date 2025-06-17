@@ -7,18 +7,19 @@ project($ENV{NAME})
 # ========================================================================================
 # FILES INCLUDES
 # ========================================================================================
+# Prepare for storing all of the libs
+add_library($ENV{NAME}::all_libs INTERFACE)
+
 # Adding headers files
 include_directories(inc/)
 
+# Adding sources for standard build
 add_subdirectory(src/drivers)
 add_subdirectory(src/modules)
 
 # Internal libraries
 set(LIBS    ${CMAKE_BINARY_DIR}/bin/config.o\\
             ${CMAKE_BINARY_DIR}/bin/header.o)
-
-# Prepare for storing all of the libs
-set(ALL_APP_LIBS "")
 
 # ========================================================================================
 # USER LOGIC
@@ -40,15 +41,23 @@ if (BUILD_TESTS)
     # Including the build of the CppUTest framework
     add_subdirectory(tools/cpputest)
 
+    file(GLOB_RECURSE TEST_SOURCE_FILES
+         "${CMAKE_CURRENT_SOURCE_DIR}/*TEST_*.cpp"
+    )
+
     # Create an executable
-    add_executable(UnitsTests tests/tester.cpp)
+    add_executable(UnitsTests tests/tester.cpp ${TEST_SOURCE_FILES})
+
+    message(STATUS ${TEST_SOURCE_FILES})
+    message(STATUS ${ALL_APP_LIBS})
 
     # Link the executable against the libraries it needs.
     target_link_libraries(UnitsTests
         PRIVATE
-        ${ALL_APP_LIBS}
+        $ENV{NAME}::all_libs
         CppUTest
         CppUTestExt
+        mcp9808
     )
 
 else()
@@ -65,7 +74,7 @@ else()
     # Link the executable against the libraries it needs.
     target_link_libraries($ENV{APPNAME}
         PRIVATE
-        ${ALL_APP_LIBS}
+        $ENV{NAME}::all_libs
     )
 
 endif()

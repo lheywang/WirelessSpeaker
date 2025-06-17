@@ -14,7 +14,7 @@
 // ==============================================================================
 
 // Including the unit test framework
-#include "CppUTest/TestHarness.h" // Essential CppUTest header
+#include "CppUTest/TestHarness.h"
 
 // Include the tested header
 #include "drivers/devices/MCP9808.hpp"
@@ -130,7 +130,7 @@ TEST(MCP9808_IntsToFloatConversion, HandlesZero)
 
 TEST(MCP9808_IntsToFloatConversion, HandlesLargePositiveFloat)
 {
-    int input 0x03FF;
+    int input = 0x03FF;
     float output = 0.0f;
     IntsToFloat(input, &output);
     DOUBLES_EQUAL(63.9375f, output, FLOAT_TOLERANCE);
@@ -143,8 +143,8 @@ TEST(MCP9808_IntsToFloatConversion, BoundaryValueFloatPart)
     IntsToFloat(input, &output);
     DOUBLES_EQUAL(0.0f, output, FLOAT_TOLERANCE);
 
-    int input = 0xF010;
-    float output = 0.0f;
+    input = 0xF010;
+    output = 0.0f;
     IntsToFloat(input, &output);
     DOUBLES_EQUAL(-1.0f, output, FLOAT_TOLERANCE);
 }

@@ -8,4 +8,7 @@ set(MCP9808_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/MCP9808.cpp)
 add_library(mcp9808 ${MCP9808_SOURCES})
 
 # Make the current directory and its 'includes' subdirectories available
-target_link_libraries(mcp9808 PUBLIC i2c)
+target_link_libraries(mcp9808 
+    PUBLIC 
+    i2c
+)
