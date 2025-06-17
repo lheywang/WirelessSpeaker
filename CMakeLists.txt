@@ -34,6 +34,11 @@ if (BUILD_TESTS)
     # User infos
     message(STATUS "Configuring for Unit Test build (Host: x86_64)")
 
+    # Add some compiler flags for the final usage
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra ")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -Wall -Wextra ")
+    
+
     # Add some headers search path
     include_directories(tools/cpputest/include/)
     include_directories(tools/cpputest/include/CppUTest/)
@@ -57,7 +62,6 @@ if (BUILD_TESTS)
         MasterLibs
         CppUTest
         CppUTestExt
-        mcp9808
     )
 
 else()
