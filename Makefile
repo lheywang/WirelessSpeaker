@@ -16,7 +16,7 @@ MAX_CORES := $(shell nproc)
 -include .config
 
 # Configuring PHONY
-.PHONY: clean deep_clean all format doc __clean __deep_clean __all __format __doc 
+.PHONY: clean deep_clean all format doc tests __clean __deep_clean __all __format __doc __tests
 
 # Configure some variables
 DOCKER_ARGS := --rm -v "$(shell pwd):/app"
@@ -46,10 +46,35 @@ format:
 		${DOCKER_NAME} \
 		__format
 
+infos:
+	@docker run ${DOCKER_ARGS}\
+		${DOCKER_NAME} \
+		__infos
+
+tests:
+	@docker run ${DOCKER_ARGS}\
+		${DOCKER_NAME} \
+		-e NAME="${NAME}" \
+		-e APPNAME="${NAME}" \
+		__tests
+
+tester:
+	@docker run ${DOCKER_ARGS}\
+		${DOCKER_NAME} \
+		-e NAME="${NAME}" \
+		-e APPNAME="${NAME}" \
+		__tester
+
 doc:
 	@docker run ${DOCKER_ARGS}\
 		${DOCKER_NAME} \
 		__doc
+
+pdf:  doc
+	@docker run ${DOCKER_ARGS}\
+		${DOCKER_NAME} \
+		__pdf
+
 
 
 # ===========================================================================================================
@@ -71,6 +96,7 @@ __deep_clean:
 	@echo "Removing caches..."
 
 	@-rm -r -f build/
+	@-rm -r -f build_tests
 	@-rm -r -f doc/
 	@-cd tools/device-tree && make dtc_clean
 
@@ -83,11 +109,11 @@ __all: build/bin/config.o build/bin/header.o
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@echo "Compiling C/C++ sources files..."
 	@echo "------------------------------------------------------------------------------------------------------------"
-	@cmake -S src/ -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/cmake/toolchain.cmake -B build/
-	@cd build/ && make all -j$(MAX_CORES)
+	@cmake -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/cmake/toolchain.cmake -B build/
+	@cd build/ && make all -s -j$(MAX_CORES)
 
 	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Compiled source on $(shell pwd)/build/${APPNAME}"
+	@echo "Compiled source on ./build/${APPNAME}"
 	@echo "You can now execute it on the target !"
 	@echo "------------------------------------------------------------------------------------------------------------"
 
@@ -97,6 +123,41 @@ __format:
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@echo "Formatted all of the source files ! (.c / .h / .hpp / .cpp)"
 	@echo "------------------------------------------------------------------------------------------------------------"
+
+__infos:
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "toolchain informations :"
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo ""
+
+	cat /usr/local/share/cmake/toolchain.cmake
+
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "tools versions"
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo ""
+
+	cat /usr/local/share/infos/versions.txt
+
+__tester:
+	@mkdir -p build_tests/
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "Compiling C/C++ sources files for UnitTests ..."
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@cmake -DBUILD_TESTS=ON -B build_tests/
+	@cd build_tests/ && make all -s -j$(MAX_CORES)
+
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "Compiled tests on ./build_tests/UnitsTests"
+	@echo "You can now execute it to ensure the code quality!"
+	@echo "------------------------------------------------------------------------------------------------------------"
+
+__tests: __tester
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "Running UnitTests..."
+	@echo "------------------------------------------------------------------------------------------------------------"
+
+	@cd build_tests/ && ./UnitsTests -c -v
 
 # ===========================================================================================================
 # RECIPES FOR DOCUMENTATION
@@ -111,9 +172,21 @@ __doc:
 	@doxygen Doxyfile
 
 	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Generated HTML doc on $(shell pwd)/doc/html/index.html"
-	@echo "Generated HTML doc on file://///wsl.localhost/Debian$(shell pwd)/doc/html/index.html"
+	@echo "Generated HTML doc on ./doc/html/index.html"
 	@echo "------------------------------------------------------------------------------------------------------------"
+
+__pdf:
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "Building PDF documentation... "
+	@echo "------------------------------------------------------------------------------------------------------------"
+
+	@cd doc/latex/ && make pdf
+	@cp doc/latex/refman.pdf doc/${NAME}.pdf
+
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "Generated PDF doc on ./doc/${NAME}.pdf"
+	@echo "------------------------------------------------------------------------------------------------------------"
+
 
 # ===========================================================================================================
 # RECIPES FOR EMBEDDED DATA

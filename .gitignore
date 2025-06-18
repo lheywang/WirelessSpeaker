@@ -44,9 +44,11 @@
 
 # VSCODE artifacts
 .vscode/
+.VSCodeCounter/
 
 # Build outputs
 build/
+build_tests/
 doc/
 *__pycache__/
 
@@ -56,13 +58,9 @@ CMakeCache.txt
 cmake_install.cmake
 src/Makefile
 
-# Installation sub projects
-tools/utils
-
 # QSPICE simulations (too big...)
 *.qraw*
 *.csv*
 
 # Log files
 *.log*
-*.txt*
