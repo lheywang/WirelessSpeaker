@@ -1,0 +1,14 @@
+# ================================================================================
+# BUILDER
+# ================================================================================
+name: builder
+run-name: Build the project executable !
+on:
+  push:
+    branches: [main]
+
+jobs:
+  builder:
+    runs-on: ubuntu-latest
+
+    steps:

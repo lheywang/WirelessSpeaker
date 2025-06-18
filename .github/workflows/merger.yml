@@ -1,0 +1,15 @@
+# ================================================================================
+# MERGER
+# ================================================================================
+name: merger
+run-name: Handle the check before merging into the dev branch
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  check-formatting:
+    runs-on: ubuntu-latest
+
+    steps:

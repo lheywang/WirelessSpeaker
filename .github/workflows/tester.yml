@@ -1,0 +1,14 @@
+# ================================================================================
+# TESTER
+# ================================================================================
+
+name: tester
+run-name: Perform unittests on the source code !
+
+on: workflow_calls
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+
+    steps:

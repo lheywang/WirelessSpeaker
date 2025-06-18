@@ -1,0 +1,14 @@
+# ================================================================================
+# DOCUMENTATION
+# ================================================================================
+name: doc
+run-name: Build the documentation of the project, on an HTML and PDF (LaTeX) formats !
+on:
+  push:
+    branches: [main]
+
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+
+    steps:

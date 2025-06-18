@@ -1,0 +1,13 @@
+# ================================================================================
+# FORMATTER (C/Cpp)
+# ================================================================================
+name: Formatter (C/Cpp)
+run-name: Ensure that the C/Cpp format is correctly formatted !
+
+on: workflow_calls
+
+jobs:
+  check-formatting:
+    runs-on: ubuntu-latest
+
+    steps:

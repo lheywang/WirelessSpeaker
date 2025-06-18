@@ -1,0 +1,13 @@
+# ================================================================================
+# DOCKER
+# ================================================================================
+name: docker
+run-name: Build the docker image that will be used in the next few builders !
+on:
+  workflow_calls:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
