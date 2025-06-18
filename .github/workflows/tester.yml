@@ -44,13 +44,16 @@ jobs:
 
       # Running tests
       - name: Running tests
+        id: unittest_exec
         run: |
           ./build_tests/UnitsTests -c -v
+        continue-on-error: true
 
-      # Checking outputs
-      - name: Checcking the result
+      - name: Check for errors now...
+        if: ${{ steps.unittest_exec.outputs.exit_code != '0' }}
         run: |
-          "[ $? -eq 0 ] && exit 0 || exit 1"
+          echo "Unit tests failed !"
+          exit 1
 
       # Adding logs to the summary
       - name: Logging

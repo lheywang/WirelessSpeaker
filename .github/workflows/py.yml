@@ -22,12 +22,16 @@ jobs:
 
       # Checking format...
       - name: Check code formatting
+        id: black_formatter
         run: |
           black . --check --verbose
+        continue-on-error: true
+
       - name: Check for errors now...
-        shell: bash
+        if: ${{ steps.black_formatter.outputs.exit_code != '0' }}
         run: |
-          "[ $? -eq 0 ] && exit 0 || exit 1"
+          echo "Formatting failed !"
+          exit 1
 
       # Adding logs to the summary
       - name: Logging
