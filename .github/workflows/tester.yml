@@ -44,11 +44,16 @@ jobs:
         run: |
           make tester DOCKER_NAME=builder
 
+      # Adding logs to the summary
+      - name: Logging 1
+        run: |
+          echo "### UnitTests :rocket:" >> $GITHUB_STEP_SUMMARY
+
       # Running tests
       - name: Running tests
         id: unittest_exec
         run: |
-          ./build_tests/UnitsTests -c -v
+          ./build_tests/UnitsTests -c -v >> $GITHUB_STEP_SUMMARY
         continue-on-error: true
 
       - name: Check for errors now...
@@ -60,6 +65,4 @@ jobs:
       # Adding logs to the summary
       - name: Logging
         run: |
-          echo "### UnitTests :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
           echo "Unit Tests :white_check_mark:" >> $GITHUB_STEP_SUMMARY
