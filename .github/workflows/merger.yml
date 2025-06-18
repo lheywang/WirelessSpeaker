@@ -6,8 +6,15 @@ run-name: Handle the check before merging into the dev branch
 # --------------------------------------------------------------------------------
 on:
   pull_request:
-    branches: [dev, main]
-    types: [opened, synchronize, reopened]
+    branches: 
+      - main
+      - dev
+    types:
+      - opened
+      - synchronize
+      - reopened
+  push:
+    branches: tests
 # --------------------------------------------------------------------------------
 jobs:
   job_build:
