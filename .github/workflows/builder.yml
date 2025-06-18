@@ -48,6 +48,12 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Built and uploaded executable ! :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
+      # Adding logs to the summary
+      - name: Logging compiler infos
+        run: |
+          echo "### Compiler informations ! :rocket:" >> $GITHUB_STEP_SUMMARY
+          make infos >> >> $GITHUB_STEP_SUMMARY
+
   documentation:
     runs-on: ubuntu-latest
     needs: [job_test] # Require the code to be tested (launched by builder)
