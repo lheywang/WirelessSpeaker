@@ -132,10 +132,10 @@ __infos:
 
 	cat /usr/local/share/infos/versions.txt
 
-__tests:
+__tester:
 	@mkdir -p build_tests/
 	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Compiling C/C++ sources files..."
+	@echo "Compiling C/C++ sources files for UnitTests ..."
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@cmake -DBUILD_TESTS=ON -B build_tests/
 	@cd build_tests/ && make all -s -j$(MAX_CORES)
@@ -144,6 +144,13 @@ __tests:
 	@echo "Compiled tests on ./build_tests/UnitsTests"
 	@echo "You can now execute it to ensure the code quality!"
 	@echo "------------------------------------------------------------------------------------------------------------"
+
+__tests: __tester
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "Running UnitTests..."
+	@echo "------------------------------------------------------------------------------------------------------------"
+
+	@cd build_tests/ && ./UnitsTests -c -v
 
 # ===========================================================================================================
 # RECIPES FOR DOCUMENTATION

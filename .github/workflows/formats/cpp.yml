@@ -1,0 +1,23 @@
+# ================================================================================
+# FORMATTER (C/Cpp)
+# ================================================================================
+name: Formatter (C / C++)
+run-name: Check that C / C++ sources files are correctly formatted !
+# --------------------------------------------------------------------------------
+on: workflow_calls
+# --------------------------------------------------------------------------------
+jobs:
+  check-formatting:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Setup
+      - uses: actions/checkout@v3
+      # Install dependencies
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install clang-format
+      # Checking format
+      - name: Check source formatting
+        run: find src/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*hpp' | xargs clang-format -i -style=file -dry-run -Werror
+      - name: Check headers formatting
+        run: find inc/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*hpp' | xargs clang-format -i -style=file -dry-run -Werror

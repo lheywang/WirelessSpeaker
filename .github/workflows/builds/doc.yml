@@ -3,10 +3,9 @@
 # ================================================================================
 name: doc
 run-name: Build the documentation of the project, on an HTML and PDF (LaTeX) formats !
-on:
-  push:
-    branches: [main]
-
+# --------------------------------------------------------------------------------
+on: workflow_calls
+# --------------------------------------------------------------------------------
 jobs:
   documentation:
     runs-on: ubuntu-latest

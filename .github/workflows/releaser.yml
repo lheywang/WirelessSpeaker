@@ -3,13 +3,15 @@
 # ================================================================================
 name: releaser
 run-name: Generate a release when push on the main branch !
-
+# --------------------------------------------------------------------------------
 on:
   push:
     branches: [main]
-
+# --------------------------------------------------------------------------------
 jobs:
   releasing:
     runs-on: ubuntu-latest
 
     steps:
+      run: |
+        echo "I'm running !"

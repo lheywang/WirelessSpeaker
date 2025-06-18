@@ -3,13 +3,15 @@
 # ================================================================================
 name: merger
 run-name: Handle the check before merging into the dev branch
-
+# --------------------------------------------------------------------------------
 on:
   push:
-    branches: [dev]
-
+    branches: [dev, tests]
+# --------------------------------------------------------------------------------
 jobs:
   check-formatting:
     runs-on: ubuntu-latest
 
     steps:
+      run: |
+        echo "I'm running !"
