@@ -13,5 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      run: |
-        echo "I'm running !"
+      - name: Test
+        run: |
+          echo "I'm running !"
