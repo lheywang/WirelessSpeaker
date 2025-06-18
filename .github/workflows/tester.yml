@@ -25,6 +25,8 @@ jobs:
     steps:
       # Checkout the repo
       - uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       # Fetch the docker image and load it
       - name: Download artifact
