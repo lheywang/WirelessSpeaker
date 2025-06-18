@@ -18,19 +18,19 @@ jobs:
     needs: [job_build] # Require the executable and the documentation to be built
 
     steps:
-      - name: Download specific artifacts
+      - name: Download specific artifacts (html zip)
         uses: actions/download-artifact@v4
         with:
-          name: WirelessSpeaker-html (html zip)
+          name: WirelessSpeaker-html
+          path: ${{ runner.temp }}/artifacts/
+          merge-multiple: true
+      - name: Download specific artifacts (pdf)
+        uses: actions/download-artifact@v4
+        with:
+          name: WirelessSpeaker-pdf (executable)
           path: ${{ runner.temp }}/artifacts/
           merge-multiple: true
       - name: Download specific artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: WirelessSpeaker-pdf (pdf)
-          path: ${{ runner.temp }}/artifacts/
-          merge-multiple: true
-      - name: Download specific artifacts (executable)
         uses: actions/download-artifact@v4
         with:
           name: WirelessSpeaker
