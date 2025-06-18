@@ -11,3 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Test
+        run: |
+          echo "I'm running docker creation !"

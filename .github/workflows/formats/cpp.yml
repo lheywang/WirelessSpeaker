@@ -7,15 +7,17 @@ run-name: Check that C / C++ sources files are correctly formatted !
 on: workflow_calls
 # --------------------------------------------------------------------------------
 jobs:
-  check-formatting:
+  C/Cpp-formatter:
     runs-on: ubuntu-latest
 
     steps:
       # Setup
       - uses: actions/checkout@v3
+
       # Install dependencies
       - name: Install clang-format
         run: sudo apt-get update && sudo apt-get install clang-format
+
       # Checking format
       - name: Check source formatting
         run: find src/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*hpp' | xargs clang-format -i -style=file -dry-run -Werror

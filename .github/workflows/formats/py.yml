@@ -12,13 +12,18 @@ on:
     types: [opened, synchronize]
 # --------------------------------------------------------------------------------
 jobs:
-  check-formatting:
+  python-formatter:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the repo
       - uses: actions/checkout@v3
+
+      # Install dependencies
       - name: Install python black formatter
         run: sudo apt-get update && sudo apt-get install black
+
+      # Checking format...
       - name: Check code formatting
         run: black . --check
       - name: Check for errors now...

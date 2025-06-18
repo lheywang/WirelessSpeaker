@@ -9,10 +9,17 @@ on:
     branches: [dev, tests]
 # --------------------------------------------------------------------------------
 jobs:
-  check-formatting:
+  dep1:
+    uses: ./.github/workflows/builds/builder.yml@tests
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dep2:
+    uses: ./.github/workflows/builds/doc.yml@tests
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  merger:
     runs-on: ubuntu-latest
+    needs: [dep1, dep2] # Require the executable and the documentation to be built
 
     steps:
       - name: Test
         run: |
-          echo "I'm running !"
+          echo "I'm running release !"

@@ -7,7 +7,14 @@ run-name: Build the documentation of the project, on an HTML and PDF (LaTeX) for
 on: workflow_calls
 # --------------------------------------------------------------------------------
 jobs:
+  dep1:
+    uses: ./.github/workflows/tests/tester.yml@tests
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   documentation:
     runs-on: ubuntu-latest
+    needs: [dep1] # Require the code to be tested
 
     steps:
+      - name: Test
+        run: |
+          echo "I'm running documentation building !"
