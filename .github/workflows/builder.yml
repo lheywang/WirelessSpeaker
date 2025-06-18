@@ -8,12 +8,12 @@ on:
   workflow_call:
 # --------------------------------------------------------------------------------
 jobs:
-  dep1:
+  job_test:
     uses: ./.github/workflows/tester.yml
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   builder:
     runs-on: ubuntu-latest
-    needs: [dep1] # Require the code to be tested
+    needs: [job_test] # Require the code to be tested
 
     steps:
       - name: Test
