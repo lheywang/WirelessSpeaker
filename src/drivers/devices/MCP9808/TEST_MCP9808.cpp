@@ -43,7 +43,7 @@ TEST(MCP9808_FloatToIntsConversion, HandlesPositiveFloat)
     float input = 10.0f;
     int output = 0;
     FloatToInts(input, &output);
-    CHECK_EQUAL(0x0A00, output);
+    CHECK_EQUAL(0x00A0, output);
 
     input = 2.25f;
     output = 0;
@@ -61,7 +61,7 @@ TEST(MCP9808_FloatToIntsConversion, HandlesNegativeFloat)
     input = -1.5f;
     output = 0;
     FloatToInts(input, &output);
-    CHECK_EQUAL(0x1FE8, output);
+    CHECK_EQUAL(0x1018, output);
 }
 
 TEST(MCP9808_FloatToIntsConversion, HandlesZero)
@@ -77,7 +77,15 @@ TEST(MCP9808_FloatToIntsConversion, HandlesLargePositiveFloat)
     float input = 100.9f;
     int output = 0;
     FloatToInts(input, &output);
-    CHECK_EQUAL(0x065E, output);
+    CHECK_EQUAL(0x064E, output);
+}
+
+TEST(MCP9808_FloatToIntsConversion, HandlesLargeNegativeFloat)
+{
+    float input = -100.9f;
+    int output = 0;
+    FloatToInts(input, &output);
+    CHECK_EQUAL(0x164E, output);
 }
 
 TEST(MCP9808_FloatToIntsConversion, BoundaryValueFloatPart)
@@ -85,12 +93,22 @@ TEST(MCP9808_FloatToIntsConversion, BoundaryValueFloatPart)
     float input = 0.0625f;
     int output = 0;
     FloatToInts(input, &output);
-    CHECK_EQUAL(0x001, output);
+    CHECK_EQUAL(0x0001, output);
 
-    input = 0.0625f * 15.0f;
+    input = 0.9375f;
     output = 0;
     FloatToInts(input, &output);
-    CHECK_EQUAL(0x01F, output);
+    CHECK_EQUAL(0x000F, output);
+
+    input = 255.9375f;
+    output = 0;
+    FloatToInts(input, &output);
+    CHECK_EQUAL(0x0FFF, output);
+
+    input = -255.9375f;
+    output = 0;
+    FloatToInts(input, &output);
+    CHECK_EQUAL(0x1FFF, output);
 }
 
 // ==============================================================================

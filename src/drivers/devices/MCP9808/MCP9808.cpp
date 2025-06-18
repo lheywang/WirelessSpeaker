@@ -78,19 +78,17 @@ int FloatToInts(const float Input, int* const OutputBuf)
     // Set and copy the data
     int Sign = 0;
     if(Input < 0)
-    {
         Sign = 1;
-    }
 
+    // Prevent from rounding issues !
     float tmp = abs(Input);
 
     // Compute the differents factors (rounding, then the float part)
-    int IntegerPart = (int)round(tmp);
-    int FloatPart = (int)round((tmp - (float)IntegerPart) / 0.0625);
-    IntegerPart &= 0xFF;
+    int IntegerPart = (int)(tmp);
+    int FloatPart = (int)((tmp - IntegerPart) / 0.0625);
 
     *OutputBuf = 0;
-    *OutputBuf = (Sign << 12) | (IntegerPart << 4) | (FloatPart & 0x0F);
+    *OutputBuf = (Sign << 12) | ((IntegerPart & 0xFF) << 4) | (FloatPart & 0x0F);
 
     return 0;
 }
