@@ -78,7 +78,7 @@ jobs:
           docker image ls -a
 
       # Building the documentation
-      - name: Building executable
+      - name: Building zip
         run: |
           make pdf DOCKER_NAME=builder
 

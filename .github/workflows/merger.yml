@@ -13,8 +13,6 @@ on:
       - opened
       - synchronize
       - reopened
-  push:
-    branches: tests
 # --------------------------------------------------------------------------------
 jobs:
   job_build:

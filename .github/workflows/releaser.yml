@@ -21,12 +21,13 @@ jobs:
       - name: Download specific artifacts
         uses: actions/download-artifact@v4
         with:
-          name: |
-            WirelessSpeaker
-            WirelessSpeaker-html
-            WirelessSpeaker-pdf
           path: ${{ runner.temp }}/artifacts/
           merge-multiple: true
+      - name: Remove unwanted artifacts
+        run: |
+          rm -rf build/*.tar
+          rm -rf build/*.dockerbuild
+          ls build/
 
       # Get a new revision ID
       - name: Generate release tag
