@@ -53,9 +53,6 @@ if (BUILD_TESTS)
     # Create an executable
     add_executable(UnitsTests tests/tester.cpp ${TEST_SOURCE_FILES})
 
-    message(STATUS ${TEST_SOURCE_FILES})
-    message(STATUS ${ALL_APP_LIBS})
-
     # Link the executable against the libraries it needs.
     target_link_libraries(UnitsTests
         PRIVATE

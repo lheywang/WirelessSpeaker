@@ -75,13 +75,18 @@ int FloatToInts(const float Input, int* const OutputBuf)
         return -1;
     }
 
+    // Set and copy the data
     int Sign = 0;
     if(Input < 0)
-        Sign = 1; // We set to 1 the sign bit, since data is expressed as CPL2.
+    {
+        Sign = 1;
+    }
+
+    float tmp = abs(Input);
 
     // Compute the differents factors (rounding, then the float part)
-    int IntegerPart = round(Input);
-    int FloatPart = round((Input - IntegerPart) / 0.0625);
+    int IntegerPart = (int)round(tmp);
+    int FloatPart = (int)round((tmp - (float)IntegerPart) / 0.0625);
     IntegerPart &= 0xFF;
 
     *OutputBuf = 0;
@@ -101,10 +106,13 @@ int IntsToFloat(const int Input, float* const OutputBuf)
     int INT = (Input & 0x0FF0) >> 4;
     int FLOAT = Input & 0x000F;
 
+    float temp = (float)INT;
+    temp += (FLOAT) * 0.0625;
+    *OutputBuf = temp;
+
     if(Sign)
-        *OutputBuf = -(INT + FLOAT / 16);
-    else
-        *OutputBuf = (INT + FLOAT / 16);
+        *OutputBuf = -temp;
+
     return 0;
 }
 

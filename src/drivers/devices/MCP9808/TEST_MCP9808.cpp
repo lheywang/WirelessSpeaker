@@ -38,34 +38,28 @@ TEST_GROUP(MCP9808_IntsToFloatConversion){void setup(){} void teardown(){}};
 // ==============================================================================
 
 // Now, define your individual test cases
-TEST(MCP9808_FloatToIntsConversion, HandlesPositiveInteger)
+TEST(MCP9808_FloatToIntsConversion, HandlesPositiveFloat)
 {
     float input = 10.0f;
     int output = 0;
     FloatToInts(input, &output);
     CHECK_EQUAL(0x0A00, output);
-}
 
-TEST(MCP9808_FloatToIntsConversion, HandlesNegativeInteger)
-{
-    float input = -5.0f;
-    int output = 0;
-    FloatToInts(input, &output);
-    CHECK_EQUAL(0x1050, output);
-}
-
-TEST(MCP9808_FloatToIntsConversion, HandlesPositiveFloat)
-{
-    float input = 2.25f;
-    int output = 0;
+    input = 2.25f;
+    output = 0;
     FloatToInts(input, &output);
     CHECK_EQUAL(0x024, output);
 }
 
 TEST(MCP9808_FloatToIntsConversion, HandlesNegativeFloat)
 {
-    float input = -1.5f;
+    float input = -5.0f;
     int output = 0;
+    FloatToInts(input, &output);
+    CHECK_EQUAL(0x1050, output);
+
+    input = -1.5f;
+    output = 0;
     FloatToInts(input, &output);
     CHECK_EQUAL(0x1FE8, output);
 }
@@ -109,7 +103,7 @@ TEST(MCP9808_IntsToFloatConversion, HandlesPositiveInteger)
     int input = 0x01A5;
     float output = 0.0f;
     IntsToFloat(input, &output);
-    DOUBLES_EQUAL(26.875f, output, FLOAT_TOLERANCE);
+    DOUBLES_EQUAL(26.3125f, output, FLOAT_TOLERANCE);
 }
 
 TEST(MCP9808_IntsToFloatConversion, HandlesNegativeInteger)
@@ -117,7 +111,7 @@ TEST(MCP9808_IntsToFloatConversion, HandlesNegativeInteger)
     int input = 0xF1A5;
     float output = 0.0f;
     IntsToFloat(input, &output);
-    DOUBLES_EQUAL(-26.875f, output, FLOAT_TOLERANCE);
+    DOUBLES_EQUAL(-26.3125f, output, FLOAT_TOLERANCE);
 }
 
 TEST(MCP9808_IntsToFloatConversion, HandlesZero)
