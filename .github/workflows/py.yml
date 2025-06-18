@@ -22,10 +22,12 @@ jobs:
 
       # Checking format...
       - name: Check code formatting
-        uses: baobabsoluciones/check-formatting-python@v1
-        with:
-          github-token: ${{ secrets.GH_PAT }}
-          paths: "tools/default-generator/"
+        run: |
+          black . --check --verbose
+      - name: Check for errors now...
+        shell: bash
+        run: |
+          "[ $? -eq 0 ] && exit 0 || exit 1"
 
       # Adding logs to the summary
       - name: Logging
