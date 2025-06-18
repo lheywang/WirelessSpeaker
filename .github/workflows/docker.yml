@@ -1,0 +1,29 @@
+# ================================================================================
+# DOCKER
+# ================================================================================
+name: docker
+run-name: Build the docker image that will be used in the next few builders !
+# --------------------------------------------------------------------------------
+on:
+  workflow_call:
+# --------------------------------------------------------------------------------
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and export the image
+        uses: docker/build-push-action@v6
+        with:
+          tags: builder:latest
+          file: ./docker/dockerfile
+          outputs: type=docker,dest=${{ runner.temp }}/builder.tar
+
+      - name: Upload artifact (docker image)
+        uses: actions/upload-artifact@v4
+        with:
+          name: builder
+          path: ${{ runner.temp }}/builder.tar

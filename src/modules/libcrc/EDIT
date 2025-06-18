@@ -1,0 +1,14 @@
+List of modifications dones
+---------------------------------------
+DATE : October 2024 - June 2025
+
+1)  Change of includes path to match a non installed situation.
+
+2)  Deleted main to not cause any issues when building the project.
+
+3)  Pre-compiled gentab32.inc and gentab64.inc files.
+    Generation was deleted.
+
+4)  Deleted precalc.c precalc.h files since they're now useless.
+
+5)  Moved header file to the include folder

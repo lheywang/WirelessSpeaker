@@ -10,8 +10,13 @@
 # First, load config
 set -a ; . ./.config ; set +a
 
-cd docker/
-docker build -t ${DOCKER_NAME} -f dockerfile .
+# Then, build the docker image
+docker build -t ${DOCKER_NAME} -f docker/dockerfile .
+
+# Finally, build the tools for the developper
+cd tools/utils && cmake . && sudo make install
+
+
 
 echo "--------------------------------------------------------------------"
 echo "Installed everything on your computer !"

@@ -1,20 +1,43 @@
+# ================================================================================
+# FORMATTER (C/Cpp)
+# ================================================================================
 name: Python CI
+run-name: Check that Python sources files are correctly formatted !
+# --------------------------------------------------------------------------------
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize]
-
+  workflow_call:
+# --------------------------------------------------------------------------------
 jobs:
-  check-formatting:
+  python-formatter:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Install python black formatter
-      run: sudo apt-get update && sudo apt-get install black
-    - name: Check code formatting
-      run: black . --check
-    - name: Check for errors now...
-      run: '[ $? -eq 0 ] && exit 0 || exit 1'
+      # Checkout the repo
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      # Install dependencies
+      - name: Install python black formatter
+        run: |
+          sudo apt-get update && sudo apt-get install black
+
+      # Checking format...
+      - name: Check code formatting
+        id: black_formatter
+        run: |
+          black . --check --verbose
+        continue-on-error: true
+
+      - name: Check for errors now...
+        if: ${{ steps.black_formatter.outputs.exit_code != '0' }}
+        run: |
+          echo "Formatting failed !"
+          exit 1
+
+      # Adding logs to the summary
+      - name: Logging
+        run: |
+          echo "### Python Formatter :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Formatting of the python files passed ! :white_check_mark:" >> $GITHUB_STEP_SUMMARY
