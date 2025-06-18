@@ -27,10 +27,10 @@ jobs:
       - name: Download specific artifacts (pdf)
         uses: actions/download-artifact@v4
         with:
-          name: WirelessSpeaker-pdf (executable)
+          name: WirelessSpeaker-pdf
           path: ${{ runner.temp }}/artifacts/
           merge-multiple: true
-      - name: Download specific artifacts
+      - name: Download specific artifacts (executable)
         uses: actions/download-artifact@v4
         with:
           name: WirelessSpeaker
