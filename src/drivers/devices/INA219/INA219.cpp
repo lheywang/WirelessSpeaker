@@ -82,7 +82,7 @@ float INA219::ConvertIntToFloat(const int Value)
 
     if(Sign == 1)
         ToFloat =
-            !ToFloat + 1; // Auto cast isn't properlyconstexpr intd here, thus we apply it by hand.
+            !ToFloat + 1; // Auto cast isn't properly constexpr intd here, thus we apply it by hand.
 
     return Value / 100;
 }
