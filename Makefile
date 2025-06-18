@@ -46,11 +46,6 @@ format:
 		${DOCKER_NAME} \
 		__format
 
-doc:
-	@docker run ${DOCKER_ARGS}\
-		${DOCKER_NAME} \
-		__doc
-
 infos:
 	@docker run ${DOCKER_ARGS}\
 		${DOCKER_NAME} \
@@ -62,6 +57,17 @@ tests:
 		-e NAME="${NAME}" \
 		-e APPNAME="${NAME}" \
 		__tests
+
+doc:
+	@docker run ${DOCKER_ARGS}\
+		${DOCKER_NAME} \
+		__doc
+
+pdf:  doc
+	@docker run ${DOCKER_ARGS}\
+		${DOCKER_NAME} \
+		__pdf
+
 
 
 # ===========================================================================================================
@@ -152,9 +158,21 @@ __doc:
 	@doxygen Doxyfile
 
 	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Generated HTML doc on $(shell pwd)/doc/html/index.html"
-	@echo "Generated HTML doc on file://///wsl.localhost/Debian$(shell pwd)/doc/html/index.html"
+	@echo "Generated HTML doc on ./doc/html/index.html"
 	@echo "------------------------------------------------------------------------------------------------------------"
+
+__pdf:
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "Building PDF documentation... "
+	@echo "------------------------------------------------------------------------------------------------------------"
+
+	@cd doc/latex/ && make pdf
+	@cp doc/latex/refman.pdf doc/${NAME}.pdf
+
+	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "Generated PDF doc on ./doc/${NAME}.pdf"
+	@echo "------------------------------------------------------------------------------------------------------------"
+
 
 # ===========================================================================================================
 # RECIPES FOR EMBEDDED DATA
