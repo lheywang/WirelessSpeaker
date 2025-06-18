@@ -18,13 +18,22 @@ jobs:
     needs: [job_build] # Require the executable and the documentation to be built
 
     steps:
-      - name: Download specific artifacts
+      - name: Download specific artifacts (html zip)
         uses: actions/download-artifact@v4
         with:
-          name: |
-            WirelessSpeaker
-            WirelessSpeaker-html
-            WirelessSpeaker-pdf
+          name: WirelessSpeaker-html
+          path: ${{ runner.temp }}/artifacts/
+          merge-multiple: true
+      - name: Download specific artifacts (pdf)
+        uses: actions/download-artifact@v4
+        with:
+          name: WirelessSpeaker-pdf
+          path: ${{ runner.temp }}/artifacts/
+          merge-multiple: true
+      - name: Download specific artifacts (executable)
+        uses: actions/download-artifact@v4
+        with:
+          name: WirelessSpeaker
           path: ${{ runner.temp }}/artifacts/
           merge-multiple: true
 
@@ -33,7 +42,7 @@ jobs:
         id: generate_release_tag
         uses: amitsingh-007/next-release-tag@v6.0.0
         with:
-          github_token: ${{ secrets.PAT }}
+          github_token: ${{ secrets.GH_PAT }}
           tag_prefix: "v"
           tag_template: "yyyy.mm.i"
 
@@ -43,7 +52,7 @@ jobs:
         with:
           name: Release ${{ steps.generate_release_tag.outputs.next_release_tag }}
           tag_name: ${{ steps.generate_release_tag.outputs.next_release_tag }}
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{secrets.GH_PAT}}
 
           files: |
             ${{ runner.temp }}/artifacts/*
