@@ -6,7 +6,7 @@ run-name: Handle the check before merging into the dev branch
 # --------------------------------------------------------------------------------
 on:
   pull_request:
-    branches: 
+    branches:
       - main
       - dev
     types:
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [job_build] # Require the executable and the documentation to be built
 
-      steps:
-        - name: Test
-          run: |
-            echo "I'm running release !"
+    steps:
+      - name: Test
+        run: |
+          echo "I'm running release !"
