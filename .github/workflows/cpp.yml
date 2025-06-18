@@ -4,7 +4,8 @@
 name: Formatter (C / C++)
 run-name: Check that C / C++ sources files are correctly formatted !
 # --------------------------------------------------------------------------------
-on: workflow_calls
+on:
+  workflow_call:
 # --------------------------------------------------------------------------------
 jobs:
   C/Cpp-formatter:

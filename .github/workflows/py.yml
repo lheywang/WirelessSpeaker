@@ -4,7 +4,8 @@
 name: Python CI
 run-name: Check that Python sources files are correctly formatted !
 # --------------------------------------------------------------------------------
-on: workflow_calls
+on:
+  workflow_call:
 # --------------------------------------------------------------------------------
 jobs:
   python-formatter:

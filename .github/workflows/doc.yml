@@ -4,7 +4,8 @@
 name: doc
 run-name: Build the documentation of the project, on an HTML and PDF (LaTeX) formats !
 # --------------------------------------------------------------------------------
-on: workflow_calls
+on:
+  workflow_call:
 # --------------------------------------------------------------------------------
 jobs:
   dep1:
