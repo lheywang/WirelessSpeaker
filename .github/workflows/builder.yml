@@ -54,7 +54,7 @@ jobs:
       - name: Logging compiler infos
         run: |
           echo "### Compiler informations ! :rocket:" >> $GITHUB_STEP_SUMMARY
-          make infos >> $GITHUB_STEP_SUMMARY
+          make infos DOCKER_NAME=builder >> $GITHUB_STEP_SUMMARY
 
   documentation:
     runs-on: ubuntu-latest
