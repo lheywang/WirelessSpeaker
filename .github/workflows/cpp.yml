@@ -8,7 +8,7 @@ on:
   workflow_call:
 # --------------------------------------------------------------------------------
 jobs:
-  C/Cpp-formatter:
+  C-Cpp-formatter:
     runs-on: ubuntu-latest
 
     steps:
