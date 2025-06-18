@@ -10,10 +10,10 @@ on:
 # --------------------------------------------------------------------------------
 jobs:
   dep1:
-    uses: ./.github/workflows/builds/builder.yml
+    uses: builder.yml
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   dep2:
-    uses: ./.github/workflows/builds/doc.yml
+    uses: doc.yml
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   merger:
     runs-on: ubuntu-latest

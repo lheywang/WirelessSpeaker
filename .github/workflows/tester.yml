@@ -8,13 +8,13 @@ on: workflow_calls
 # --------------------------------------------------------------------------------
 jobs:
   dep1:
-    uses: ./.github/workflows/builds/docker.yml
+    uses: docker.yml
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   dep2:
-    uses: ./.github/workflows/formats/cpp.yml
+    uses: cpp.yml
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   dep3:
-    uses: ./.github/workflows/formats/py.yml
+    uses: py.yml
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   testing:
