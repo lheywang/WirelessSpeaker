@@ -7,8 +7,8 @@ run-name: Handle the check before merging into the dev branch
 on:
   pull_request:
     branches:
-      - main
       - dev
+      - main
     types:
       - opened
       - synchronize
@@ -25,6 +25,9 @@ jobs:
     needs: [job_build] # Require the executable and the documentation to be built
 
     steps:
-      - name: Test
+      # Adding logs to the summary
+      - name: Logging 1
         run: |
-          echo "I'm running release !"
+          echo "### Results :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All tests sucessfulls, merge enabled ! :white_check_mark:" >> $GITHUB_STEP_SUMMARY
