@@ -45,11 +45,27 @@ enum class TEMP_HYSTERESIS
 // ==============================================================================
 
 /**
- * @brief   Convert the values from and to the sensor to their adequate representation.
- * 
+ * @brief   Convert the values from the sensor to their floating point value representation.
+ *
+ * @param   Input       The input value to convert.
+ * @param   OutputBuf   A pointer to the buffer where the converted output will be stored.
+ *
+ * @return  Returns 0 on success, or -1 if an invalid pointer is passed.
+ *
  * @warning Used internally, no need to use them after operation of the driver.
  */
 int IntsToFloat(const int Input, float* const OutputBuf);
+
+/**
+ * @brief   Convert the values from the floating point representation to an 12 bit integer compatible with the sensor.
+ *
+ * @param   Input       The input value to convert.
+ * @param   OutputBuf   A pointer to the buffer where the converted output will be stored.
+ *
+ * @return  Returns 0 on success, or -1 if an invalid pointer is passed.
+ *
+ * @warning Used internally, no need to use them after operation of the driver.
+ */
 int FloatToInts(const float Input, int* const OutputBuf);
 
 // ==============================================================================
