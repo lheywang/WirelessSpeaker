@@ -12,9 +12,6 @@ jobs:
   job_build:
     uses: ./.github/workflows/builder.yml
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  job_doc:
-    uses: ./.github/workflows/doc.yml
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   merger:
     runs-on: ubuntu-latest
     needs: [job_build, job_doc] # Require the executable and the documentation to be built
