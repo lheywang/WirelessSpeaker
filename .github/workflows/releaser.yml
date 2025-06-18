@@ -10,10 +10,10 @@ on:
 # --------------------------------------------------------------------------------
 jobs:
   dep1:
-    uses: ./.github/workflows/builds/builder.yml@tests
+    uses: ./.github/workflows/builds/builder.yml
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   dep2:
-    uses: ./.github/workflows/builds/doc.yml@tests
+    uses: ./.github/workflows/builds/doc.yml
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   releaser:
     runs-on: ubuntu-latest

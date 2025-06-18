@@ -8,7 +8,7 @@ on: workflow_calls
 # --------------------------------------------------------------------------------
 jobs:
   dep1:
-    uses: ./.github/workflows/tests/tester.yml@tests
+    uses: ./.github/workflows/tests/tester.yml
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   builder:
     runs-on: ubuntu-latest
