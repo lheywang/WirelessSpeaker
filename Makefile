@@ -19,7 +19,7 @@ MAX_CORES := $(shell nproc)
 .PHONY: clean deep_clean all format doc tests __clean __deep_clean __all __format __doc __tests
 
 # Configure some variables
-DOCKER_ARGS := --rm -it -v "$(shell pwd):/app"
+DOCKER_ARGS := --rm -v "$(shell pwd):/app"
 
 # ===========================================================================================================
 # USER ACCESSIBLE COMMANDS (invoke behind the scene docker)
