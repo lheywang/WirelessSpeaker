@@ -23,6 +23,38 @@ jobs:
     needs: [job_docker, job_cpp, job_py] # Require the code to be formatted AND the docker image to be ready
 
     steps:
-      - name: Test
+      # Checkout the repo
+      - uses: actions/checkout@v3
+
+      # Fetch the docker image and load it
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: builder
+          path: ${{ runner.temp }}
+      - name: Load image
         run: |
-          echo "I'm running tests !"
+          docker load --input ${{ runner.temp }}/builder.tar
+          docker image ls -a
+
+      # Compiling tests
+      - name: Building tester
+        run: |
+          make tester DOCKER_NAME=builder
+
+      # Running tests
+      - name: Running tests
+        run: |
+          ./build_tests/UnitsTests -c -v
+
+      # Checking outputs
+      - name: Checcking the result
+        run: |
+          "[ $? -eq 0 ] && exit 0 || exit 1"
+
+      # Adding logs to the summary
+      - name: Logging
+        run: |
+          echo "### UnitTests :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Unit Tests :white_check_mark:" >> $GITHUB_STEP_SUMMARY

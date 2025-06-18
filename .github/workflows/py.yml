@@ -17,10 +17,20 @@ jobs:
 
       # Install dependencies
       - name: Install python black formatter
-        run: sudo apt-get update && sudo apt-get install black
+        run: |
+          sudo apt-get update && sudo apt-get install black
 
       # Checking format...
       - name: Check code formatting
-        run: black . --check
+        run: |
+          black . --check
       - name: Check for errors now...
-        run: "[ $? -eq 0 ] && exit 0 || exit 1"
+        run: |
+          "[ $? -eq 0 ] && exit 0 || exit 1"
+
+      # Adding logs to the summary
+      - name: Logging
+        run: |
+          echo "### Python Formatter :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Formatting of the python files passed ! :white_check_mark:" >> $GITHUB_STEP_SUMMARY

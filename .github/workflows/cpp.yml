@@ -24,3 +24,10 @@ jobs:
         run: find src/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*hpp' | xargs clang-format -i -style=file -dry-run -Werror
       - name: Check headers formatting
         run: find inc/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*hpp' | xargs clang-format -i -style=file -dry-run -Werror
+
+      # Adding logs to the summary
+      - name: Logging
+        run: |
+          echo "### C/C++ Formatter :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Formatting of the C/C++ files passed ! :white_check_mark:" >> $GITHUB_STEP_SUMMARY

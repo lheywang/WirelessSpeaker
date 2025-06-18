@@ -22,7 +22,7 @@ jobs:
           file: ./docker/dockerfile
           outputs: type=docker,dest=${{ runner.temp }}/builder.tar
 
-      - name: Upload artifact
+      - name: Upload artifact (docker image)
         uses: actions/upload-artifact@v4
         with:
           name: builder

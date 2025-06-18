@@ -58,6 +58,13 @@ tests:
 		-e APPNAME="${NAME}" \
 		__tests
 
+tester:
+	@docker run ${DOCKER_ARGS}\
+		${DOCKER_NAME} \
+		-e NAME="${NAME}" \
+		-e APPNAME="${NAME}" \
+		__tester
+
 doc:
 	@docker run ${DOCKER_ARGS}\
 		${DOCKER_NAME} \
