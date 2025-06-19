@@ -28,8 +28,7 @@
 // ==============================================================================
 // DEFINES
 // ==============================================================================
-#define FLOAT_TOLERANCE                                                                            \
-    (1 / 32) // Sensor is given for 0.0625° of precision. This value correspond to half of it.
+#define FLOAT_TOLERANCE 0.005
 
 // ==============================================================================
 // TEST GROUPS
@@ -111,7 +110,6 @@ TEST(INA219_FloatToIntsConversion, HandlesNegativeFloat)
     {
         for(int g = 1; g < 5; g++) // Loop for different gains
         {
-
             sensor->__SetPGASetting(g);
             int16_t out =
                 sensor->ConvertFloatToInt(inputs[k]) &
@@ -193,15 +191,105 @@ TEST(INA219_FloatToIntsConversion, HandlesBoundariesFloat)
 // ==============================================================================*
 
 // Now, define your individual test cases
-// TEST(INA219_IntsToFloatConversion, HandlesPositiveFloat)
-// {
-//     int inputs[] = {1, 2, 3, 4};
-//     float outputs[] = {0, 0, 0, 0};
+TEST(INA219_IntsToFloatConversion, HandlesPositiveFloat)
+{
+    std::cout << CYAN << "[ INA219  ]: Testing positives floats..." << RESET;
+    int16_t inputs[] = {1, 2, 3998, 4000};
+    float outputs[] = {0.01f, 0.02f, 39.98f, 40.00f};
 
-//     for(int k = 1; k < 4; k++)
-//     {
-//         sensor->__SetPGASetting(k);
-//         int out = sensor->ConvertIntToFloat(inputs[k - 1]);
-//         DOUBLES_EQUAL(out, outputs[k - 1], FLOAT_TOLERANCE);
-//     }
-// }
+    for(int k = 0; k < 4; k++) // Loop for different values
+    {
+        for(int g = 1; g < 5; g++) // Loop for different gains
+        {
+            sensor->__SetPGASetting(g);
+            float out = sensor->ConvertIntToFloat(inputs[k]);
+            DOUBLES_EQUAL(outputs[k], out, FLOAT_TOLERANCE);
+        }
+    }
+    std::cout << GREEN << " OK !" << RESET << std::endl;
+}
+
+TEST(INA219_IntsToFloatConversion, HandlesNegativeFloat)
+{
+    std::cout << CYAN << "[ INA219  ]: Testing positive integers ..." << RESET;
+    int16_t inputs[] = {-1, -2, -3998, -4000};
+    float outputs[] = {-0.01f, -0.02f, -39.98f, -40.00f};
+
+    for(int k = 0; k < 4; k++) // Loop for different values
+    {
+        for(int g = 1; g < 5; g++) // Loop for different gains
+        {
+            sensor->__SetPGASetting(g);
+            float out = sensor->ConvertIntToFloat(inputs[k]);
+            DOUBLES_EQUAL(outputs[k], out, FLOAT_TOLERANCE);
+        }
+    }
+    std::cout << GREEN << " OK !" << RESET << std::endl;
+}
+
+TEST(INA219_IntsToFloatConversion, HandlesNullFloat)
+{
+    std::cout << CYAN << "[ INA219  ]: Testing zero integer..." << RESET;
+    int16_t inputs = 0;
+    float outputs = 0.0f;
+
+    for(int g = 1; g < 5; g++) // Loop for different gains
+    {
+        sensor->__SetPGASetting(g);
+        float out = sensor->ConvertIntToFloat(inputs);
+        DOUBLES_EQUAL(outputs, out, FLOAT_TOLERANCE);
+    }
+    std::cout << GREEN << " OK !" << RESET << std::endl;
+}
+
+TEST(INA219_IntsToFloatConversion, HandlesLargePositiveFloat)
+{
+    std::cout << CYAN << "[ INA219  ]: Testing large positives integers..." << RESET;
+    int16_t inputs[] = {15999, 16002, 31998, 32000};
+    float outputs[] = {159.99f, 160.02f, 319.98f, 320.00f};
+
+    for(int k = 0; k < 4; k++) // Loop for different values
+    {
+        for(int g = 1; g < 5; g++) // Loop for different gains
+        {
+            sensor->__SetPGASetting(g);
+            float out = sensor->ConvertIntToFloat(inputs[k]);
+            DOUBLES_EQUAL(outputs[k], out, FLOAT_TOLERANCE);
+        }
+    }
+    std::cout << GREEN << " OK !" << RESET << std::endl;
+}
+
+TEST(INA219_IntsToFloatConversion, HandlesLargeNegativeFloat)
+{
+    std::cout << CYAN << "[ INA219  ]: Testing large negatives floats..." << RESET;
+    int16_t inputs[] = {-15999, -16002, -31998, -32000};
+    float outputs[] = {-159.99f, -160.02f, -319.98f, -320.00f};
+
+    for(int k = 0; k < 4; k++) // Loop for different values
+    {
+        for(int g = 1; g < 5; g++) // Loop for different gains
+        {
+            sensor->__SetPGASetting(g);
+            float out = sensor->ConvertIntToFloat(inputs[k]);
+            DOUBLES_EQUAL(outputs[k], out, FLOAT_TOLERANCE);
+        }
+    }
+    std::cout << GREEN << " OK !" << RESET << std::endl;
+}
+
+TEST(INA219_IntsToFloatConversion, HandlesBoundariesFloat)
+{
+    std::cout << CYAN << "[ INA219  ]: Testing boundaries floats..." << RESET;
+    int16_t inputs[] = {4000, 8000, 16000, 32000, -4000, -8000, -16000, -32000};
+    float outputs[] = {40.00f, 80.00f, 160.00f, 320.00f, -40.00f, -80.00f, -160.00f, -320.00f};
+    int gains[] = {4, 3, 2, 1, 4, 3, 2, 1};
+
+    for(int k = 0; k < 8; k++) // Loop for different values
+    {
+        sensor->__SetPGASetting(gains[k]);
+        float out = sensor->ConvertIntToFloat(inputs[k]);
+        DOUBLES_EQUAL(outputs[k], out, FLOAT_TOLERANCE);
+    }
+    std::cout << GREEN << " OK !" << RESET << std::endl;
+}

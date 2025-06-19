@@ -56,38 +56,32 @@ INA219::~INA219()
 // =====================
 // FUNCTIONS
 // =====================
-float INA219::ConvertIntToFloat(const int Value)
+float INA219::ConvertIntToFloat(const int16_t Value)
 {
-    int Sign;
-    int ToFloat;
-
+    float val = 0;
     switch(this->PGASetting)
     {
     case 1:
-        Sign = Value & 0x8000;
-        ToFloat = Value & 0x7FFF;
+        val = (float)(Value & 0xFFFF);
         break;
+
     case 2:
-        Sign = Value & 0x4000;
-        ToFloat = Value & 0x3FFF;
+        val = (float)(Value & 0x7FFF);
         break;
+
     case 3:
-        Sign = Value & 0x2000;
-        ToFloat = Value & 0x1FFF;
+        val = (float)(Value & 0x3FFF);
         break;
+
     case 4:
-        Sign = Value & 0x1000;
-        ToFloat = Value & 0x0FFF;
+        val = (float)(Value & 0x1FFF);
         break;
     }
 
-    if(Sign == 1)
-        ToFloat =
-            !ToFloat + 1; // Auto cast isn't properly constexpr intd here, thus we apply it by hand.
-
-    return Value / 100;
+    return val / 100;
 }
 
+// TESTED AND VALIDATED
 int16_t INA219::ConvertFloatToInt(const float Value)
 {
     int buf = (int)(Value * 100);

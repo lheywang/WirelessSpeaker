@@ -136,7 +136,7 @@ public:
     int SetCalibration(const float Value);
 
     // For internal usage only.
-    float ConvertIntToFloat(const int Value);
+    float ConvertIntToFloat(const int16_t Value);
     int16_t ConvertFloatToInt(const float Value);
 
     // Adding a custom setter for the PGA_Gain (unit_test only)
