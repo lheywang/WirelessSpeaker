@@ -26,6 +26,7 @@ set(LIBS    ${CMAKE_BINARY_DIR}/bin/config.o\\
 # ========================================================================================
 # Ask for the BUILD mode
 option(BUILD_TESTS "Build the unit test executable instead of the main application." OFF)
+option(COVERAGE "Build the coverage flags inside of the executable." OFF)
 
 # ========================================================================================
 # EXECUTABLES
@@ -40,8 +41,13 @@ if (BUILD_TESTS)
     # Add some compiler flags for the final usage
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra ")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -Wall -Wextra ")
-    
 
+    if (COVERAGE)
+        message(STATUS "Addind converage flags")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage ")
+    endif()
+    
     # Add some headers search path
     include_directories(tools/cpputest/include/)
     include_directories(tools/cpputest/include/CppUTest/)

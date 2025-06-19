@@ -16,7 +16,7 @@ MAX_CORES := $(shell nproc)
 -include .config
 
 # Configuring PHONY
-.PHONY: clean deep_clean all format doc tests __clean __deep_clean __all __format __doc __tests
+.PHONY: clean deep_clean all format doc tests coverage __clean __deep_clean __all __format __doc __tests __coverage
 
 # Configure some variables (remove -it flag for runners)
 ifeq ($(CI),true)
@@ -99,7 +99,6 @@ __deep_clean:
 	@echo "Removing caches..."
 
 	@-rm -r -f build/
-	@-rm -r -f build_tests
 	@-rm -r -f doc/
 	@-cd tools/device-tree && make dtc_clean
 
@@ -109,9 +108,11 @@ __deep_clean:
 
 __all: build/bin/config.o build/bin/header.o
 	@mkdir -p build/
+
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@echo "Compiling C/C++ sources files..."
 	@echo "------------------------------------------------------------------------------------------------------------"
+
 	@cmake -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/cmake/toolchain.cmake -B build/
 	@cd build/ && make all -s -j$(MAX_CORES)
 
@@ -142,13 +143,14 @@ __infos:
 
 	cat /usr/local/share/infos/versions.txt
 
-__tester:
-	@mkdir -p build_tests/
+__tester: build/bin/config.o build/bin/header.o
+	@mkdir -p build/
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@echo "Compiling C/C++ sources files for UnitTests ..."
 	@echo "------------------------------------------------------------------------------------------------------------"
-	@cmake -DBUILD_TESTS=ON -B build_tests/
-	@cd build_tests/ && make all -s -j$(MAX_CORES)
+
+	@cmake -DBUILD_TESTS=ON -B build/
+	@cd build/ && make all -s -j$(MAX_CORES)
 
 	@echo "------------------------------------------------------------------------------------------------------------"
 	@echo "Compiled tests on ./build_tests/UnitsTests"
@@ -160,7 +162,7 @@ __tests: __tester
 	@echo "Running UnitTests..."
 	@echo "------------------------------------------------------------------------------------------------------------"
 
-	@cd build_tests/ && ./UnitsTests -c
+	@cd build/ && ./UnitsTests -c
 
 # ===========================================================================================================
 # RECIPES FOR DOCUMENTATION
