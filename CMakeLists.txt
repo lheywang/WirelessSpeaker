@@ -31,6 +31,9 @@ option(BUILD_TESTS "Build the unit test executable instead of the main applicati
 # EXECUTABLES
 # ========================================================================================
 if (BUILD_TESTS)
+    # Building the mocks library
+    add_subdirectory(tests)
+
     # User infos
     message(STATUS "Configuring for Unit Test build (Host: x86_64)")
 
@@ -56,9 +59,9 @@ if (BUILD_TESTS)
     # Link the executable against the libraries it needs.
     target_link_libraries(UnitsTests
         PRIVATE
-        MasterLibs
         CppUTest
         CppUTestExt
+        MasterLibs
     )
 
 else()
