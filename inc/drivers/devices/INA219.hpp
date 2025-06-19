@@ -137,7 +137,7 @@ public:
 
     // For internal usage only.
     float ConvertIntToFloat(const int Value);
-    int ConvertFloatToInt(const float Value);
+    int16_t ConvertFloatToInt(const float Value);
 
     // Adding a custom setter for the PGA_Gain (unit_test only)
     void __SetPGASetting(int value);

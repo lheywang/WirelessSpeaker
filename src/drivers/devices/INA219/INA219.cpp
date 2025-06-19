@@ -17,10 +17,9 @@
 
 // STD
 #include <cstdint>
+#include <iostream>
 #include <math.h>
 #include <stdio.h>
-
-#include <iostream>
 
 // =====================
 // REGISTERS
@@ -89,7 +88,7 @@ float INA219::ConvertIntToFloat(const int Value)
     return Value / 100;
 }
 
-int INA219::ConvertFloatToInt(const float Value)
+int16_t INA219::ConvertFloatToInt(const float Value)
 {
     int buf = (int)(Value * 100);
     int Sign = (Value < 0) ? 1 : 0;
@@ -97,16 +96,16 @@ int INA219::ConvertFloatToInt(const float Value)
     switch(this->PGASetting)
     {
     case 1:
-        return (Sign << 15) | (buf & 0x7FFFF);
+        return (Sign << 15) | (buf & 0x7FFF);
         break;
     case 2:
-        return (Sign << 15) | (Sign << 14) | (buf & 0x3FFFF);
+        return (Sign << 15) | (Sign << 14) | (buf & 0x3FFF);
         break;
     case 3:
-        return (Sign << 15) | (Sign << 14) | (Sign << 13) | (buf & 0x1FFFF);
+        return (Sign << 15) | (Sign << 14) | (Sign << 13) | (buf & 0x1FFF);
         break;
     case 4:
-        return (Sign << 15) | (Sign << 14) | (Sign << 13) | (Sign << 12) | (buf & 0x0FFFF);
+        return (Sign << 15) | (Sign << 14) | (Sign << 13) | (Sign << 12) | (buf & 0x0FFF);
         break;
     }
     return -2 ^ 31; // Large enough to not influe here
