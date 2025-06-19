@@ -53,7 +53,7 @@ INA219::~INA219()
 }
 
 // =====================
-// PRIVATES
+// FUNCTIONS
 // =====================
 float INA219::ConvertIntToFloat(const int Value)
 {
@@ -90,8 +90,8 @@ float INA219::ConvertIntToFloat(const int Value)
 int INA219::ConvertFloatToInt(const float Value)
 {
     float intermediate = round(Value * 100);
-    int buf = -((int)intermediate);
-    int Sign = (buf < 0) ? 1 : 0;
+    int buf = (int)intermediate;
+    int Sign = (Value < 0) ? 1 : 0;
 
     switch(this->PGASetting)
     {
@@ -108,12 +108,8 @@ int INA219::ConvertFloatToInt(const float Value)
         return (Sign << 15) | (Sign << 14) | (Sign << 13) | (Sign << 12) | (buf && 0x0FFFF);
         break;
     }
-    return -1;
+    return -1000000000; // Large enough to not influe here
 }
-
-// =====================
-// FUNCTIONS
-// =====================
 
 int INA219::Configure(const int Reset,
                       const int BusVoltageRange,
@@ -225,4 +221,10 @@ int INA219::ReadBusVoltage(float* const Value)
     *Value = this->ConvertIntToFloat(buf);
 
     return 0;
+}
+
+void INA219::__SetPGASetting(int value)
+{
+    this->PGASetting = value;
+    return;
 }
