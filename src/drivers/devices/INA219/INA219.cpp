@@ -20,6 +20,8 @@
 #include <math.h>
 #include <stdio.h>
 
+#include <iostream>
+
 // =====================
 // REGISTERS
 // =====================
@@ -89,26 +91,25 @@ float INA219::ConvertIntToFloat(const int Value)
 
 int INA219::ConvertFloatToInt(const float Value)
 {
-    float intermediate = round(Value * 100);
-    int buf = (int)intermediate;
+    int buf = (int)(Value * 100);
     int Sign = (Value < 0) ? 1 : 0;
 
     switch(this->PGASetting)
     {
     case 1:
-        return (Sign << 15) | (buf && 0x7FFFF);
+        return (Sign << 15) | (buf & 0x7FFFF);
         break;
     case 2:
-        return (Sign << 15) | (Sign << 14) | (buf && 0x3FFFF);
+        return (Sign << 15) | (Sign << 14) | (buf & 0x3FFFF);
         break;
     case 3:
-        return (Sign << 15) | (Sign << 14) | (Sign << 13) | (buf && 0x1FFFF);
+        return (Sign << 15) | (Sign << 14) | (Sign << 13) | (buf & 0x1FFFF);
         break;
     case 4:
-        return (Sign << 15) | (Sign << 14) | (Sign << 13) | (Sign << 12) | (buf && 0x0FFFF);
+        return (Sign << 15) | (Sign << 14) | (Sign << 13) | (Sign << 12) | (buf & 0x0FFFF);
         break;
     }
-    return -1000000000; // Large enough to not influe here
+    return -2 ^ 31; // Large enough to not influe here
 }
 
 int INA219::Configure(const int Reset,

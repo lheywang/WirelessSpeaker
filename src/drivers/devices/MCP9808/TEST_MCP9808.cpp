@@ -183,7 +183,7 @@ TEST(MCP9808_IntsToFloatConversion, HandlesLargeNegativeFloat)
 
 TEST(MCP9808_IntsToFloatConversion, BoundaryValueFloatPart)
 {
-    std::cout << CYAN << "[ MCP9808 ]: Testing boundaries integers..." << RESET;
+    std::cout << "." << CYAN << "[ MCP9808 ]: Testing boundaries integers..." << RESET;
     int input = 0xE000; // 3 unused bits
     float output = 0.0f;
     IntsToFloat(input, &output);
