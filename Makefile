@@ -9,14 +9,19 @@
 # v2 on Jun 2025
 # ===========================================================================================================
 
-# Load the number of system cores to fasten the build process
-MAX_CORES := $(shell nproc)
+# Configuring PHONY
+.PHONY: clean deep_clean all format doc tests coverage __clean __deep_clean __all __format __doc __tests __coverage
+
 
 # Load shared variables among different build steps
 -include .config
 
-# Configuring PHONY
-.PHONY: clean deep_clean all format doc tests coverage __clean __deep_clean __all __format __doc __tests __coverage
+# ===========================================================================================================
+# VARIABLES
+# ===========================================================================================================
+
+# Load the number of system cores to fasten the build process
+MAX_CORES := $(shell nproc)
 
 # Configure some variables (remove -it flag for runners)
 ifeq ($(CI),true)
@@ -49,6 +54,12 @@ BBlue=\033[1;34m
 BPurple=\033[1;35m
 BCyan=\033[1;36m
 BWhite=\033[1;37m
+
+# Configuring build paths
+debug=build/debug
+release=build/release
+documentation=build/doc/
+
 # ===========================================================================================================
 # USER ACCESSIBLE COMMANDS (invoke behind the scene docker)
 # ===========================================================================================================
@@ -107,7 +118,6 @@ pdf:  doc
 		__pdf
 
 
-
 # ===========================================================================================================
 # GLOBAL RECIPES (TO BE RUNNED UNDER DOCKER)
 # Theses shall not be runned under plain OS. 
@@ -116,31 +126,33 @@ __clean:
 	@-+cd /app/doc/latex && $(MAKE) clean
 	@-+cd /app/tools/device-tree && $(MAKE) dtc_clean
 
-	@-+cd build/ && $(MAKE) clean
-	@-rm -f build/bin/*.bin build/bin/*.o 
+	@-+cd ${release} && $(MAKE) clean
+	@-+cd ${debug} && $(MAKE) clean
+	@-rm -f ${release}/bin/*.bin ${release}/bin/*.o 
+	@-rm -f ${debug}/bin/*.bin ${debug}/bin/*.o 
 	
 	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	@echo "${BGreen}Cleaned build/ doc/ and tools/ and default/ binaries !${Color_Off}"
 	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 __deep_clean:
-	@-rm -r -f build/
-	@-rm -r -f doc/
+	@-rm -rf ${release} ${debug}
+	@-rm -r -f ${documentation}
 	@+cd tools/device-tree && $(MAKE) dtc_clean
 
 	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
-	@echo "${BGreen}Deleted build/ doc/ default/ !${Color_Off}"
+	@echo "${BGreen}Deleted ${release} ${debug} ${documentation} !${Color_Off}"
 	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
-__all: build/bin/config.o build/bin/header.o
-	@mkdir -p build/
+__all: build/prod/bin/config.o build/prod/bin/header.o
+	@mkdir -p build/prod/
 
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	@echo "${BYellow}Compiling C/C++ sources files...${Color_Off}"
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
-	@cmake -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/cmake/toolchain.cmake -B build/
-	@cd build/ && $(MAKE) all -s -j$(MAX_CORES)
+	@cmake -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/cmake/toolchain.cmake -B build/prod/
+	@cd build/prod/ && $(MAKE) all -s -j$(MAX_CORES)
 
 	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	@echo "${BGreen}Compiled source on ./build/${APPNAME}${Color_Off}"
@@ -149,6 +161,7 @@ __all: build/bin/config.o build/bin/header.o
 
 __format:
 	@find src/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*hpp' | xargs clang-format -i -style=file
+	@find inc/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*hpp' | xargs clang-format -i -style=file
 		
 	@echo "${BCyan}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	@echo "${BCyan}Formatted all of the source files ! (.c / .h / .hpp / .cpp)${Color_Off}"
@@ -169,15 +182,15 @@ __infos:
 
 	@cat /usr/local/share/infos/versions.txt
 
-__tester: build/bin/config.o build/bin/header.o
+__tester: build/debug/bin/config.o build/debug/bin/header.o
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	@echo "${BYellow}Compiling C/C++ sources files for UnitTests ...${Color_Off}"
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
-	@mkdir -p build/
+	@mkdir -p build/debug/
 
-	@cmake -DBUILD_TESTS=ON -B build/
-	@cd build/ && $(MAKE) all -s -j$(MAX_CORES)
+	@cmake -DBUILD_TESTS=ON -B build/debug/
+	@cd build/debug/ && $(MAKE) all -s -j$(MAX_CORES)
 
 	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	@echo "${BGreen}Compiled tests on ./build_tests/UnitsTests${Color_Off}"
@@ -189,7 +202,7 @@ __tests: __tester
 	@echo "${BYellow}Running UnitTests...${Color_Off}"
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
-	@cd build/ && ./UnitsTests -c
+	@cd build/debug/ && ./UnitsTests -c
 
 # ===========================================================================================================
 # RECIPES FOR DOCUMENTATION
@@ -224,24 +237,46 @@ __pdf:
 # ===========================================================================================================
 # RECIPES FOR EMBEDDED DATA
 # ===========================================================================================================
-build/bin/config.o: default/config/config.toml
-	@mkdir -p build/bin/	
+build/prod/bin/config.o: default/config/config.toml
+	@mkdir -p build/prod/bin/
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	@echo "${BYellow}Preparing config default binary data...${Color_Off}"
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
-	@python3 tools/default-generator/config/config-generator.py $< build/bin/config.bin
-	@aarch64-linux-gnu-ld -r -b binary -o  $@ build/bin/config.bin
+	@python3 tools/default-generator/config/config-generator.py $< build/prod/bin/config.bin
+	@aarch64-linux-gnu-ld -r -b binary -o  $@ build/prod/bin/config.bin
 
 	@echo "Generated $@"
 
-build/bin/header.o: default/header/header.toml
-	@mkdir -p build/bin/
+build/prod/bin/header.o: default/header/header.toml
+	@mkdir -p build/prod/bin/
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	@echo "${BYellow}Preparing header default binary data...${Color_Off}"
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	
-	@python3 tools/default-generator/header/header-generator.py $< build/bin/header.bin 
-	@aarch64-linux-gnu-ld -r -b binary -o  $@ build/bin/header.bin
+	@python3 tools/default-generator/header/header-generator.py $< build/prod/bin/header.bin 
+	@aarch64-linux-gnu-ld -r -b binary -o  $@ build/prod/bin/header.bin
+
+	@echo "Generated $@"
+
+build/debug/bin/config.o: default/config/config.toml
+	@mkdir -p build/prod/bin/
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BYellow}Preparing config default binary data...${Color_Off}"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
+
+	@python3 tools/default-generator/config/config-generator.py $< build/debug/bin/config.bin
+	@aarch64-linux-gnu-ld -r -b binary -o  $@ build/prod/bin/config.bin
+
+	@echo "Generated $@"
+
+build/debug/bin/header.o: default/header/header.toml
+	@mkdir -p build/prod/bin/
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BYellow}Preparing header default binary data...${Color_Off}"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	
+	@python3 tools/default-generator/header/header-generator.py $< build/debug/bin/header.bin 
+	@aarch64-linux-gnu-ld -r -b binary -o  $@ build/prod/bin/header.bin
 
 	@echo "Generated $@"
