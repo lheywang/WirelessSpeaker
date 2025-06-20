@@ -11,7 +11,10 @@
 
 # Configuring PHONY
 .PHONY: clean deep_clean all format doc tests coverage __clean __deep_clean __all __format __doc __tests __coverage
+.SILENT: clean deep_clean all format doc tests coverage __clean __deep_clean __all __format __doc __tests __coverage
 
+# Remove useless logs
+export MAKEFLAGS += --no-print-directory
 
 # Load shared variables among different build steps
 -include .config
@@ -62,12 +65,14 @@ clean:
 	@docker run ${DOCKER_ARGS} \
 		${DOCKER_NAME} \
 		${DOCKER_VARS} \
+		-e MAKEFLAGS="${MAKEFLAGS}"\
 		__clean
 
 deep_clean:
 	@docker run ${DOCKER_ARGS} \
 		${DOCKER_NAME} \
 		${DOCKER_VARS} \
+		-e MAKEFLAGS="${MAKEFLAGS}"\
 		__deep_clean
 
 all:
@@ -80,12 +85,14 @@ format:
 	@docker run ${DOCKER_ARGS} \
 		${DOCKER_NAME} \
 		${DOCKER_VARS} \
+		-e MAKEFLAGS="${MAKEFLAGS}"\
 		__format
 
 infos:
 	@docker run ${DOCKER_ARGS}\
 		${DOCKER_NAME} \
 		${DOCKER_VARS} \
+		-e MAKEFLAGS="${MAKEFLAGS}"\
 		__infos
 
 tests:
@@ -118,11 +125,11 @@ pdf:  doc
 # Theses shall not be runned under plain OS. 
 # ===========================================================================================================
 __clean:
-	@-+cd ${DOCKER_BASE}/${BUILD_DOC} && $(MAKE) clean
+	@-+cd ${DOCKER_BASE}/${BUILD_DOC}/latex && $(MAKE) clean
 	@-+cd ${DOCKER_BASE}/tools/device-tree && $(MAKE) dtc_clean
 
-	@-+cd ${DOCKER_BASE}/${BUILD_RELEASE} && $(MAKE) clean
-	@-+cd ${DOCKER_BASE}/${BUILD_DEBUG} && $(MAKE) clean
+	@+cd ${DOCKER_BASE}/${BUILD_RELEASE} && $(MAKE) clean
+	@+cd ${DOCKER_BASE}/${BUILD_DEBUG} && $(MAKE) clean
 	@-rm -f ${DOCKER_BASE}/${BUILD_RELEASE}/bin/*.bin ${DOCKER_BASE}/${BUILD_RELEASE}/bin/*.o 
 	@-rm -f ${DOCKER_BASE}/${BUILD_DEBUG}/bin/*.bin ${DOCKER_BASE}/${BUILD_DEBUG}/bin/*.o 
 	
@@ -222,7 +229,7 @@ __pdf:
 	@echo "${BYellow} Building PDF BUILD_DOC... ${Color_Off}"
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
-	@cd ${DOCKER_BASE}/${BUILD_DOC} && make pdf
+	@+cd ${DOCKER_BASE}/${BUILD_DOC}/latex && make pdf
 	@cp ${DOCKER_BASE}/${BUILD_DOC}/latex/refman.pdf ${DOCKER_BASE}/${BUILD_DOC}/${NAME}.pdf
 
 	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
