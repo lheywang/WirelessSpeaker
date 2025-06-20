@@ -159,6 +159,8 @@ pdf:  doc
 # -----------------------------------------------------------------------------------------------------------
 __clean: __clean_latex_docs __clean_device_tree __clean_build_release __clean_build_debug __clean_build_coverage
 # -----------------------------------------------------------------------------------------------------------
+	@-rm -f ${DOCKER_BASE}/${BUILD_COVERAGE}/bin/*.bin 
+	@-rm -f ${DOCKER_BASE}/${BUILD_COVERAGE}/bin/*.o 
 	@-rm -f ${DOCKER_BASE}/${BUILD_RELEASE}/bin/*.bin 
 	@-rm -f ${DOCKER_BASE}/${BUILD_RELEASE}/bin/*.o 
 	@-rm -f ${DOCKER_BASE}/${BUILD_DEBUG}/bin/*.bin 
@@ -178,12 +180,15 @@ __clean: __clean_latex_docs __clean_device_tree __clean_build_release __clean_bu
 # -----------------------------------------------------------------------------------------------------------
 __deep_clean:
 # -----------------------------------------------------------------------------------------------------------
-	@-rm -rf ${DOCKER_BASE}/${BUILD_RELEASE} ${DOCKER_BASE}/${BUILD_DEBUG}
-	@-rm -r -f ${DOCKER_BASE}/${BUILD_DOC}
+	@-rm -rf ${DOCKER_BASE}/${BUILD_COVERAGE} 
+	@-rm -rf ${DOCKER_BASE}/${BUILD_RELEASE}
+	@-rm -rf ${DOCKER_BASE}/${BUILD_DEBUG} 
+	@-rm -rf ${DOCKER_BASE}/${BUILD_DOC}
+
 	@+cd tools/device-tree && $(MAKE) ${MAKESILENT} dtc_clean
 
 	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
-	@echo "${BGreen} Deleted ${BUILD_RELEASE} ${BUILD_DEBUG} ${BUILD_DOC} !${Color_Off}"
+	@echo "${BGreen} Deleted ${BUILD_RELEASE} ${BUILD_DEBUG} ${BUILD_COVERAGE} ${BUILD_DOC} !${Color_Off}"
 	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 # ===========================================================================================================
@@ -202,7 +207,7 @@ __all: ${DOCKER_BASE}/${BUILD_RELEASE}/bin/config.o ${DOCKER_BASE}/${BUILD_RELEA
 	@cd ${DOCKER_BASE}/${BUILD_RELEASE} && $(MAKE) ${MAKESILENT} all -j$(MAX_CORES)
 
 	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
-	@echo "${BGreen} Compiled source on ./build/${APPNAME}${Color_Off}"
+	@echo "${BGreen} Compiled source on ./${BUILD_RELEASE}/${APPNAME}${Color_Off}"
 	@echo "${BGreen} You can now execute it on the target !${Color_Off}"
 	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 

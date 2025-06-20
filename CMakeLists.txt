@@ -60,13 +60,16 @@ if (BUILD_TESTS)
     message("${BoldCyan}Configuring for Unit Test build (Host: x86_64) ${ColourReset}")
 
     # Add some compiler flags for the final usage
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra ")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -Wall -Wextra ")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -Wextra ")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++20 -Wall -Wextra ")
 
     if (COVERAGE)
-        message("${BoldCyan}Addind converage flags ${ColourReset}")
+        message("${BoldCyan}Addind coverage flags ${ColourReset}")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage ")
+
+        # Add linker options
+        add_link_options("-lgcov")
     endif()
     
     # Add some headers search path
@@ -100,12 +103,13 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcpu=cortex-a53 -O3 -std=c++20 -MMD -Wall -Wextra ")
 
     # Add an executable
-    add_executable($ENV{APPNAME} src/main.cpp ${LIBS})
+    add_executable($ENV{APPNAME} src/main.cpp)
 
     # Link the executable against the libraries it needs.
     target_link_libraries($ENV{APPNAME}
         PRIVATE
         MasterLibs
+        ${LIBS}
     )
 
 endif()
