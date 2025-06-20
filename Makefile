@@ -24,58 +24,86 @@ DOCKER_ARGS := --rm -v "$(shell pwd):/app"
 else
 DOCKER_ARGS := --rm -it -v "$(shell pwd):/app"
 endif
+
+DOCKER_VARS := -e NAME="${NAME}" -e APPNAME="${NAME}"
+
+# Reset
+Color_Off=\033[0m
+
+# Regular Colors
+Black=\033[0;30m
+Red=\033[0;31m
+Green=\033[0;32m
+Yellow=\033[0;33m
+Blue=\033[0;34m
+Purple=\033[0;35m
+Cyan=\033[0;36m
+White=\033[0;37m
+
+# Bold
+BBlack=\033[1;30m
+BRed=\033[1;31m
+BGreen=\033[1;32m
+BYellow=\033[1;33m
+BBlue=\033[1;34m
+BPurple=\033[1;35m
+BCyan=\033[1;36m
+BWhite=\033[1;37m
 # ===========================================================================================================
 # USER ACCESSIBLE COMMANDS (invoke behind the scene docker)
 # ===========================================================================================================
 clean:
 	@docker run ${DOCKER_ARGS} \
 		${DOCKER_NAME} \
+		${DOCKER_VARS} \
 		__clean
 
 deep_clean:
 	@docker run ${DOCKER_ARGS} \
 		${DOCKER_NAME} \
+		${DOCKER_VARS} \
 		__deep_clean
 
 all:
 	@docker run ${DOCKER_ARGS} \
 		${DOCKER_NAME} \
-		-e NAME="${NAME}" \
-		-e APPNAME="${NAME}" \
+		${DOCKER_VARS} \
 		__all
 
 format:
 	@docker run ${DOCKER_ARGS} \
 		${DOCKER_NAME} \
+		${DOCKER_VARS} \
 		__format
 
 infos:
 	@docker run ${DOCKER_ARGS}\
 		${DOCKER_NAME} \
+		${DOCKER_VARS} \
 		__infos
 
 tests:
 	@docker run ${DOCKER_ARGS}\
 		${DOCKER_NAME} \
-		-e NAME="${NAME}" \
-		-e APPNAME="${NAME}" \
+		${DOCKER_VARS} \
 		__tests
 
 tester:
 	@docker run ${DOCKER_ARGS}\
 		${DOCKER_NAME} \
-		-e NAME="${NAME}" \
-		-e APPNAME="${NAME}" \
+		${DOCKER_VARS} \
 		__tester
 
 doc:
 	@docker run ${DOCKER_ARGS}\
-		${DOCKER_NAME} \
+		${DOCKER_NAME} \*
+		${DOCKER_VARS} \
 		__doc
 
 pdf:  doc
 	@docker run ${DOCKER_ARGS}\
 		${DOCKER_NAME} \
+		${DOCKER_VARS} \
 		__pdf
 
 
@@ -85,82 +113,81 @@ pdf:  doc
 # Theses shall not be runned under plain OS. 
 # ===========================================================================================================
 __clean:
-	@-cd build/ && make clean
-	@rm -f build/bin/*.bin build/bin/*.o
+	@-+cd /app/doc/latex && $(MAKE) clean
+	@-+cd /app/tools/device-tree && $(MAKE) dtc_clean
 
-	@-cd doc/latex && make clean
-	@-cd tools/device-tree && make dtc_clean
+	@-+cd build/ && $(MAKE) clean
+	@-rm -f build/bin/*.bin build/bin/*.o 
 	
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Cleaned build/ doc/ and tools/ and default/ binaries !"
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BGreen}Cleaned build/ doc/ and tools/ and default/ binaries !${Color_Off}"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 __deep_clean:
-	@echo "Removing caches..."
-
 	@-rm -r -f build/
 	@-rm -r -f doc/
-	@-cd tools/device-tree && make dtc_clean
+	@+cd tools/device-tree && $(MAKE) dtc_clean
 
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Deleted build/ doc/ default/ !"
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BGreen}Deleted build/ doc/ default/ !${Color_Off}"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 __all: build/bin/config.o build/bin/header.o
 	@mkdir -p build/
 
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Compiling C/C++ sources files..."
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BYellow}Compiling C/C++ sources files...${Color_Off}"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 	@cmake -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/cmake/toolchain.cmake -B build/
-	@cd build/ && make all -s -j$(MAX_CORES)
+	@cd build/ && $(MAKE) all -s -j$(MAX_CORES)
 
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Compiled source on ./build/${APPNAME}"
-	@echo "You can now execute it on the target !"
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BGreen}Compiled source on ./build/${APPNAME}${Color_Off}"
+	@echo "${BGreen}You can now execute it on the target !${Color_Off}"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 __format:
 	@find src/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*hpp' | xargs clang-format -i -style=file
 		
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Formatted all of the source files ! (.c / .h / .hpp / .cpp)"
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BCyan}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BCyan}Formatted all of the source files ! (.c / .h / .hpp / .cpp)${Color_Off}"
+	@echo "${BCyan}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 __infos:
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "toolchain informations :"
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BCyan}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BCyan}toolchain informations :${Color_Off}"
+	@echo "${BCyan}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	@echo ""
 
-	cat /usr/local/share/cmake/toolchain.cmake
+	@cat /usr/local/share/cmake/toolchain.cmake
 
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "tools versions"
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BCyan}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BCyan}tools versions${Color_Off}"
+	@echo "${BCyan}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	@echo ""
 
-	cat /usr/local/share/infos/versions.txt
+	@cat /usr/local/share/infos/versions.txt
 
 __tester: build/bin/config.o build/bin/header.o
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BYellow}Compiling C/C++ sources files for UnitTests ...${Color_Off}"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
+
 	@mkdir -p build/
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Compiling C/C++ sources files for UnitTests ..."
-	@echo "------------------------------------------------------------------------------------------------------------"
 
 	@cmake -DBUILD_TESTS=ON -B build/
-	@cd build/ && make all -s -j$(MAX_CORES)
+	@cd build/ && $(MAKE) all -s -j$(MAX_CORES)
 
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Compiled tests on ./build_tests/UnitsTests"
-	@echo "You can now execute it to ensure the code quality!"
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BGreen}Compiled tests on ./build_tests/UnitsTests${Color_Off}"
+	@echo "${BGreen}You can now execute it to ensure the code quality!${Color_Off}"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 __tests: __tester
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Running UnitTests..."
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BYellow}Running UnitTests...${Color_Off}"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 	@cd build/ && ./UnitsTests -c
 
@@ -170,27 +197,28 @@ __tests: __tester
 
 # If Doxygen is installed, it will generate the doc and build the HTML doc for the whole project
 __doc:
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Creating documentation... "
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BYellow}Creating documentation... ${Color_Off}"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 	@doxygen Doxyfile
 
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Generated HTML doc on ./doc/html/index.html"
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BGreen}Generated HTML doc on ./doc/html/index.html${Color_Off}"
+	@echo "${BGreen}Generated LaTeX doc on ./doc/latex/reflan.tex${Color_Off}"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 __pdf:
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Building PDF documentation... "
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BYellow}Building PDF documentation... ${Color_Off}"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 	@cd doc/latex/ && make pdf
 	@cp doc/latex/refman.pdf doc/${NAME}.pdf
 
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Generated PDF doc on ./doc/${NAME}.pdf"
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BGreen}Generated PDF doc on ./doc/${NAME}.pdf${Color_Off}"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 
 # ===========================================================================================================
@@ -198,9 +226,9 @@ __pdf:
 # ===========================================================================================================
 build/bin/config.o: default/config/config.toml
 	@mkdir -p build/bin/	
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Preparing config default binary data..."
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BYellow}Preparing config default binary data...${Color_Off}"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 	@python3 tools/default-generator/config/config-generator.py $< build/bin/config.bin
 	@aarch64-linux-gnu-ld -r -b binary -o  $@ build/bin/config.bin
@@ -209,9 +237,9 @@ build/bin/config.o: default/config/config.toml
 
 build/bin/header.o: default/header/header.toml
 	@mkdir -p build/bin/
-	@echo "------------------------------------------------------------------------------------------------------------"
-	@echo "Preparing header default binary data..."
-	@echo "------------------------------------------------------------------------------------------------------------"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BYellow}Preparing header default binary data...${Color_Off}"
+	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	
 	@python3 tools/default-generator/header/header-generator.py $< build/bin/header.bin 
 	@aarch64-linux-gnu-ld -r -b binary -o  $@ build/bin/header.bin

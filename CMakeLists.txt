@@ -4,6 +4,27 @@
 cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 project($ENV{NAME})
 
+# Setting colors variables for further usage
+if(NOT WIN32)
+  string(ASCII 27 Esc)
+  set(ColourReset "${Esc}[m")
+  set(ColourBold  "${Esc}[1m")
+  set(Red         "${Esc}[31m")
+  set(Green       "${Esc}[32m")
+  set(Yellow      "${Esc}[33m")
+  set(Blue        "${Esc}[34m")
+  set(Magenta     "${Esc}[35m")
+  set(Cyan        "${Esc}[36m")
+  set(White       "${Esc}[37m")
+  set(BoldRed     "${Esc}[1;31m")
+  set(BoldGreen   "${Esc}[1;32m")
+  set(BoldYellow  "${Esc}[1;33m")
+  set(BoldBlue    "${Esc}[1;34m")
+  set(BoldMagenta "${Esc}[1;35m")
+  set(BoldCyan    "${Esc}[1;36m")
+  set(BoldWhite   "${Esc}[1;37m")
+endif()
+
 # ========================================================================================
 # FILES INCLUDES
 # ========================================================================================
@@ -36,14 +57,14 @@ if (BUILD_TESTS)
     add_subdirectory(tests)
 
     # User infos
-    message(STATUS "Configuring for Unit Test build (Host: x86_64)")
+    message("${BoldCyan}Configuring for Unit Test build (Host: x86_64) ${ColourReset}")
 
     # Add some compiler flags for the final usage
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra ")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -Wall -Wextra ")
 
     if (COVERAGE)
-        message(STATUS "Addind converage flags")
+        message("${BoldCyan}Addind converage flags ${ColourReset}")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage ")
     endif()
@@ -72,7 +93,7 @@ if (BUILD_TESTS)
 
 else()
     # User info
-    message(STATUS "Configuring for Main Application build (Target: AARCH64)")
+    message(STATUS "${BoldCyan}Configuring for Main Application build (Target: AARCH64) ${ColourReset}")
 
     # Add some compiler flags for the final usage
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=cortex-a53 -O3 -MMD -Wall -Wextra ")
