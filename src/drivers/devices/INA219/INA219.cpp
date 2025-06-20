@@ -17,9 +17,11 @@
 
 // STD
 #include <cstdint>
-#include <iostream>
 #include <math.h>
 #include <stdio.h>
+
+// Debug
+#include "utils/term_color.hpp"
 
 // =====================
 // REGISTERS
@@ -56,49 +58,56 @@ INA219::~INA219()
 // =====================
 // FUNCTIONS
 // =====================
+// TESTED AND VALIDATED
 float INA219::ConvertIntToFloat(const int16_t Value)
 {
-    float val = 0;
-    switch(this->PGASetting)
+    // Define masking patterns
+    int smask[] = {0x1000, 0x2000, 0x4000, 0x8000};
+    int vmask[] = {0x0FFF, 0x1FFF, 0x3FFF, 0x7FFF};
+
+    // Apply mask depending on the PGA setting actually used
+    int16_t val = (Value & vmask[this->PGASetting]);
+    int16_t sign = (Value & smask[this->PGASetting]);
+
+    // If Sign is set, then perform the complement to 2 of the val
+    // And apply a mask to fetch the RIGHT value and not all bits
+    if(sign != 0)
     {
-    case 1:
-        val = (float)(Value & 0xFFFF);
-        break;
-
-    case 2:
-        val = (float)(Value & 0x7FFF);
-        break;
-
-    case 3:
-        val = (float)(Value & 0x3FFF);
-        break;
-
-    case 4:
-        val = (float)(Value & 0x1FFF);
-        break;
+        val = (~val + 1) & vmask[this->PGASetting];
     }
 
-    return val / 100;
+    // Compute the float value, divided by 100
+    float ret = ((float)val) / 100;
+
+    // Restore the sign
+    if(sign != 0)
+    {
+        ret = -ret;
+    }
+
+    return ret;
 }
 
 // TESTED AND VALIDATED
 int16_t INA219::ConvertFloatToInt(const float Value)
 {
+    // First, cast value and identify sign
     int buf = (int)(Value * 100);
     int Sign = (Value < 0) ? 1 : 0;
 
+    // Then, build and return the correct value
     switch(this->PGASetting)
     {
-    case 1:
+    case 3: // +- 320 mV
         return (Sign << 15) | (buf & 0x7FFF);
         break;
-    case 2:
+    case 2: // +- 160 mV
         return (Sign << 15) | (Sign << 14) | (buf & 0x3FFF);
         break;
-    case 3:
+    case 1: // +- 80 mV
         return (Sign << 15) | (Sign << 14) | (Sign << 13) | (buf & 0x1FFF);
         break;
-    case 4:
+    case 0: // °- 40 mV
         return (Sign << 15) | (Sign << 14) | (Sign << 13) | (Sign << 12) | (buf & 0x0FFF);
         break;
     }
