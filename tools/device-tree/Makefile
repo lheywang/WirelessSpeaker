@@ -1,7 +1,5 @@
 DTC_EXECNAME := WirelessSpeaker
 
-include ../../Makefile
-
 CC := dtc
 FLAGS := -@ -Hepapr -I dts -O dtb -o
 SOURCE := WirelessSpeakerV1.dts
