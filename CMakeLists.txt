@@ -31,13 +31,6 @@ endif()
 # Prepare for storing all of the libs
 add_library(MasterLibs INTERFACE)
 
-# Adding headers files
-include_directories(inc/)
-
-# Adding sources for standard build
-add_subdirectory(src/drivers)
-add_subdirectory(src/modules)
-
 # Internal libraries
 set(LIBS    ${CMAKE_BINARY_DIR}/bin/config.o\\
             ${CMAKE_BINARY_DIR}/bin/header.o)
@@ -65,16 +58,23 @@ if (BUILD_TESTS)
 
     if (COVERAGE)
         message("${BoldCyan}Addind coverage flags ${ColourReset}")
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage ")
 
-        # Add linker options
+        # Add compilation flags to ensure the generation of .gcno files.
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+
+        # Add linker options to ensure the generation of .gcda files.
         add_link_options("-lgcov")
     endif()
     
     # Add some headers search path
     include_directories(tools/cpputest/include/)
     include_directories(tools/cpputest/include/CppUTest/)
+    include_directories(inc/)
+
+    # Adding sources for standard build
+    add_subdirectory(src/drivers)
+    add_subdirectory(src/modules)
 
     # Including the build of the CppUTest framework
     add_subdirectory(tools/cpputest)
@@ -97,6 +97,13 @@ if (BUILD_TESTS)
 else()
     # User info
     message(STATUS "${BoldCyan}Configuring for Main Application build (Target: AARCH64) ${ColourReset}")
+
+    # Add header files
+    include_directories(inc/)
+
+    # Adding sources for standard build
+    add_subdirectory(src/drivers)
+    add_subdirectory(src/modules)
 
     # Add some compiler flags for the final usage
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=cortex-a53 -O3 -MMD -Wall -Wextra ")

@@ -1,17 +1,18 @@
 # ===========================================================================================================
 # MAKEFILE
 #
-# Handle all of the build process for the whole project.
-# May be runned on bare OS, but is generally called inside a docker
+# Handle all of the build process for the whole project. This is more used a developper shell script.
+# Most, if not all of the commands are runned into a docker container, built from the install script.
 # 
 # l.heywang <leonard.heywang@proton.me>
 # v1 on Nov 2024
 # v2 on Jun 2025
 # ===========================================================================================================
 
-# Configuring PHONY
+# Configuring MakeFile
 .PHONY: clean deep_clean all format doc tests __clean __deep_clean __all __format __doc __tests
 .SILENT: clean deep_clean all format doc tests __clean __deep_clean __all __format __doc __tests
+.ONESHELL:
 
 # Remove useless logs
 export MAKEFLAGS += --no-print-directory
@@ -69,6 +70,12 @@ BWhite=\033[1;37m
 
 MAKESILENT= -s
 
+# Configure output paths for custom recipes
+LCOV_HTML_DIR 	:= 	${DOCKER_BASE}/${BUILD_COVERAGE}/report/html
+LCOV_INFO_DIR 	:= 	${DOCKER_BASE}/${BUILD_COVERAGE}/report/info
+LCOV_INFO_FILE 	:= 	${LCOV_INFO_DIR}/coverage.info
+
+
 # ===========================================================================================================
 # USER ACCESSIBLE COMMANDS (invoke behind the scene docker)
 # ===========================================================================================================
@@ -84,7 +91,10 @@ clean:
 # -----------------------------------------------------------------------------------------------------------
 deep_clean:
 # -----------------------------------------------------------------------------------------------------------
-	 ./
+	@docker run ${DOCKER_ARGS} \
+		${DOCKER_NAME} \
+		${DOCKER_VARS} \
+		__deep_clean
 
 # -----------------------------------------------------------------------------------------------------------
 all:
@@ -129,7 +139,7 @@ tester:
 		__tester
 
 # -----------------------------------------------------------------------------------------------------------
-coverage: tester
+coverage:
 # -----------------------------------------------------------------------------------------------------------
 	@docker run ${DOCKER_ARGS}\
 		${DOCKER_NAME} \
@@ -178,7 +188,7 @@ __clean: __clean_latex_docs __clean_device_tree __clean_build_release __clean_bu
 	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 # -----------------------------------------------------------------------------------------------------------
-__deep_clean:
+__deep_clean: __clean_latex_docs __clean_device_tree __clean_build_release __clean_build_debug __clean_build_coverage
 # -----------------------------------------------------------------------------------------------------------
 	@-rm -rf ${DOCKER_BASE}/${BUILD_COVERAGE} 
 	@-rm -rf ${DOCKER_BASE}/${BUILD_RELEASE}
@@ -264,15 +274,39 @@ __cover: ${DOCKER_BASE}/${BUILD_COVERAGE}/bin/config.o ${DOCKER_BASE}/${BUILD_CO
 __coverage: __cover
 # -----------------------------------------------------------------------------------------------------------
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
-	@echo "${BYellow} Running UnitTests...${Color_Off}"
+	@echo "${BYellow} Running Coverage ...${Color_Off}"
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
-	@mkdir -p ${DOCKER_BASE}/${BUILD_COVERAGE}/output/
-
-	@export GCOV_PREFIX=${DOCKER_BASE}/${BUILD_COVERAGE}/output/
-	@export GCOV_PREFIX_STRIP=3
-
 	@cd ${DOCKER_BASE}/${BUILD_COVERAGE} && ./UnitsTests -c
+
+	@mkdir -p ${LCOV_HTML_DIR}
+	@mkdir -p ${LCOV_INFO_DIR}
+	@touch ${LCOV_INFO_FILE}
+
+	@echo "${Purple}"
+
+	@lcov 	--capture --directory ${DOCKER_BASE}/${BUILD_COVERAGE} \
+			--output-file ${LCOV_INFO_FILE} \
+			--ignore-errors mismatch,mismatch
+
+	@lcov 	--remove ${LCOV_INFO_FILE} \
+        	"${DOCKER_BASE}/tests/*" \
+        	"${DOCKER_BASE}/tools/cpputest/*" \
+        	"/usr/*" \
+        	-o ${LCOV_INFO_FILE}
+
+	@lcov 	--remove ${LCOV_INFO_FILE} \
+        	"${DOCKER_BASE}/src/*/TEST_*.cpp" \
+        	-o ${LCOV_INFO_FILE}
+
+	@genhtml ${LCOV_INFO_FILE} --output-directory ${LCOV_HTML_DIR}
+
+	@echo "${Color_Off}"
+
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
+	@echo "${BGreen} Coverage report generated!${Color_Off}"
+	@echo "${BGreen} Open ./$(subst ${DOCKER_BASE}/,,${LCOV_HTML_DIR})/index.html to view.${Color_Off}"
+	@echo "${BGreen}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
 # ===========================================================================================================
 # RECIPES FOR FORMATTING
@@ -344,86 +378,32 @@ __pdf:
 # RECIPES FOR EMBEDDED DATA
 # ===========================================================================================================
 # -----------------------------------------------------------------------------------------------------------
-$(DOCKER_BASE)/$(BUILD_RELEASE)/bin/config.o: default/config/config.toml
+$(DOCKER_BASE)/%/bin/config.o: default/config/config.toml
 # -----------------------------------------------------------------------------------------------------------
-	@mkdir -p ${DOCKER_BASE}/${BUILD_RELEASE}/bin/
+	@mkdir -p $(basename $@)
 	@mkdir -p /tmp/WirelessSpeaker/
+
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	@echo "${BYellow} Preparing config default binary data...${Color_Off}"
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 
-	@python3 ${DOCKER_BASE}/tools/default-generator/config/config-generator.py $< /tmp/WirelessSpeaker/r_config.bin
-	@aarch64-linux-gnu-ld -r -b binary -o  $@ /tmp/WirelessSpeaker/r_config.bin
+	@python3 ${DOCKER_BASE}/tools/default-generator/config/config-generator.py $< /tmp/WirelessSpeaker/config.bin
+	@aarch64-linux-gnu-ld -r -b binary -o  $@ /tmp/WirelessSpeaker/config.bin
 
 	@echo "Done !"
 
 # -----------------------------------------------------------------------------------------------------------
-$(DOCKER_BASE)/$(BUILD_RELEASE)/bin/header.o: ${DOCKER_BASE}/${DEFAULT_LOC}/header/header.toml
+$(DOCKER_BASE)/%/bin/header.o: ${DOCKER_BASE}/${DEFAULT_LOC}/header/header.toml
 # -----------------------------------------------------------------------------------------------------------
-	@mkdir -p ${DOCKER_BASE}/${BUILD_RELEASE}/bin/
+	@mkdir -p $(basename $@)
 	@mkdir -p /tmp/WirelessSpeaker/
+
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	@echo "${BYellow}Preparing header default binary data...${Color_Off}"
 	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
 	
-	@python3 ${DOCKER_BASE}/tools/default-generator/header/header-generator.py $< /tmp/WirelessSpeaker/r_header.bin
-	@aarch64-linux-gnu-ld -r -b binary -o  $@ /tmp/WirelessSpeaker/r_header.bin
-
-	@echo "Done !"
-
-# -----------------------------------------------------------------------------------------------------------
-$(DOCKER_BASE)/$(BUILD_DEBUG)/bin/config.o: default/config/config.toml
-# -----------------------------------------------------------------------------------------------------------
-	@mkdir -p ${DOCKER_BASE}/${BUILD_DEBUG}/bin/
-	@mkdir -p /tmp/WirelessSpeaker/
-	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
-	@echo "${BYellow} Preparing config default binary data...${Color_Off}"
-	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
-
-	@python3 ${DOCKER_BASE}/tools/default-generator/config/config-generator.py $< /tmp/WirelessSpeaker/d_header.bin
-	@aarch64-linux-gnu-ld -r -b binary -o  $@ /tmp/WirelessSpeaker/d_header.bin
-
-	@echo "Done !"
-
-# -----------------------------------------------------------------------------------------------------------
-$(DOCKER_BASE)/$(BUILD_DEBUG)/bin/header.o: default/header/header.toml
-# -----------------------------------------------------------------------------------------------------------
-	@mkdir -p ${DOCKER_BASE}/${BUILD_DEBUG}/bin/
-	@mkdir -p /tmp/WirelessSpeaker/
-	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
-	@echo "${BYellow} Preparing header default binary data...${Color_Off}"
-	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
-	
-	@python3 ${DOCKER_BASE}/tools/default-generator/header/header-generator.py $< /tmp/WirelessSpeaker/d_config.bin 
-	@aarch64-linux-gnu-ld -r -b binary -o  $@ /tmp/WirelessSpeaker/d_config.bin 
-
-	@echo "Done !"
-
-# -----------------------------------------------------------------------------------------------------------
-$(DOCKER_BASE)/$(BUILD_COVERAGE)/bin/config.o: default/config/config.toml
-# -----------------------------------------------------------------------------------------------------------
-	@mkdir -p ${DOCKER_BASE}/${BUILD_COVERAGE}/bin/
-	@mkdir -p /tmp/WirelessSpeaker/
-	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
-	@echo "${BYellow} Preparing config default binary data...${Color_Off}"
-	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
-
-	@python3 ${DOCKER_BASE}/tools/default-generator/config/config-generator.py $< /tmp/WirelessSpeaker/c_header.bin
-	@aarch64-linux-gnu-ld -r -b binary -o  $@ /tmp/WirelessSpeaker/c_header.bin
-
-	@echo "Done !"
-
-# -----------------------------------------------------------------------------------------------------------
-$(DOCKER_BASE)/$(BUILD_COVERAGE)/bin/header.o: default/header/header.toml
-# -----------------------------------------------------------------------------------------------------------
-	@mkdir -p ${DOCKER_BASE}/${BUILD_COVERAGE}/bin/
-	@mkdir -p /tmp/WirelessSpeaker/
-	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
-	@echo "${BYellow} Preparing header default binary data...${Color_Off}"
-	@echo "${BYellow}------------------------------------------------------------------------------------------------------------${Color_Off}"
-	
-	@python3 ${DOCKER_BASE}/tools/default-generator/header/header-generator.py $< /tmp/WirelessSpeaker/c_config.bin 
-	@aarch64-linux-gnu-ld -r -b binary -o  $@ /tmp/WirelessSpeaker/c_config.bin 
+	@python3 ${DOCKER_BASE}/tools/default-generator/header/header-generator.py $< /tmp/WirelessSpeaker/header.bin
+	@aarch64-linux-gnu-ld -r -b binary -o  $@ /tmp/WirelessSpeaker/header.bin
 
 	@echo "Done !"
 
@@ -476,6 +456,7 @@ __clean_build_coverage:
 	@if [ -d "${DOCKER_BASE}/${BUILD_COVERAGE}" ]; then \
 		echo "${Green}  Directory found. Cleaning build/coverage...${Color_Off}"; \
 		cd "${DOCKER_BASE}/${BUILD_COVERAGE}" && $(MAKE) ${MAKESILENT} clean; \
+		rm -rf *.gcno *.gcda; \
 	else \
 		echo "${Yellow}  Directory ${DOCKER_BASE}/${BUILD_COVERAGE} does not exist. Skipping clean.${Color_Off}"; \
 	fi
