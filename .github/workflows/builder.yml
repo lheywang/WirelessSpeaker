@@ -35,7 +35,7 @@ jobs:
       # Building the executable
       - name: Building executable
         run: |
-          make all DOCKER_NAME=builder
+          make all DOCKER_NAME=builder BUILD_RELEASE=build
 
       - name: Upload executable (aarch64)
         uses: actions/upload-artifact@v4
@@ -80,7 +80,7 @@ jobs:
       # Building the documentation
       - name: Building zip
         run: |
-          make pdf DOCKER_NAME=builder
+          make pdf DOCKER_NAME=builder BUILD_DOC=doc
 
       # Creating zip of the html pages
       - name: Zipping HTML documentation

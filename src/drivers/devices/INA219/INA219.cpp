@@ -20,6 +20,9 @@
 #include <math.h>
 #include <stdio.h>
 
+// Debug
+#include "utils/term_color.hpp"
+
 // =====================
 // REGISTERS
 // =====================
@@ -53,67 +56,63 @@ INA219::~INA219()
 }
 
 // =====================
-// PRIVATES
-// =====================
-float INA219::ConvertIntToFloat(const int Value)
-{
-    int Sign;
-    int ToFloat;
-
-    switch(this->PGASetting)
-    {
-    case 1:
-        Sign = Value & 0x8000;
-        ToFloat = Value & 0x7FFF;
-        break;
-    case 2:
-        Sign = Value & 0x4000;
-        ToFloat = Value & 0x3FFF;
-        break;
-    case 3:
-        Sign = Value & 0x2000;
-        ToFloat = Value & 0x1FFF;
-        break;
-    case 4:
-        Sign = Value & 0x1000;
-        ToFloat = Value & 0x0FFF;
-        break;
-    }
-
-    if(Sign == 1)
-        ToFloat =
-            !ToFloat + 1; // Auto cast isn't properly constexpr intd here, thus we apply it by hand.
-
-    return Value / 100;
-}
-
-int INA219::ConvertFloatToInt(const float Value)
-{
-    float intermediate = round(Value * 100);
-    int buf = -((int)intermediate);
-    int Sign = (buf < 0) ? 1 : 0;
-
-    switch(this->PGASetting)
-    {
-    case 1:
-        return (Sign << 15) | (buf && 0x7FFFF);
-        break;
-    case 2:
-        return (Sign << 15) | (Sign << 14) | (buf && 0x3FFFF);
-        break;
-    case 3:
-        return (Sign << 15) | (Sign << 14) | (Sign << 13) | (buf && 0x1FFFF);
-        break;
-    case 4:
-        return (Sign << 15) | (Sign << 14) | (Sign << 13) | (Sign << 12) | (buf && 0x0FFFF);
-        break;
-    }
-    return -1;
-}
-
-// =====================
 // FUNCTIONS
 // =====================
+// TESTED AND VALIDATED
+float INA219::ConvertIntToFloat(const int16_t Value)
+{
+    // Define masking patterns
+    int smask[] = {0x1000, 0x2000, 0x4000, 0x8000};
+    int vmask[] = {0x0FFF, 0x1FFF, 0x3FFF, 0x7FFF};
+
+    // Apply mask depending on the PGA setting actually used
+    int16_t val = (Value & vmask[this->PGASetting]);
+    int16_t sign = (Value & smask[this->PGASetting]);
+
+    // If Sign is set, then perform the complement to 2 of the val
+    // And apply a mask to fetch the RIGHT value and not all bits
+    if(sign != 0)
+    {
+        val = (~val + 1) & vmask[this->PGASetting];
+    }
+
+    // Compute the float value, divided by 100
+    float ret = ((float)val) / 100;
+
+    // Restore the sign
+    if(sign != 0)
+    {
+        ret = -ret;
+    }
+
+    return ret;
+}
+
+// TESTED AND VALIDATED
+int16_t INA219::ConvertFloatToInt(const float Value)
+{
+    // First, cast value and identify sign
+    int buf = (int)(Value * 100);
+    int Sign = (Value < 0) ? 1 : 0;
+
+    // Then, build and return the correct value
+    switch(this->PGASetting)
+    {
+    case 3: // +- 320 mV
+        return (Sign << 15) | (buf & 0x7FFF);
+        break;
+    case 2: // +- 160 mV
+        return (Sign << 15) | (Sign << 14) | (buf & 0x3FFF);
+        break;
+    case 1: // +- 80 mV
+        return (Sign << 15) | (Sign << 14) | (Sign << 13) | (buf & 0x1FFF);
+        break;
+    case 0: // °- 40 mV
+        return (Sign << 15) | (Sign << 14) | (Sign << 13) | (Sign << 12) | (buf & 0x0FFF);
+        break;
+    }
+    return -2 ^ 31; // Large enough to not influe here
+}
 
 int INA219::Configure(const int Reset,
                       const int BusVoltageRange,
@@ -225,4 +224,10 @@ int INA219::ReadBusVoltage(float* const Value)
     *Value = this->ConvertIntToFloat(buf);
 
     return 0;
+}
+
+void INA219::__SetPGASetting(int value)
+{
+    this->PGASetting = value;
+    return;
 }
