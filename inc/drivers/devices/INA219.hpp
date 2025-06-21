@@ -30,9 +30,6 @@ private:
     uint8_t address;
     I2C_Bus I2C;
 
-    float ConvertIntToFloat(const int Value);
-    int ConvertFloatToInt(const float Value);
-
     // number of sign numbers.
     int PGASetting;
 
@@ -137,4 +134,11 @@ public:
      * @test Function to test !
      */
     int SetCalibration(const float Value);
+
+    // For internal usage only.
+    float ConvertIntToFloat(const int16_t Value);
+    int16_t ConvertFloatToInt(const float Value);
+
+    // Adding a custom setter for the PGA_Gain (unit_test only)
+    void __SetPGASetting(int value);
 };

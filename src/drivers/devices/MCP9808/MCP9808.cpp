@@ -68,6 +68,7 @@ MCP9808::~MCP9808()
 // CONVERSION FUNCTIONS
 // =====================
 
+// TESTED AND VALIDATED
 int FloatToInts(const float Input, int* const OutputBuf)
 {
     if(OutputBuf == nullptr)
@@ -93,6 +94,7 @@ int FloatToInts(const float Input, int* const OutputBuf)
     return 0;
 }
 
+// TESTED AND VALIDATED
 int IntsToFloat(const int Input, float* const OutputBuf)
 {
     if(OutputBuf == nullptr)

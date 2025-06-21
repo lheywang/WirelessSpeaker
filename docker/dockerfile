@@ -26,6 +26,9 @@ RUN apt-get -y install \
     libfdt-dev
 
 RUN apt-get -y install \
+    lcov
+
+RUN apt-get -y install \
     crossbuild-essential-arm64
 
 RUN apt-get -y install \
