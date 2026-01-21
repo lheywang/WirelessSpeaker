@@ -2,7 +2,7 @@
 # MERGER
 # ================================================================================
 name: merger
-run-name: Handle the check before merging into the dev branch
+run-name: Checking code quality for the PR...
 # --------------------------------------------------------------------------------
 on:
   pull_request:
@@ -13,6 +13,8 @@ on:
       - opened
       - synchronize
       - reopened
+  push:
+    branches: tests
 # --------------------------------------------------------------------------------
 jobs:
   job_build:

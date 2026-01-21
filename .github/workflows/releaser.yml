@@ -2,7 +2,7 @@
 # RELEASER
 # ================================================================================
 name: releaser
-run-name: Generate a release when push on the main branch !
+run-name: Creating a release
 # --------------------------------------------------------------------------------
 on:
   push:

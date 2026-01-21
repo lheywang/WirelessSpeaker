@@ -42,7 +42,7 @@ jobs:
       # Compiling tests
       - name: Building tester
         run: |
-          make tester DOCKER_NAME=builder
+          make tester DOCKER_NAME=builder BUILD_DEBUG=build_tests
 
       # Adding logs to the summary
       - name: Logging 1

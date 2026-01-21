@@ -395,7 +395,7 @@ int PCM5252::ConfigureGPIO(const int MISOFunction,
     // Since eight registers are contigous, we iterate over them inside of the I2C_Write function. We only pass the address of begining.
     res += I2C_Write(&this->I2C,
                      this->address,
-                     REGISTER_NONINCREMENT(GPIO1_OUTPUT_FUNCTION),
+                     REGISTER_AUTOINCREMENT(GPIO1_OUTPUT_FUNCTION),
                      buf + 2 * sizeof(buf[0]),
                      8);
 
