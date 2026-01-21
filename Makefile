@@ -342,6 +342,12 @@ __infos:
 	@cat /usr/local/share/infos/versions.txt
 
 
+=======
+	@echo "Compiled source on $(shell pwd)/build/${APPNAME}"
+	@echo "You can now execute it on the target !"
+	@echo "------------------------------------------------------------------------------------------------------------"
+
+>>>>>>> af88353 (Added conditionnal build process to select between tests and prod)
 # ===========================================================================================================
 # RECIPES FOR BUILD_DOC
 # ===========================================================================================================
