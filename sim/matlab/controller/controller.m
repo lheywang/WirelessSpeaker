@@ -41,8 +41,26 @@ Dgate = 20e-9;  % Second
 Feedback_min = -100;
 Feedback_max = 100;
 
+% ADC parameters
+Cs = 1e-7;      % Farad
+Rs = 1e4;       % Ohm
+
+Gmax = 1e3;
+Vana = 5;       % Volt (symetrical)
+SR = 1e3;       % Volt per second
+Fc = 1e6;       % Hz
+Rout = 10;      % Ohm
+Rin = 1e6;      % Ohm
+
+alpha = 0.9999;
+
+
 %% Automated computations : 
 % Frequency calculations
 Fpwm = Fclk / PWM_Cycles;
+
+%% Linearizing data
+analog_plant = linearize("filter_model");
+adc_integrator = linearize("adc_model");
 
 
