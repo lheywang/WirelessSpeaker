@@ -15,7 +15,7 @@ close all;
 %% Configure variables
 % Project wide parameters
 Vcc = 24;       % Volt
-Fclk =  270e6;  % Hertz
+Fs = 96e3;      % Hertz
 PWM_Cycles = 11;
 PWM_Bits = 8;
 
@@ -56,8 +56,12 @@ alpha = 0.9999;
 
 
 %% Automated computations : 
+% Counter resolution
+Cnt_res = 1 / ((2 ^ PWM_Bits) - 1);
+
 % Frequency calculations
-Fpwm = Fclk / PWM_Cycles;
+Fpwm = Fs * PWM_Cycles;
+Fcnt = Fpwm * (2 ^ PWM_Bits);
 
 %% Linearizing data
 analog_plant = linearize("filter_model");
