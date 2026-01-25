@@ -38,22 +38,36 @@ Rspk = 5.9;     % Ohm
 Dgate = 20e-9;  % Second
 
 % Feedback parameters
-Feedback_min = -100;
-Feedback_max = 100;
+Feedback_min = -Vcc;
+Feedback_max = Vcc;
 
 % ADC parameters
 Cs = 1e-7;      % Farad
 Rs = 1e4;       % Ohm
 
+% Analog section
 Gmax = 1e3;
-Vana = 5;       % Volt (symetrical)
+Vana = 3.3;     % Volt (single ended)
 SR = 1e3;       % Volt per second
 Fc = 1e6;       % Hz
 Rout = 10;      % Ohm
 Rin = 1e6;      % Ohm
 
+% Comparator
+Hys = 0.1;      % Volt
+
+% Analog protection 
+Vmax = 33;      % Volt
+
+% Digital filters
 alpha = 0.9999;
 
+% ADC speed (factor of Fpwm clock)
+adc_clk = 32;
+
+% Accumulator
+
+accumulator_gain = Vmax / adc_clk;
 
 %% Automated computations : 
 % Counter resolution
@@ -62,6 +76,10 @@ Cnt_res = 1 / ((2 ^ PWM_Bits) - 1);
 % Frequency calculations
 Fpwm = Fs * PWM_Cycles;
 Fcnt = Fpwm * (2 ^ PWM_Bits);
+Fadc = Fpwm * adc_clk;
+
+% Analog computations
+AnalogDiv = Vmax / Vana;
 
 %% Linearizing data
 analog_plant = linearize("filter_model");
