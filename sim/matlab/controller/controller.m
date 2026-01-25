@@ -61,6 +61,7 @@ Vmax = 33;      % Volt
 
 % Digital filters
 alpha = 0.9999;
+dc_gain = -0.1;
 
 % ADC speed (factor of Fpwm clock)
 adc_clk = 32;
