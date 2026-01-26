@@ -26,7 +26,7 @@ L1 = 705.6e-9;  % Henry
 RL0 = 0.5;      % Ohm
 RL1 = 0.5;      % Ohm
 
-C0 = 22e-6;     % Farad
+C0 = 1e-6;     % Farad
 C1 = 100e-9;    % Farad
 
 C0R = 0.5;      % Ohm
