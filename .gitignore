@@ -2,3 +2,6 @@
 *.slxc
 *.asv
 *slprj/
+
+# Python
+*__pycache__*
