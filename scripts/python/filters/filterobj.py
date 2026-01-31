@@ -1,6 +1,6 @@
 # Define a standard filterobj class, which will be used to define the filters
 import numpy as np
-
+import scipy.signal as signal
 
 class filterobj:
 
@@ -12,6 +12,7 @@ class filterobj:
         fs: int = 0,
         Q: float = 0.0,
         G: float = 0.0,
+        order: int = 4
     ) -> None:
         self.type = type
         self.central: float = float(central)
@@ -19,9 +20,12 @@ class filterobj:
         self.sample_rate: int = int(fs)
         self.quality: float = float(Q)
         self.gain: float = float(G)
+        self.order = order
 
-        self.coeff_a: list[float] = []
-        self.coeff_b: list[float] = []
+        self.low = ((self.central * 2) - self.width) / 2
+        self.high = (self.central * 2) - self.low
+
+        self.filters = []
 
         return
 
@@ -33,6 +37,7 @@ class filterobj:
         fs: int = 0,
         Q: float = 0.0,
         G: float = 0.0,
+        order: int = 4
     ) -> int:
         """
         Define the filter from other specs than the default constructor
@@ -41,7 +46,7 @@ class filterobj:
         if low > high:
             return -1
 
-        if type not in ["lowpass", "highpass", "peaking"]:
+        if type not in ["lowpass", "highpass", "bandpass"," bandstop"]:
             return -2
 
         self.type = type
@@ -50,6 +55,9 @@ class filterobj:
         self.sample_rate = int(fs)
         self.central = (low + high) / 2
         self.width = high - low
+        self.low = low
+        self.high = high
+        self.order = order
 
         return 0
 
@@ -58,60 +66,33 @@ class filterobj:
         Compute the filter coefficients.
         """
 
-        A = 10 ** (self.gain / 40.0)
-        w0 = 2 * np.pi * (self.central / self.sample_rate)
+        if self.type == "lowpass":
+            cutoff = self.low
+        elif self.type == "highpass":
+            cutoff = self.high
+        elif self.type in ["bandpass", "bandstop"]:
+            cutoff = [self.low, self.high]
+        else:
+            return -1
 
-        cos_w0 = np.cos(w0)
-        sin_w0 = np.sin(w0)
+        sos = signal.butter(N=self.order, Wn=cutoff, btype=self.type, fs=self.sample_rate, output='sos')
 
-        alpha = sin_w0 / (2 * self.quality)
+        for section in sos:
+            b0, b1, b2, a0, a1, a2 = section
 
-        match self.type:
-            case "lowpass":
-                a0 = 1 + alpha
-                self.coeff_b = [
-                    float(((1 - cos_w0) / 2) / a0),
-                    float((1 - cos_w0) / a0),
-                    float(((1 - cos_w0) / 2) / a0),
-                ]
-                self.coeff_a = [
-                    float((a0) / a0),
-                    float((-2 * cos_w0) / a0),
-                    float((1 - alpha) / a0),
-                ]
+            # To add here : normalize over the standard format !!
 
-            case "highpass":
-                a0 = 1 + alpha
-                self.coeff_b = [
-                    float(((1 + cos_w0) / 2) / a0),
-                    float((1 + cos_w0) / a0),
-                    float(((1 + cos_w0) / 2) / a0),
-                ]
-                self.coeff_a = [
-                    float((a0) / a0),
-                    float((-2 * cos_w0) / a0),
-                    float((1 - alpha) / a0),
-                ]
-
-            case "peaking":
-                a0 = 1 + alpha / A
-                self.coeff_b = [
-                    float((1 + alpha * A) / a0),
-                    float((-2 * cos_w0) / a0),
-                    float((1 - alpha * A) / a0),
-                ]
-                self.coeff_a = [
-                    float((a0) / a0),
-                    float((-2 * cos_w0) / a0),
-                    float((1 - alpha / A) / a0),
-                ]
-
-            case _:
-                self.coeff_b = [1.0, 0.0, 0.0]
-                self.coeff_a = [1.0, 0.0, 0.0]
+            filt_struct = {
+                'b': [b0/a0, b1/a0, b2/a0],
+                'a': [1.0,   a1/a0, a2/a0], # a0 is now 1.0
+                'type': self.type,
+                'fc': cutoff
+            }
+            self.filters.append(filt_struct)
 
         return 0
-
+    
+       
     def show(self):
         print(
             f"""\
@@ -125,7 +106,6 @@ class filterobj:
         filter gain =       {self.gain:.3f}
 
     Filter coefficients : 
-        A =                 {self.coeff_a}
-        B =                 {self.coeff_b}
+        Coeffs =            {self.filters}
 """
         )

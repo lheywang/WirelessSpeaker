@@ -21,7 +21,7 @@ def get_filters(data: dict) -> tuple[list, list, list, list]:
         for index2, band in enumerate(data["EQ"]["freqs"]):
             tmp = filterobj()
             tmp.define(
-                "peaking", band[0], band[1], fs, 0.707, data["EQ"]["gain"][index2]
+                "bandpass", band[0], band[1], fs, 0.707, data["EQ"]["gain"][index2]
             )
             tmp.compute()
             EQ[index1].append(tmp)
@@ -121,27 +121,27 @@ if __name__ == "__main__":
     EQ, CROSSOVER_BASS, CROSSOVER_MEDIUM, CROSSOVER_HIGH = get_filters(data)
 
     # Creating frequency space
-    freqs = np.logspace(1, np.log10(CROSSOVER_BASS[0][0].sample_rate / 2), 1000)
-    w_rad = 2 * np.pi * freqs / CROSSOVER_BASS[0][0].sample_rate
+    # freqs = np.logspace(1, np.log10(CROSSOVER_BASS[0][0].sample_rate / 2), 1000)
+    # w_rad = 2 * np.pi * freqs / CROSSOVER_BASS[0][0].sample_rate
 
-    _, h = signal.freqz(
-        CROSSOVER_BASS[0][0].coeff_b, CROSSOVER_BASS[0][0].coeff_a, worN=w_rad
-    )
-    _, h2 = signal.freqz(
-        CROSSOVER_BASS[0][1].coeff_b, CROSSOVER_BASS[0][1].coeff_a, worN=w_rad
-    )
+    # _, h = signal.freqz(
+    #     CROSSOVER_BASS[0][0].coeff_b, CROSSOVER_BASS[0][0].coeff_a, worN=w_rad
+    # )
+    # _, h2 = signal.freqz(
+    #     CROSSOVER_BASS[0][1].coeff_b, CROSSOVER_BASS[0][1].coeff_a, worN=w_rad
+    # )
 
-    h_tot = h * h2
+    # h_tot = h * h2
 
-    plt.figure(figsize=(12, 8))
+    # plt.figure(figsize=(12, 8))
 
-    plt.semilogx(freqs, to_db(h_tot), label="Woofer Total", color="blue", linewidth=2)
+    # plt.semilogx(freqs, to_db(h_tot), label="Woofer Total", color="blue", linewidth=2)
 
-    # Styling
-    plt.xlabel("Frequency [Hz]")
-    plt.ylabel("Amplitude [dB]")
-    plt.grid(which="both", linestyle="-", alpha=0.5)
-    plt.legend()
-    plt.xlim(20, 20000)
+    # # Styling
+    # plt.xlabel("Frequency [Hz]")
+    # plt.ylabel("Amplitude [dB]")
+    # plt.grid(which="both", linestyle="-", alpha=0.5)
+    # plt.legend()
+    # plt.xlim(20, 20000)
 
-    plt.show()
+    # plt.show()
