@@ -1,0 +1,50 @@
+# Params.toml
+# Configure the filters
+
+[OUTPUT]
+output = "DSP.csv"
+
+# Main EQ configuration
+[EQ]
+sample_rate = [96000, 88200]
+freqs = [
+    [5, 60],
+    [60, 170],
+    [170, 310],
+    [310, 600],
+    [600, 1000],
+    [1000, 3000],
+    [3000, 6000],
+    [6000, 12000],
+    [12000, 14000],
+    [14000, 16000],
+    [16000, 22500]
+]
+gain = [
+    1,
+    1, 
+    1, 
+    1, 
+    1, 
+    1, 
+    1, 
+    1, 
+    1, 
+    1,
+    1
+]
+
+# Crossover configuration
+# Crossover are doubled ! So, you're desiging a single stage, and there's two on the fabric !
+
+[CROSSOVER.BASS] 
+freqs = [7, 600]
+sample_rate = [96000, 88200]
+
+[CROSSOVER.MEDIUM] 
+freqs = [600, 6000]
+sample_rate = [96000, 88200]
+
+[CROSSOVER.HIGH]
+freqs = [6000, 20000]
+sample_rate = [96000, 88200]
