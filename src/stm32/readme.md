@@ -1,3 +1,4 @@
 # STM32
 
-This code, optionnal contain the sources for the HDMI CEC, SPDIF and other optionnal audio sources.
+This folder store the code responsible for the user IO (top panel).
+
