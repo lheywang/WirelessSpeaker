@@ -5,3 +5,10 @@
 
 # Python
 *__pycache__*
+
+# Software build
+build/*
+
+
+# VSCode
+.vscode/*
