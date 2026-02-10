@@ -28,7 +28,7 @@ Every packet follows a fixed 5-byte header format followed by variable payload a
 | **1**    | **DEV_ID**  | `u8`   | Logical ID of the sender (See Section 2.1).                      |
 | **2**    | **SEQ_ID**  | `u8`   | Rolling counter (0-255). Used to match Requests/Responses.       |
 | **3**    | **CMD**     | `u8`   | Operation Code (OpCode).                                         |
-| **4**    | **LEN**     | `u8`   | Length of the **PAYLOAD** (0 to 255).                            |
+| **4**    | **LEN**     | `u8`   | Length of the **PAYLOAD** (0 to 250).                            |
 | **5...** | **PAYLOAD** | `u8[]` | Data bytes.                                                      |
 | **End**  | **CSUM**    | `u8`   | Checksum: `(DEV_ID + SEQ_ID + CMD + LEN + SUM(PAYLOAD)) & 0xFF`. |
 
