@@ -12,3 +12,12 @@ common:
 	mkdir -p build/
 	cmake -S src/ -B build/
 	cmake --build build/
+
+common_test:
+	mkdir -p build/
+	cmake -S src/ -B build/ -DTESTS_BUILDS_LXCP=ON
+	cmake --build build/ 
+
+
+clean:
+	cmake --build build/ --target clean
