@@ -1,2 +1,0 @@
-/usr/sbin/ar qc liblcxp.a CMakeFiles/lcxp.dir/src/lcxp.cpp.o
-/usr/sbin/ranlib liblcxp.a
