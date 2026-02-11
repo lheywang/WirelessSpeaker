@@ -35,12 +35,13 @@ namespace lcxp
     /**
      *  Define the struct passed to the custom parser.
      *  This struct contain two elements :
-     *      - the buffer of the payload.
+     *      - the buffer of the payload and it's length.
      *      - a void pointer to the output struct of the parser, since it's type and memory layout is unknown.
      */
     struct LCxP_parser_struct
     {
-        uint8_t buffer[MAX_PAYLOAD_SIZE];
+        uint8_t * buffer;
+        uint8_t len;
         uint8_t sender_id;
         void *output_struct;
     };
@@ -55,6 +56,21 @@ namespace lcxp
     {
         uint8_t opcode;
         uint32_t (*parser)(struct LCxP_parser_struct *arg);
+    };
+
+    /**
+     *  Define the struct used to store the results of the parsing, in a 
+     *  more convenient way.
+     *  Contain all the elements defined in the standard : 
+     */
+    struct parser_result
+    {
+        uint8_t dev_id;
+        uint8_t seq_id;
+        uint8_t cmd;
+        uint8_t len;
+        uint8_t * payload;
+        uint8_t checksum;
     };
 
     /* *******************************************************************
@@ -136,7 +152,7 @@ namespace lcxp
          * @return uint32_t
          * @retval 0                The byte was added to the buffer.
          * @retval 1                The buffer was full. Could not add the byte.
-         * @retval 2                At least one byte could not be added. The first one where added.
+         * @retval N                N bytes couldn't be added (the last ones ...)
          */
         uint32_t add_Nbyte(uint8_t *byte, uint8_t number);
 
@@ -160,6 +176,9 @@ namespace lcxp
         /*
          * VARIABLES
          */
+        // RESULTS
+        struct parser_result result;
+
         // BUFFER
         uint8_t buffer_size;             // The actual buffer size. Used essentially for the byte by byte creation.
         uint8_t buffer[MAX_BUFFER_SIZE]; // The full buffer of data.
@@ -177,14 +196,9 @@ namespace lcxp
          * @brief                   Get the checksum object, as the following form :
          *                          CHECKSUM = DEV_ID ^ SEQ_ID ^ CMD ^ LEN ^ (SUM(PAYLOAD) & 0xFF)
          *
-         * @param[in] dev_id        The sender id in the command.
-         * @param[in] seq_id        The sequence id in the command.
-         * @param[in] cmd           The opcode in the command.
-         * @param[in] len           The total len in the command. Used for both len, and iterative sum of the payload.
-         * @param[in] payload       Pointer to the base of the payload.
          *
          * @return uint8_t  The value of the computed checksum.
          */
-        uint8_t get_checksum(uint8_t dev_id, uint8_t seq_id, uint8_t cmd, uint8_t len, uint8_t *payload);
+        uint8_t get_checksum();
     };
 }
