@@ -56,7 +56,8 @@ Allows the Host to run a generic parser while knowing the context of the data.
 | **0x04** | `SYS_READY`    | `[FW_VER]`     | S→H  | Sent on boot. Payload: Firmware version (u8).      |
 | **0x05** | `SYS_INFO_GET` | None           | H→S  | Request Hardware details.                          |
 | **0x06** | `SYS_INFO_RET` | `[TYPE_STR]`   | S→H  | Response. ASCII String (e.g., "ESP32-C5:Rev3").    |
-| **0x07** | `SYS_UUID_RET` | `[UUID_BYTES]` | S→H  | Response. Unique Hardware Serial/MAC.              |
+| **0x07** | `SYS_UUID_GET` | None           | H→S  | Request unique Hardware Serial/MAC.                |
+| **0x08** | `SYS_UUID_RET` | `[UUID_BYTES]` | S→H  | Response. Unique Hardware Serial/MAC.              |
 
 ### 3.2 Audio Configuration (0x10 - 0x1F)
 *Clocking and stream flow control.*

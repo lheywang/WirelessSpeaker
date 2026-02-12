@@ -18,6 +18,21 @@
 
 namespace lcxp
 {
+    /* *******************************************************************
+     * ENUMS
+     * *******************************************************************/
+    enum opcodes
+    {
+        SYS_PING = 0x00,
+        SYS_ACK = 0x01,
+        SYS_NACK = 0x02,
+        SYS_RESET = 0x03,
+        SYS_READY = 0x04,
+        SYS_INFO_GET = 0x05,
+        SYS_INFO_RET = 0x06,
+        SYS_UUID_GET = 0x07,
+        SYS_UUID_RET = 0x08
+    };
 
     /* *******************************************************************
      * CONSTANTS
@@ -31,20 +46,8 @@ namespace lcxp
 
     /* *******************************************************************
      * STRUCTS
-     * *******************************************************************/
-    /**
-     *  Define the struct used to store callback data.
-     *  Contain two elements :
-     *      - the opcode to which this callback is tied.
-     *      - a function pointer, to call when needed.
-     */
-    struct parser_callback
-    {
-        uint8_t opcode;
-        uint32_t (*parser)(struct parser_result *arg);
-    };
-
-    /**
+     * ********************************************************************/
+    /*
      *  Define the struct used to store the results of the parsing, in a 
      *  more convenient way.
      *  Contain all the elements defined in the standard : 
@@ -80,7 +83,7 @@ namespace lcxp
          * @brief Destroy the LCxp object
          *
          */
-        ~LCxP();
+        virtual ~LCxP();
 
         // COMMAND REGISTERING :
         /**
@@ -95,7 +98,45 @@ namespace lcxp
          * @retval 1    There was already too much callbacks known.
          * @retval 2    There was already a callback registered for this opcode.
          */
-        uint32_t register_command(uint8_t opcode, uint32_t (*parser)(struct parser_result *arg));
+        template <typename T>
+        uint32_t register_command(uint8_t opcode, uint32_t (T::*parser)(struct parser_result *arg))
+        {
+            // Exit rapidly if none are available.
+            if (this->registeredCallbacks >= MAX_PARSER_CALLBACKS)
+                return 1;
+
+            /*
+            * First, seek for the first available structure. There's one since there's at least one slot available.
+            */
+            uint8_t pos = 0;
+            for (int i = 0; i < MAX_PARSER_CALLBACKS; i++)
+            {
+                if (this->callbacks_structs[i].parser == nullptr)
+                {
+                    pos = i;
+                    break;
+                }
+            }
+
+            /*
+             * Check if the opcode isn't already registered
+             */
+            for (int i = 0; i < MAX_PARSER_CALLBACKS; i++)
+            {
+                if (this->callbacks_structs[i].opcode == opcode)
+                    return 2;
+            }
+
+            /*
+            * Fill the structure and return
+            */
+            this->callbacks_structs[pos].opcode = opcode;
+            this->callbacks_structs[pos].parser = reinterpret_cast<MemberHandler>(parser);
+
+            // Increment the registered counter by one.
+            this->registeredCallbacks += 1;
+            return 0;
+        }
 
         /**
          * @brief                   Remove a previously used callback from the internal list.
@@ -167,7 +208,64 @@ namespace lcxp
          */
         uint8_t * build();
 
+        // DEFAULT HANDLER, COMMON COMMANDS
+        /** @defgroup defaults The defaults functions, available for all childs.
+         *  @{
+         */
+        virtual uint32_t sys_ping(struct parser_result *arg);
+        virtual uint32_t sys_ack(struct parser_result *arg);
+        virtual uint32_t sys_nack(struct parser_result *arg);
+        virtual uint32_t sys_reset(struct parser_result *arg);
+        virtual uint32_t sys_ready(struct parser_result *arg);
+        virtual uint32_t sys_info_get(struct parser_result *arg);
+        virtual uint32_t sys_info_ret(struct parser_result *arg);
+        virtual uint32_t sys_uuid_get(struct parser_result *arg);
+        virtual uint32_t sys_uuid_ret(struct parser_result *arg);
+        /** @} */ // end of group1
+
+        /**
+         * @brief                   Get the checksum object, as the following form :
+         *                          CHECKSUM = DEV_ID ^ SEQ_ID ^ CMD ^ LEN ^ (SUM(PAYLOAD) & 0xFF)
+         *
+         *
+         * @return uint8_t  The value of the computed checksum.
+         */
+        uint8_t get_checksum();
+
+        // IO Commands
+        /**
+         * @brief                   Send the internal buffer over the designated bus.
+         * 
+         * @note                    This function MUST be overidded on the target. Otherwise, the usage 
+         *                          of std::cout will *probably* cause issues.
+         * 
+         * @return                  uint32_t 
+         */
+        virtual uint32_t send();
+
+        // SETTER AND GETTERS
+        uint64_t get_uuid();
+        uint64_t get_hwid();
+        uint32_t set_uuid(uint64_t uuid);
+        uint32_t set_hwid(uint64_t hwid);
+
     private:
+        // TYPEDEFS
+        typedef uint32_t (LCxP::*MemberHandler)(parser_result *arg);
+
+        // STRUCTS
+        /**
+         *  Define the struct used to store callback data.
+         *  Contain two elements :
+         *      - the opcode to which this callback is tied.
+         *      - a function pointer, to call when needed.
+         */
+        struct parser_callback
+        {
+            uint8_t opcode;
+            MemberHandler parser;
+        };
+
         /*
          * VARIABLES
          */
@@ -183,17 +281,13 @@ namespace lcxp
 
         // CALLBACKS
         parser_callback callbacks_structs[MAX_PARSER_CALLBACKS]; // Store the callbacks.
+
+        // GLOBAL VARIABLES
+        uint64_t uuid;
+        uint32_t hwid;
+
         /*
          * FUNCTIONS
          */
-
-        /**
-         * @brief                   Get the checksum object, as the following form :
-         *                          CHECKSUM = DEV_ID ^ SEQ_ID ^ CMD ^ LEN ^ (SUM(PAYLOAD) & 0xFF)
-         *
-         *
-         * @return uint8_t  The value of the computed checksum.
-         */
-        uint8_t get_checksum();
     };
 }

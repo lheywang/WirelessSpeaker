@@ -52,8 +52,9 @@ Allows the Host to run a generic parser while knowing the context of the data.
 | **0x03** | `SYS_RESET`    | None           | H→S  | Force software reset of the Satellite.             |
 | **0x04** | `SYS_READY`    | `[FW_VER]`     | S→H  | Sent on boot. Payload: Firmware version (u8).      |
 | **0x05** | `SYS_INFO_GET` | None           | H→S  | Request Hardware details.                          |
-| **0x06** | `SYS_INFO_RET` | `[TYPE_STR]`   | S→H  | Response. ASCII String (e.g., "Top:Rev3").         |
-| **0x07** | `SYS_UUID_RET` | `[UUID_BYTES]` | S→H  | Response. Unique Hardware Serial/MAC.              |
+| **0x06** | `SYS_INFO_RET` | `[TYPE_STR]`   | S→H  | Response. ASCII String (e.g., "ESP32-C5:Rev3").    |
+| **0x07** | `SYS_UUID_GET` | None           | H→S  | Request unique Hardware Serial/MAC.                |
+| **0x08** | `SYS_UUID_RET` | `[UUID_BYTES]` | S→H  | Response. Unique Hardware Serial/MAC.              |
 
 ### 3.2 User outputs Configuration (0x10 - 0x1F)
 *Leds controls*
@@ -79,6 +80,7 @@ Allows the Host to run a generic parser while knowing the context of the data.
 | **0x31** | `SCREEN_SHOW` | `[ELEM_ID]`                     | H→S  | The name of the icon to be shown. See 4.1 for more details              |
 | **0x32** | `SCREEN_VOL`  | `[VOLUME]`                      | H→S  | Show the actual speaker volume                                          |
 | **0x33** | `SCREEN_PWR`  | `[ELEM_ID][MAX_WATT][ACT_WATT]` | H→S  | Show the actual speaker power source, and the actual and maximal power. |
+| **0x34** | `SCREEN_OFF`  | None | H→S  | Turn off the screen. |
 
 ### 3.5 Requests (0xF0 - 0xFF)
 
