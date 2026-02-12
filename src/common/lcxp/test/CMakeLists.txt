@@ -1,19 +1,14 @@
-add_library(lcxp_main STATIC
-    src/main.cpp
-)
+if (TESTS_BUILDS_LCXP)
+    add_executable(lcxp_main src/main.cpp)
 
-add_executable(lxcp_main)
+    target_compile_options(lcxp_main PRIVATE -Wall -Wextra)
 
-target_compile_options(lcxp_main PRIVATE -Wall -Wextra)
+    target_link_libraries(lcxp_main PRIVATE
+        lcxp
+        lcap
+        lcip
+    )
 
-target_sources(lxcp_main
-    PRIVATE
-    src/main.cpp
-)
+    target_include_directories(lcxp_main PRIVATE include)
 
-target_include_directories(lcxp_main PUBLIC 
-    include
-    lxcp
-    lcap
-    lcip
-)
+endif(TESTS_BUILDS_LCXP)

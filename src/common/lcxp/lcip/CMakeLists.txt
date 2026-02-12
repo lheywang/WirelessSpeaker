@@ -4,7 +4,7 @@ add_library(lcip STATIC
 
 target_compile_options(lcip PRIVATE -Wall -Wextra)
 
-target_link_libraries(lcip PRIVATE lxcp)
+target_link_libraries(lcip PRIVATE lcxp)
 
 target_include_directories(lcip PUBLIC 
     include
