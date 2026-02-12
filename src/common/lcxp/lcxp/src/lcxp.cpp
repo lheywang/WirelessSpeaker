@@ -33,6 +33,17 @@ lcxp::LCxP::LCxP()
     this->registeredCallbacks = 0;
     memset((void *)callbacks_structs, 0x00, (size_t)sizeof(callbacks_structs));
 
+    // Append the registered commands :
+    this->register_command(opcodes::SYS_PING, &LCxP::sys_ping);
+    this->register_command(opcodes::SYS_ACK, &LCxP::sys_ack);
+    this->register_command(opcodes::SYS_NACK, &LCxP::sys_nack);
+    this->register_command(opcodes::SYS_RESET, &LCxP::sys_reset);
+    this->register_command(opcodes::SYS_READY, &LCxP::sys_ready);
+    this->register_command(opcodes::SYS_INFO_GET, &LCxP::sys_info_get);
+    this->register_command(opcodes::SYS_INFO_RET, &LCxP::sys_info_ret);
+    this->register_command(opcodes::SYS_UUID_GET, &LCxP::sys_uuid_get);
+    this->register_command(opcodes::SYS_UUID_RET, &LCxP::sys_uuid_ret);
+
     return;
 }
 
@@ -47,7 +58,15 @@ lcxp::LCxP::LCxP(uint8_t buffer[MAX_BUFFER_SIZE], uint32_t size)
     memset((void *)callbacks_structs, 0x00, (size_t)sizeof(callbacks_structs));
 
     // Append the registered commands :
+    this->register_command(opcodes::SYS_PING, &LCxP::sys_ping);
     this->register_command(opcodes::SYS_ACK, &LCxP::sys_ack);
+    this->register_command(opcodes::SYS_NACK, &LCxP::sys_nack);
+    this->register_command(opcodes::SYS_RESET, &LCxP::sys_reset);
+    this->register_command(opcodes::SYS_READY, &LCxP::sys_ready);
+    this->register_command(opcodes::SYS_INFO_GET, &LCxP::sys_info_get);
+    this->register_command(opcodes::SYS_INFO_RET, &LCxP::sys_info_ret);
+    this->register_command(opcodes::SYS_UUID_GET, &LCxP::sys_uuid_get);
+    this->register_command(opcodes::SYS_UUID_RET, &LCxP::sys_uuid_ret);
 
     return;
 }
