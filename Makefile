@@ -15,7 +15,7 @@ common:
 
 common_test:
 	mkdir -p build/
-	cmake -S src/ -B build/ -DTESTS_BUILDS_LXCP=ON
+	cmake -S src/ -B build/ -DTESTS_BUILDS_LCXP=ON
 	cmake --build build/ 
 
 
