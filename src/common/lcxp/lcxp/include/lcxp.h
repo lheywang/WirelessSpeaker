@@ -33,20 +33,6 @@ namespace lcxp
      * STRUCTS
      * *******************************************************************/
     /**
-     *  Define the struct passed to the custom parser.
-     *  This struct contain two elements :
-     *      - the buffer of the payload and it's length.
-     *      - a void pointer to the output struct of the parser, since it's type and memory layout is unknown.
-     */
-    struct LCxP_parser_struct
-    {
-        uint8_t * buffer;
-        uint8_t len;
-        uint8_t sender_id;
-        void *output_struct;
-    };
-
-    /**
      *  Define the struct used to store callback data.
      *  Contain two elements :
      *      - the opcode to which this callback is tied.
@@ -55,7 +41,7 @@ namespace lcxp
     struct parser_callback
     {
         uint8_t opcode;
-        uint32_t (*parser)(struct LCxP_parser_struct *arg);
+        uint32_t (*parser)(struct parser_result *arg);
     };
 
     /**
@@ -109,7 +95,7 @@ namespace lcxp
          * @retval 1    There was already too much callbacks known.
          * @retval 2    There was already a callback registered for this opcode.
          */
-        uint32_t register_command(uint8_t opcode, uint32_t (*parser)(struct LCxP_parser_struct *arg));
+        uint32_t register_command(uint8_t opcode, uint32_t (*parser)(struct parser_result *arg));
 
         /**
          * @brief                   Remove a previously used callback from the internal list.
@@ -156,7 +142,7 @@ namespace lcxp
          */
         uint32_t add_Nbyte(uint8_t *byte, uint8_t number);
 
-        // PARSER
+        // PARSER & BUILDER
         /**
          * @brief                   Start the parsing of the buffer.
          *                          Since the callbacks are called, we can easily imagine acting, directly within the parser context,
@@ -170,7 +156,16 @@ namespace lcxp
          * @retval 1                Invalid frame alignement structure.
          * @retval 2                Invalid checksum of the package.
          */
-        uint32_t parse_buffer();
+        uint32_t parse();
+
+        /**
+         * @brief                   Build the response buffer, from the filled opcode, and the potentially
+         *                          modified result struct.
+         * 
+         * @return &uint8_t         An handle to the built buffer, ready to be sent over the
+         *                          communication medium (UART...). 
+         */
+        uint8_t * build();
 
     private:
         /*

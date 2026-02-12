@@ -57,7 +57,7 @@ lcxp::LCxP::~LCxP()
 /* *******************************************************************
  * FUNCTIONS
  * *******************************************************************/
-uint32_t lcxp::LCxP::register_command(uint8_t opcode, uint32_t (*parser)(struct LCxP_parser_struct *arg)) 
+uint32_t lcxp::LCxP::register_command(uint8_t opcode, uint32_t (*parser)(struct parser_result *arg)) 
 {
     // Exit rapidly if none are available.
     if (this->registeredCallbacks >= MAX_PARSER_CALLBACKS)
@@ -155,7 +155,7 @@ uint32_t lcxp::LCxP::add_Nbyte(uint8_t *byte, uint8_t number)
     return 0;
 }
 
-uint32_t lcxp::LCxP::parse_buffer()
+uint32_t lcxp::LCxP::parse()
 {
     /*
      * First, split the buffer into their respective positions : 
@@ -181,8 +181,41 @@ uint32_t lcxp::LCxP::parse_buffer()
     /*
      * Finally, call the associated parser for the data message : 
      */
+    // search for the designated opcode : 
+    for (int k = MAX_PARSER_CALLBACKS; k > 0 ; k--)
+    {
+        if (this->callbacks_structs[k].opcode == this->result.cmd)
+        {
+            // Call the associated function
+            this->callbacks_structs[k].parser(&this->result);
+            break;
+        }
+    }
 
     return 0;
+}
+
+uint8_t *lcxp::LCxP::build()
+{
+    // First, clean the buffers
+    memset((void *)this->buffer, 0x00, (size_t)MAX_BUFFER_SIZE);
+    this->buffer_size = 0;
+
+    // Then, rebuild it from scratch, using the latest elements :
+    // This is valid since bytes are continous into the source struct -> we can copy the bare 4 bytes.
+    this->add_Nbyte(&this->result.dev_id, 4);
+
+    // Add the final value
+    this->add_Nbyte(this->result.payload, this->result.len);
+
+    // Append the checksum
+    this->add_byte(this->get_checksum());
+
+    // Finally, clear the buffers :
+    memset((void *)&this->result, 0x00, (size_t)sizeof(this->result));
+
+    // Return a pointer to the buffer
+    return this->buffer;
 }
 
 /* *******************************************************************
